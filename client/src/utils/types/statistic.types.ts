@@ -18,7 +18,10 @@ export interface AdminListProps {
   userId: string;
   userName: string;
   description: string;
-  admin: boolean;
+  role: {
+    roleName: string;
+    label: string;
+  };
   createdAt: Date;
 }
 
