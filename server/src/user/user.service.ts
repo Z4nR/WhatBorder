@@ -28,7 +28,6 @@ export class UserService {
     });
 
     const { password, ...user } = newUser;
-
     return user;
   }
 
