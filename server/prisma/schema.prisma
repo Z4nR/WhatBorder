@@ -16,7 +16,6 @@ model User {
   name      String
   email     String    @unique
   password  String
-  active    Boolean   @default(false)
   createdAt DateTime  @default(now())
   updateAt  DateTime?
   place     GeoData[]
