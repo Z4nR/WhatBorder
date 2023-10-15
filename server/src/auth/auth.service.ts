@@ -22,7 +22,7 @@ export class AuthService {
       return {
         ...data,
         access_token: await this.jwtService.signAsync(payload, {
-          secret: 'landborder',
+          secret: process.env.SECRETS,
           expiresIn: '60s',
         }),
       };
