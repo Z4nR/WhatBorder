@@ -24,6 +24,7 @@ model User {
 model GeoData {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
+  placeName String
   geodata   Json
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?
