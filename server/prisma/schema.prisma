@@ -13,7 +13,8 @@ datasource db {
 
 model User {
   id        Int       @id @default(autoincrement())
-  name      String
+  uuid      String    @unique @default(uuid())
+  username  String    @db.VarChar(10)
   email     String    @unique
   password  String
   createdAt DateTime  @default(now())
@@ -26,8 +27,8 @@ model GeoData {
   createdAt DateTime @default(now())
   placeName String
   geodata   Json
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  user      User?    @relation(fields: [userId], references: [uuid])
+  userId    String?
 
-  @@index([authorId])
+  @@index([userId])
 }

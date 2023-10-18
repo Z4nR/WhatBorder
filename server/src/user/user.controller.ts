@@ -10,15 +10,14 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { RegistUserDto } from './dto/regist-user.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  registAccount(@Body() registUserDto: RegistUserDto) {
-    return this.userService.register(registUserDto);
+  addPlace(@Body() placeDto) {
+    return 'Todo';
   }
 
   @Get()

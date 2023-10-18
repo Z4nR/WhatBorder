@@ -1,29 +1,52 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { AuthDto } from './dto/auth.dto';
-import { UserService } from 'src/user/user.service';
-import { compare } from 'bcrypt';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from 'src/prisma.service';
+import { AuthDto } from './dto/auth.dto';
+import { UserService } from 'src/user/user.service';
+import { AuthLoginDto } from './dto/auth-login.dto';
+import { AuthRegistDto } from './dto/auth-regist.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private prisma: PrismaService,
     private userService: UserService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
 
-  async login(dto: AuthDto) {
+  async register(dto: AuthRegistDto) {
+    const userEmail = await this.userService.findByEmail(dto.email);
+    if (userEmail) throw new ConflictException('email duplicated');
+
+    const newUser = await this.prisma.user.create({
+      data: {
+        ...dto,
+        password: await hash(dto.password, 10),
+      },
+    });
+
+    const { password, ...user } = newUser;
+    return user;
+  }
+
+  async login(dto: AuthLoginDto) {
     const user = await this.userService.findByEmail(dto.email);
     const pw = await compare(dto.password, user.password);
 
     if (!pw) throw new UnauthorizedException();
 
-    const payload = { sub: user.id, username: user.name };
+    const payload = { sub: user.id, username: user.username };
 
     return {
       access_token: await this.jwtService.signAsync(payload, {
-        secret: this.configService.get<string>('SECRET'),
+        secret: this.configService.get('SECRET'),
       }),
     };
   }
