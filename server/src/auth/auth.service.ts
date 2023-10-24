@@ -7,7 +7,6 @@ import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma.service';
-import { AuthDto } from './dto/auth.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegistDto } from './dto/auth-regist.dto';
@@ -23,7 +22,7 @@ export class AuthService {
 
   async register(dto: AuthRegistDto) {
     const userEmail = await this.userService.findByEmail(dto.email);
-    if (userEmail) throw new ConflictException('email duplicated');
+    if (userEmail) throw new ConflictException('email sudah digunakan');
 
     const newUser = await this.prisma.user.create({
       data: {
@@ -40,9 +39,12 @@ export class AuthService {
     const user = await this.userService.findByEmail(dto.email);
     const pw = await compare(dto.password, user.password);
 
-    if (!pw) throw new UnauthorizedException();
+    if (!pw)
+      throw new UnauthorizedException(
+        'password yang anda masukan tidak sesuai',
+      );
 
-    const payload = { sub: user.uuid, useruuid: user.uuid };
+    const payload = { sub: user.uuid, user: user.username };
 
     return {
       access_token: await this.jwtService.signAsync(payload, {
