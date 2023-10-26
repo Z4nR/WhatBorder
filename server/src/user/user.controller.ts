@@ -9,6 +9,8 @@ import {
   NotFoundException,
   Request,
   UseGuards,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -29,11 +31,13 @@ export class UserController {
     return 'Todo';
   }
 
+  @HttpCode(HttpStatus.ACCEPTED)
   @Get('/place')
   findAllPlace() {
     return this.userService.findAll();
   }
 
+  @HttpCode(HttpStatus.ACCEPTED)
   @Get('/place/:id')
   findOne(@Param('id') id: string) {
     const user = this.userService.findById(+id);
@@ -43,6 +47,7 @@ export class UserController {
     return user;
   }
 
+  @HttpCode(HttpStatus.OK)
   @Patch('/place/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
