@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_PIPE } from '@nestjs/core';
+import { PlaceModule } from './place/place.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { APP_PIPE } from '@nestjs/core';
     }),
     UserModule,
     AuthModule,
+    PlaceModule,
   ],
   controllers: [],
   providers: [

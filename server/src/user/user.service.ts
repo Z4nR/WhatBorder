@@ -1,16 +1,15 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma.service';
-import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async findByEmail(email: string) {
+  async findByUsername(username: string) {
     return await this.prisma.user.findUnique({
       where: {
-        email,
+        username,
       },
     });
   }
@@ -19,12 +18,8 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  async findById(id: number) {
-    return await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+  findById(id: number) {
+    return `This action returns a #${id} user`;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

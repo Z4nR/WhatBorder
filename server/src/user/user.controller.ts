@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -11,6 +10,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  Next,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -21,24 +21,19 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
-  @Get()
-  user(@Request() req) {
+  @Get('test')
+  user(@Request() req: any) {
     return req.user;
   }
 
-  @Post()
-  addPlace(@Body() placeDto) {
-    return 'Todo';
-  }
-
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get('/place')
+  @Get()
   findAllPlace() {
     return this.userService.findAll();
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get('/place/:id')
+  @Get(':id')
   findOne(@Param('id') id: string) {
     const user = this.userService.findById(+id);
 
@@ -48,12 +43,12 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Patch('/place/:id')
+  @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
-  @Delete('/place/:id')
+  @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
   }

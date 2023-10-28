@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { compare, hash } from 'bcrypt';
@@ -21,24 +22,24 @@ export class AuthService {
   ) {}
 
   async register(dto: AuthRegistDto) {
-    const userEmail = await this.userService.findByEmail(dto.email);
-    if (userEmail) throw new ConflictException('email sudah digunakan');
+    const username = await this.userService.findByUsername(dto.username);
+    if (username) throw new ConflictException('nama pengguna sudah digunakan');
 
-    const newUser = await this.prisma.user.create({
+    await this.prisma.user.create({
       data: {
         ...dto,
         password: await hash(dto.password, 10),
       },
     });
 
-    const { password, ...user } = newUser;
-    return user;
+    return { msg: 'Akun berhasil dibuat' };
   }
 
   async login(dto: AuthLoginDto) {
-    const user = await this.userService.findByEmail(dto.email);
-    const pw = await compare(dto.password, user.password);
+    const user = await this.userService.findByUsername(dto.username);
+    if (!user) throw new NotFoundException('Nama pengguna tidak diketahui');
 
+    const pw = await compare(dto.password, user.password);
     if (!pw)
       throw new UnauthorizedException(
         'password yang anda masukan tidak sesuai',
