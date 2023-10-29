@@ -21,9 +21,12 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
-  @Get('test')
+  @Get('me')
   user(@Request() req: any) {
-    return req.user;
+    return {
+      id: req.user.sub,
+      username: req.user.user,
+    };
   }
 
   @UseGuards(AuthGuard)

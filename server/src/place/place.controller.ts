@@ -19,12 +19,6 @@ export class PlaceController {
   constructor(private readonly placeService: PlaceService) {}
 
   @UseGuards(AuthGuard)
-  @Get('test')
-  user(@Request() req: any) {
-    return req.user;
-  }
-
-  @UseGuards(AuthGuard)
   @Post()
   create(@Body() createPlaceDto: CreatePlaceDto, @Request() req: any) {
     const id = req.user.sub;
