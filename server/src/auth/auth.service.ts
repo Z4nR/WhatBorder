@@ -23,7 +23,7 @@ export class AuthService {
 
   async register(dto: AuthRegistDto) {
     const username = await this.userService.findByUsername(dto.username);
-    if (username) throw new ConflictException('nama pengguna sudah digunakan');
+    if (username) throw new ConflictException('Nama Pengguna sudah digunakan');
 
     await this.prisma.user.create({
       data: {
@@ -37,12 +37,12 @@ export class AuthService {
 
   async login(dto: AuthLoginDto) {
     const user = await this.userService.findByUsername(dto.username);
-    if (!user) throw new NotFoundException('Nama pengguna tidak diketahui');
+    if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
     const pw = await compare(dto.password, user.password);
     if (!pw)
       throw new UnauthorizedException(
-        'password yang anda masukan tidak sesuai',
+        'Kata sandi yang anda masukan tidak sesuai',
       );
 
     const payload = { sub: user.uuid, user: user.username };

@@ -26,6 +26,13 @@ export class UserController {
     return req.user;
   }
 
+  @UseGuards(AuthGuard)
+  @Get('place-data')
+  findPlace(@Request() req: any) {
+    const id = req.user.sub;
+    return this.userService.findPlaceData(id);
+  }
+
   @HttpCode(HttpStatus.ACCEPTED)
   @Get()
   findAllPlace() {
