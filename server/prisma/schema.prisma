@@ -30,8 +30,8 @@ model GeoData {
   placeAddress String?   @db.MediumText()
   placeDesc    String?   @db.LongText()
   placeGeojson Json
-  user         User?     @relation(fields: [userId], references: [uuid])
-  userId       String?
+  user         User      @relation(fields: [userId], references: [uuid])
+  userId       String
 
   @@index([userId])
 }

@@ -24,9 +24,11 @@ export class PlaceController {
     return req.user;
   }
 
+  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createPlaceDto: CreatePlaceDto) {
-    return this.placeService.create(createPlaceDto);
+  create(@Body() createPlaceDto: CreatePlaceDto, @Request() req: any) {
+    const id = req.user.sub;
+    return this.placeService.create(id, createPlaceDto);
   }
 
   @Get()

@@ -7,7 +7,7 @@ import {
 import { compare, hash } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/db/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegistDto } from './dto/auth-regist.dto';
