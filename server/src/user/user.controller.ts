@@ -10,7 +10,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
-  Next,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -23,39 +23,59 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('me')
   user(@Request() req: any) {
-    return {
-      id: req.user.sub,
-      username: req.user.user,
-    };
+    try {
+      return {
+        id: req.user.sub,
+        username: req.user.user,
+      };
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
   @UseGuards(AuthGuard)
   @Get('place-data')
   findPlace(@Request() req: any) {
-    const id = req.user.sub;
-    return this.userService.findPlaceData(id);
+    try {
+      const id = req.user.sub;
+      return this.userService.findPlaceData(id);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
   @Get()
-  findAllPlace() {
+  findAll() {
     return this.userService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    const user = this.userService.findById(+id);
-
-    if (!user) throw new NotFoundException('data pengguna tidak ditemukan');
-
-    return user;
+  @Get('detail')
+  findOne(@Request() req: any) {
+    try {
+      const id = req.user.sub;
+      return this.userService.findOne(id);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
+  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Patch('update')
+  update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
+    try {
+      const id = req.user.sub;
+      return this.userService.update(id, updateUserDto);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
   @Delete(':id')

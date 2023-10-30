@@ -14,24 +14,14 @@ export class UserService {
     });
   }
 
-  async findUser(uuid: string) {
-    return await this.prisma.user.findUnique({
-      where: {
-        uuid,
-      },
-    });
-  }
-
   async findPlaceData(uuid: string) {
-    const idUser = await this.findUser(uuid);
-    if (!idUser) throw new NotFoundException('Id Pengguna tidak ditemukan');
-
     return await this.prisma.user.findMany({
       select: {
         place: {
           select: {
             placeName: true,
             placeGeojson: true,
+            createdAt: true,
           },
         },
       },
@@ -45,12 +35,42 @@ export class UserService {
     return `This action returns all user`;
   }
 
-  findById(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return await this.prisma.user.findUnique({
+      select: {
+        fullname: true,
+        username: true,
+        description: true,
+        createdAt: true,
+        updateAt: true,
+        place: {
+          select: {
+            uuid: true,
+            placeName: true,
+            placeAddress: true,
+            createdAt: true,
+          },
+        },
+      },
+      where: {
+        uuid: id,
+      },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(uuid: string, dto: UpdateUserDto) {
+    const updateTime = new Date().toISOString();
+
+    await this.prisma.user.update({
+      where: {
+        uuid,
+      },
+      data: {
+        ...dto,
+        updateAt: updateTime,
+      },
+    });
+    return { msg: 'Data pengguna berhasil diperbarui' };
   }
 
   remove(id: number) {

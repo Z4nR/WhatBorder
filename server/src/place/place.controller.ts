@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Request,
+  InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { PlaceService } from './place.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
@@ -21,8 +23,13 @@ export class PlaceController {
   @UseGuards(AuthGuard)
   @Post()
   create(@Body() createPlaceDto: CreatePlaceDto, @Request() req: any) {
-    const id = req.user.sub;
-    return this.placeService.create(id, createPlaceDto);
+    try {
+      const id = req.user.sub;
+      return this.placeService.create(id, createPlaceDto);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
   @Get()
@@ -30,14 +37,28 @@ export class PlaceController {
     return this.placeService.findAll();
   }
 
-  @Get(':id')
+  @UseGuards(AuthGuard)
+  @Get(':id/detail')
   findOne(@Param('id') id: string) {
-    return this.placeService.findOne(+id);
+    try {
+      const data = this.placeService.findOne(id);
+      if (!data) throw new NotFoundException('Data tempat tidak ditemukan');
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
-  @Patch(':id')
+  @UseGuards(AuthGuard)
+  @Patch(':id/update')
   update(@Param('id') id: string, @Body() updatePlaceDto: UpdatePlaceDto) {
-    return this.placeService.update(+id, updatePlaceDto);
+    try {
+      return this.placeService.update(id, updatePlaceDto);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
   @Delete(':id')
