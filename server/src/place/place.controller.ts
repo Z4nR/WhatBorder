@@ -10,6 +10,8 @@ import {
   Request,
   InternalServerErrorException,
   NotFoundException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { PlaceService } from './place.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
@@ -21,6 +23,7 @@ export class PlaceController {
   constructor(private readonly placeService: PlaceService) {}
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.CREATED)
   @Post()
   create(@Body() createPlaceDto: CreatePlaceDto, @Request() req: any) {
     try {
@@ -38,6 +41,7 @@ export class PlaceController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.ACCEPTED)
   @Get(':id/detail')
   findOne(@Param('id') id: string) {
     try {
@@ -51,6 +55,7 @@ export class PlaceController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Patch(':id/update')
   update(@Param('id') id: string, @Body() updatePlaceDto: UpdatePlaceDto) {
     try {
@@ -61,8 +66,10 @@ export class PlaceController {
     }
   }
 
-  @Delete(':id')
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id/delete')
   remove(@Param('id') id: string) {
-    return this.placeService.remove(+id);
+    return this.placeService.remove(id);
   }
 }

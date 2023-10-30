@@ -79,7 +79,12 @@ export class PlaceService {
     return { message: 'Data tempat berhasil diperbarui' };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} place`;
+  async remove(uuid: string) {
+    await this.prisma.geoData.delete({
+      where: {
+        uuid,
+      },
+    });
+    return { message: 'Data tempat berhasil dihapus' };
   }
 }

@@ -21,6 +21,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Get('me')
   user(@Request() req: any) {
     try {
@@ -35,6 +36,7 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.ACCEPTED)
   @Get('place-data')
   findPlace(@Request() req: any) {
     try {
@@ -79,10 +81,13 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Delete('delete')
-  remove(@Request() req: any, @Body() password: string) {
+  remove(@Request() req: any, @Body() data: any) {
     try {
       const id = req.user.sub;
+      const { password } = data;
+
       return this.userService.remove(id, password);
     } catch (error) {
       console.log(error);

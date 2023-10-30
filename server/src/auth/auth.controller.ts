@@ -28,7 +28,7 @@ export class AuthController {
   }
 
   @Public()
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.ACCEPTED)
   @Post('login')
   login(@Body() loginDto: AuthLoginDto) {
     try {
