@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/db/prisma.service';
+import { compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -10,6 +15,14 @@ export class UserService {
     return await this.prisma.user.findUnique({
       where: {
         username,
+      },
+    });
+  }
+
+  async findByIdUser(uuid: string) {
+    return await this.prisma.user.findUnique({
+      where: {
+        uuid,
       },
     });
   }
@@ -70,10 +83,33 @@ export class UserService {
         updateAt: updateTime,
       },
     });
-    return { msg: 'Data pengguna berhasil diperbarui' };
+    return { message: 'Data pengguna berhasil diperbarui' };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(uuid: string, password: string) {
+    const user = await this.findByIdUser(uuid);
+
+    const pw = await compare(password, user.password);
+    if (!pw) {
+      throw new UnauthorizedException(
+        'Kata sandi yang anda masukan tidak sesuai',
+      );
+    } else {
+      const deleteUserdata = this.prisma.user.delete({
+        where: {
+          uuid,
+        },
+      });
+
+      const deleteGeodata = this.prisma.geoData.deleteMany({
+        where: {
+          userId: uuid,
+        },
+      });
+
+      await this.prisma.$transaction([deleteUserdata, deleteGeodata]);
+
+      return { message: 'Seluruh data pengguna berhasil dihapus' };
+    }
   }
 }

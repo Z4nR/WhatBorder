@@ -11,7 +11,7 @@ import { PrismaService } from 'src/db/prisma.service';
 export class PlaceService {
   constructor(private prisma: PrismaService) {}
 
-  async findById(uuid: string) {
+  async findByIdPlace(uuid: string) {
     return await this.prisma.geoData.findUnique({
       where: {
         uuid,
@@ -19,18 +19,20 @@ export class PlaceService {
     });
   }
 
-  async checkingPlace(placeGeojson: any) {
+  async checkingPlace(geojson: any) {
     return await this.prisma.geoData.findFirst({
       where: {
-        placeGeojson,
+        placeGeojson: {
+          equals: geojson,
+        },
       },
     });
   }
 
   async create(id: string, dto: CreatePlaceDto) {
-    // const place = await this.checkingPlace(dto.placeGeojson);
-    // if (place)
-    //   throw new ConflictException('Lokasi sudah ditambahkan oleh orang lain');
+    const place = await this.checkingPlace(dto.placeGeojson);
+    if (place)
+      throw new ConflictException('Lokasi sudah ditambahkan oleh orang lain');
 
     await this.prisma.geoData.create({
       data: {
@@ -38,7 +40,7 @@ export class PlaceService {
         userId: id,
       },
     });
-    return { msg: 'Data tempat berhasil berhasil ditambahkan' };
+    return { message: 'Data tempat berhasil berhasil ditambahkan' };
   }
 
   findAll() {
@@ -46,7 +48,7 @@ export class PlaceService {
   }
 
   async findOne(uuid: string) {
-    const data = await this.findById(uuid);
+    const data = await this.findByIdPlace(uuid);
     if (!data) throw new NotFoundException('Data tempat tidak ditemukan');
 
     return await this.prisma.geoData.findUnique({
@@ -74,7 +76,7 @@ export class PlaceService {
         updateAt: updateTime,
       },
     });
-    return { msg: 'Data tempat berhasil diperbarui' };
+    return { message: 'Data tempat berhasil diperbarui' };
   }
 
   remove(id: number) {

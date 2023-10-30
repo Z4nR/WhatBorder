@@ -32,7 +32,7 @@ export class AuthService {
       },
     });
 
-    return { msg: 'Akun berhasil dibuat' };
+    return { message: 'Akun berhasil dibuat' };
   }
 
   async login(dto: AuthLoginDto) {

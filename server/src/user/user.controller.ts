@@ -78,8 +78,15 @@ export class UserController {
     }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @UseGuards(AuthGuard)
+  @Delete('delete')
+  remove(@Request() req: any, @Body() password: string) {
+    try {
+      const id = req.user.sub;
+      return this.userService.remove(id, password);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 }
