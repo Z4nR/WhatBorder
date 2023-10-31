@@ -35,7 +35,7 @@ export class PlaceController {
     }
   }
 
-  @Get()
+  @Get('place-list')
   findAll() {
     return this.placeService.findAll();
   }

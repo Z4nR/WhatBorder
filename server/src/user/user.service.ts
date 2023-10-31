@@ -92,19 +92,19 @@ export class UserService {
       );
     }
 
-    const deleteUserdata = this.prisma.user.delete({
-      where: {
-        uuid,
-      },
-    });
-
     const deleteGeodata = this.prisma.geoData.deleteMany({
       where: {
         userId: uuid,
       },
     });
 
-    await this.prisma.$transaction([deleteUserdata, deleteGeodata]);
+    const deleteUserdata = this.prisma.user.delete({
+      where: {
+        uuid,
+      },
+    });
+
+    await this.prisma.$transaction([deleteGeodata, deleteUserdata]);
 
     return { message: 'Seluruh data pengguna berhasil dihapus' };
   }

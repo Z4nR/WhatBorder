@@ -49,7 +49,7 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get()
+  @Get('user-list')
   findAll() {
     return this.userService.findAll();
   }
