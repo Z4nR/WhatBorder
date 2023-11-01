@@ -49,7 +49,12 @@ export class PlaceService {
         uuid: true,
         placeName: true,
         placeAddress: true,
-        userId: true,
+        user: {
+          select: {
+            uuid: true,
+            fullname: true,
+          },
+        },
       },
       where: {
         placeName: {
