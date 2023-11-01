@@ -43,8 +43,25 @@ export class PlaceService {
     return { message: 'Data tempat berhasil berhasil ditambahkan' };
   }
 
-  findAll() {
-    return `This action returns all place`;
+  async findAll(name: string) {
+    const placeList = await this.prisma.geoData.findMany({
+      select: {
+        uuid: true,
+        placeName: true,
+        placeAddress: true,
+        userId: true,
+      },
+      where: {
+        placeName: {
+          search: name,
+        },
+      },
+    });
+
+    if (placeList.length === 0)
+      throw new NotFoundException('Data tempat tidak ditemukan');
+
+    return placeList;
   }
 
   async findOne(uuid: string) {

@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { compare } from 'bcrypt';
@@ -40,8 +44,25 @@ export class UserService {
     });
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findAll(name: string) {
+    const userList = await this.prisma.user.findMany({
+      select: {
+        uuid: true,
+        fullname: true,
+        createdAt: true,
+        _count: true,
+      },
+      where: {
+        fullname: {
+          search: name,
+        },
+      },
+    });
+
+    if (userList.length === 0)
+      throw new NotFoundException('Data pengguna tidak ditemukan');
+
+    return userList;
   }
 
   async findOne(id: string) {

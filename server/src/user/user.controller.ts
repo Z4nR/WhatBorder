@@ -3,14 +3,13 @@ import {
   Get,
   Body,
   Patch,
-  Param,
   Delete,
-  NotFoundException,
   Request,
   UseGuards,
   HttpCode,
   HttpStatus,
   InternalServerErrorException,
+  Query,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -20,7 +19,6 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get('me')
   user(@Request() req: any) {
@@ -50,11 +48,15 @@ export class UserController {
 
   @HttpCode(HttpStatus.ACCEPTED)
   @Get('user-list')
-  findAll() {
-    return this.userService.findAll();
+  searchUser(@Query('name') name: string) {
+    try {
+      return this.userService.findAll(name);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.ACCEPTED)
   @Get('detail')
   findOne(@Request() req: any) {
@@ -67,7 +69,6 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Patch('update')
   update(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
@@ -80,7 +81,6 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.OK)
   @Delete('delete')
   remove(@Request() req: any, @Body() data: any) {

@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -20,6 +21,8 @@ model User {
   createdAt   DateTime  @default(now())
   updateAt    DateTime?
   place       GeoData[]
+
+  @@fulltext([fullname])
 }
 
 model GeoData {
@@ -34,4 +37,5 @@ model GeoData {
   userId       String
 
   @@index([userId])
+  @@fulltext([placeName])
 }
