@@ -89,15 +89,12 @@ export class UserService {
   }
 
   async update(uuid: string, dto: UpdateUserDto) {
-    const updateTime = new Date().toISOString();
-
     await this.prisma.user.update({
       where: {
         uuid,
       },
       data: {
         ...dto,
-        updateAt: updateTime,
       },
     });
     return { message: 'Data pengguna berhasil diperbarui' };

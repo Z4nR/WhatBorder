@@ -87,15 +87,12 @@ export class PlaceService {
   }
 
   async update(uuid: string, dto: UpdatePlaceDto) {
-    const updateTime = new Date().toISOString();
-
     await this.prisma.geoData.update({
       where: {
         uuid,
       },
       data: {
         ...dto,
-        updateAt: updateTime,
       },
     });
     return { message: 'Data tempat berhasil diperbarui' };

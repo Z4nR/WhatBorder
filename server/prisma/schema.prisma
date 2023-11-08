@@ -19,7 +19,7 @@ model User {
   password    String
   description String?   @db.Text()
   createdAt   DateTime  @default(now())
-  updateAt    DateTime?
+  updateAt    DateTime  @updatedAt
   place       GeoData[]
 
   @@fulltext([fullname])
@@ -28,7 +28,7 @@ model User {
 model GeoData {
   uuid         String    @id @default(uuid())
   createdAt    DateTime  @default(now())
-  updateAt     DateTime?
+  updateAt     DateTime  @updatedAt
   placeName    String
   placeAddress String?   @db.MediumText()
   placeDesc    String?   @db.LongText()
