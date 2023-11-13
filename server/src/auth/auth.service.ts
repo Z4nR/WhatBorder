@@ -45,7 +45,10 @@ export class AuthService {
         'Kata sandi yang anda masukan tidak sesuai',
       );
 
-    const payload = { sub: user.uuid, user: user.username };
+    const payload = {
+      sub: user.uuid,
+      user: user.username,
+    };
 
     return {
       access_token: await this.jwtService.signAsync(payload, {
