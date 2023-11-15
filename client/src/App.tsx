@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout, Button, theme } from 'antd';
 import Siders from './components/Siders';
+import { Route, Routes } from 'react-router-dom';
+import DashboardPages from './pages/DashboardPages';
 
 const { Header, Content } = Layout;
 
@@ -15,7 +17,17 @@ const App: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Siders collapse={collapsed} />
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          style={{
+            padding: 0,
+            background: colorBgContainer,
+            position: 'sticky',
+            top: 0,
+            right: 0,
+            zIndex: 11,
+            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+          }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
@@ -34,7 +46,9 @@ const App: React.FC = () => {
             background: colorBgContainer,
           }}
         >
-          Content
+          <Routes>
+            <Route path="/dashboard" element={<DashboardPages />} />
+          </Routes>
         </Content>
       </Layout>
     </Layout>

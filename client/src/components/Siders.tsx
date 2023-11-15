@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+import { BiSolidDashboard, BiSolidMap, BiSolidMapAlt } from 'react-icons/bi';
 import { Avatar, Flex, Layout, Menu } from 'antd';
 import logoWeb from '../assets/react.svg';
 
@@ -14,6 +11,27 @@ interface SidersProps {
 }
 
 const Siders: React.FC<SidersProps> = ({ collapse }) => {
+  const menuItems = [
+    {
+      key: '1',
+      icon: <BiSolidDashboard />,
+      label: 'Dashboard',
+      link: '/dashboard',
+    },
+    {
+      key: '2',
+      icon: <BiSolidMap />,
+      label: 'Place List',
+      link: '/place-list',
+    },
+    {
+      key: '3',
+      icon: <BiSolidMapAlt />,
+      label: 'Compare Map',
+      link: '/compare-map',
+    },
+  ];
+
   return (
     <Sider trigger={null} collapsible collapsed={collapse}>
       <Flex justify="center" style={{ padding: 10 }}>
@@ -23,23 +41,11 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
         theme="dark"
         mode="inline"
         defaultSelectedKeys={['1']}
-        items={[
-          {
-            key: '1',
-            icon: <UserOutlined />,
-            label: 'Dashboard',
-          },
-          {
-            key: '2',
-            icon: <VideoCameraOutlined />,
-            label: 'Place List',
-          },
-          {
-            key: '3',
-            icon: <UploadOutlined />,
-            label: 'Compare Map',
-          },
-        ]}
+        items={menuItems.map((item) => ({
+          key: item.key,
+          icon: item.icon,
+          label: <Link to={item.link}>{item.label}</Link>,
+        }))}
       />
     </Sider>
   );
