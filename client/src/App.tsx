@@ -1,17 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout, Button, theme } from 'antd';
 import Siders from './components/Siders';
 import { Route, Routes } from 'react-router-dom';
 import DashboardPages from './pages/DashboardPages';
+import LoginPages from './pages/LoginPages';
 
 const { Header, Content } = Layout;
 
 const App: React.FC = () => {
+  const [authUser, setAuthUser] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  useEffect(() => {});
+
+  if (!authUser) {
+    return (
+      <Layout
+        style={{
+          minHeight: '100vh',
+          justifyContent: 'center',
+        }}
+      >
+        <Routes>
+          <Route path="/*" element={<LoginPages />} />
+        </Routes>
+      </Layout>
+    );
+  }
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
