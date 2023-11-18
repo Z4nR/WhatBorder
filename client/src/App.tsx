@@ -5,6 +5,8 @@ import Siders from './components/Siders';
 import { Route, Routes } from 'react-router-dom';
 import DashboardPages from './pages/DashboardPages';
 import LoginPages from './pages/LoginPages';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+const queryClient = new QueryClient();
 
 const { Header, Content } = Layout;
 
@@ -25,9 +27,11 @@ const App: React.FC = () => {
           justifyContent: 'center',
         }}
       >
-        <Routes>
-          <Route path="/*" element={<LoginPages />} />
-        </Routes>
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path="/*" element={<LoginPages />} />
+          </Routes>
+        </QueryClientProvider>
       </Layout>
     );
   }
@@ -65,9 +69,11 @@ const App: React.FC = () => {
             background: colorBgContainer,
           }}
         >
-          <Routes>
-            <Route path="/dashboard" element={<DashboardPages />} />
-          </Routes>
+          <QueryClientProvider client={queryClient}>
+            <Routes>
+              <Route path="/dashboard" element={<DashboardPages />} />
+            </Routes>
+          </QueryClientProvider>
         </Content>
       </Layout>
     </Layout>

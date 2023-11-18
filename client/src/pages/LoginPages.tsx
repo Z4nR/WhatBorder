@@ -2,16 +2,33 @@ import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Typography, theme } from 'antd';
 import { Link } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
+import { loginAcc } from '../utils/networks';
+import storage from '../utils/storage';
 
 const { Text, Title } = Typography;
 
 const App: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-  };
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const { mutateAsync } = useMutation({
+    mutationFn: loginAcc,
+    onSuccess: (data) => {
+      if (data.access_token) {
+        storage.setAccessToken('token', data);
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const onFinish = (values: any) => {
+    mutateAsync(values);
+    console.log('Received values of form: ', values);
+  };
 
   return (
     <Form
