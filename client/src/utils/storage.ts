@@ -1,11 +1,13 @@
-const get = (key: string) => sessionStorage.getItem(key);
-const getAccessToken = (key: string): any | null => {
+const get = (key: string) => localStorage.getItem(key);
+const getAccessToken = (key: any) => {
   const storedValue = get(key);
   return storedValue ? JSON.parse(storedValue) : null;
 };
 
-const set = (key: string, value: any) => sessionStorage.setItem(key, value);
-const setAccessToken = (key: string, value: any) =>
-  set(key, JSON.stringify(value));
+const set = (key: string, value: any) => localStorage.setItem(key, value);
+const setAccessToken = (key: string, value: any) => set(key, value);
 
-export default { getAccessToken, setAccessToken };
+const remove = (key: string) => localStorage.removeItem(key);
+const removeAccessToken = (key: any) => remove(key);
+
+export default { getAccessToken, setAccessToken, removeAccessToken };

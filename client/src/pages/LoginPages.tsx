@@ -16,12 +16,10 @@ const App: React.FC = () => {
   const { mutateAsync } = useMutation({
     mutationFn: loginAcc,
     onSuccess: (data) => {
-      if (data.access_token) {
-        storage.setAccessToken('token', data);
-      }
+      storage.setAccessToken('token', data);
     },
-    onError: (error) => {
-      console.log(error);
+    onError: (error: any) => {
+      console.log(error.response.data.message);
     },
   });
 

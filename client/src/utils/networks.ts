@@ -12,10 +12,6 @@ const loginAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      if (res.status !== 202) {
-        const { message } = res.data;
-        return message;
-      }
       const { access_token } = res.data;
       return access_token;
     });
