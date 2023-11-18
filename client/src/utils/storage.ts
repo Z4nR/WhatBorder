@@ -5,7 +5,8 @@ const getAccessToken = (key: any) => {
 };
 
 const set = (key: string, value: any) => localStorage.setItem(key, value);
-const setAccessToken = (key: string, value: any) => set(key, value);
+const setAccessToken = (key: string, value: any) =>
+  set(key, JSON.stringify(value));
 
 const remove = (key: string) => localStorage.removeItem(key);
 const removeAccessToken = (key: any) => remove(key);

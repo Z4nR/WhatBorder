@@ -1,4 +1,5 @@
 import axios from 'axios';
+import storage from './storage';
 
 const Server_URL = import.meta.env.VITE_BACKEND;
 
@@ -17,4 +18,17 @@ const loginAcc = async (data: any) => {
     });
 };
 
-export { loginAcc };
+const getLogged = async () => {
+  return axios
+    .get('/user/me', {
+      headers: {
+        Authorization: `Bearer ${storage.getAccessToken('token')}`,
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+      return res.data;
+    });
+};
+
+export { loginAcc, getLogged };

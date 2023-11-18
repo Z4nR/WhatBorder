@@ -8,7 +8,7 @@ import storage from '../utils/storage';
 
 const { Text, Title } = Typography;
 
-const App: React.FC = () => {
+const LoginPages: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -25,7 +25,6 @@ const App: React.FC = () => {
 
   const onFinish = (values: any) => {
     mutateAsync(values);
-    console.log('Received values of form: ', values);
   };
 
   return (
@@ -90,4 +89,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default LoginPages;

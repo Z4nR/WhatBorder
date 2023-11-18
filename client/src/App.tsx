@@ -5,8 +5,7 @@ import Siders from './components/Siders';
 import { Route, Routes } from 'react-router-dom';
 import DashboardPages from './pages/DashboardPages';
 import LoginPages from './pages/LoginPages';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-const queryClient = new QueryClient();
+import storage from './utils/storage';
 
 const { Header, Content } = Layout;
 
@@ -17,7 +16,9 @@ const App: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  useEffect(() => {});
+  useEffect(() => {
+    setAuthUser(storage.getAccessToken('token'));
+  }, []);
 
   if (!authUser) {
     return (
@@ -27,11 +28,9 @@ const App: React.FC = () => {
           justifyContent: 'center',
         }}
       >
-        <QueryClientProvider client={queryClient}>
-          <Routes>
-            <Route path="/*" element={<LoginPages />} />
-          </Routes>
-        </QueryClientProvider>
+        <Routes>
+          <Route path="/*" element={<LoginPages />} />
+        </Routes>
       </Layout>
     );
   }
@@ -69,11 +68,9 @@ const App: React.FC = () => {
             background: colorBgContainer,
           }}
         >
-          <QueryClientProvider client={queryClient}>
-            <Routes>
-              <Route path="/dashboard" element={<DashboardPages />} />
-            </Routes>
-          </QueryClientProvider>
+          <Routes>
+            <Route path="/dashboard" element={<DashboardPages />} />
+          </Routes>
         </Content>
       </Layout>
     </Layout>
