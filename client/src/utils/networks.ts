@@ -19,14 +19,14 @@ const loginAcc = async (data: any) => {
 };
 
 const getLogged = async () => {
+  const token = storage.getAccessToken('token');
   return axios
     .get('/user/me', {
       headers: {
-        Authorization: `Bearer ${storage.getAccessToken('token')}`,
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((res) => {
-      console.log(res.data);
       return res.data;
     });
 };

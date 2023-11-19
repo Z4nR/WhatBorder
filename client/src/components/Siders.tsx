@@ -16,7 +16,7 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
       key: '1',
       icon: <BiSolidDashboard />,
       label: 'Dashboard',
-      link: '/dashboard',
+      link: '/',
     },
     {
       key: '2',

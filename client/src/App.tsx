@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Layout, Button, theme } from 'antd';
-import Siders from './components/Siders';
-import { Route, Routes } from 'react-router-dom';
-import DashboardPages from './pages/DashboardPages';
+import React from 'react';
+import { Layout, Spin } from 'antd';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
+import { getLogged } from './utils/networks';
 import LoginPages from './pages/LoginPages';
 import storage from './utils/storage';
+import LayoutPages from './layout/Layout';
+import DashboardPages from './pages/DashboardPages';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-const { Header, Content } = Layout;
+const queryClient = new QueryClient();
 
-const App: React.FC = () => {
-  const [authUser, setAuthUser] = useState(null);
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+const AuthRoute = () => {
+  const token = storage;
+  const { data, error, isError, isLoading } = useQuery({
+    queryKey: ['user'],
+    queryFn: async () => await getLogged(),
+  });
 
-  useEffect(() => {
-    setAuthUser(storage.getAccessToken('token'));
-  }, []);
+  if (isError) token.removeAccessToken('token');
 
-  if (!authUser) {
+  if (isLoading)
     return (
       <Layout
         style={{
@@ -28,52 +28,29 @@ const App: React.FC = () => {
           justifyContent: 'center',
         }}
       >
-        <Routes>
-          <Route path="/*" element={<LoginPages />} />
-        </Routes>
+        <Spin style={{ margin: '0 auto' }} tip="Loading..." size="large">
+          <div className="content" />
+        </Spin>
       </Layout>
     );
-  }
 
+  return data && !error ? <Outlet /> : <Navigate to={'/auth'} />;
+};
+
+const App: React.FC = () => {
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Siders collapse={collapsed} />
-      <Layout>
-        <Header
-          style={{
-            padding: 0,
-            background: colorBgContainer,
-            position: 'sticky',
-            top: 0,
-            right: 0,
-            zIndex: 11,
-            boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-          }}
-        >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-          />
-        </Header>
-        <Content
-          style={{
-            margin: '24px 16px',
-            padding: 24,
-            background: colorBgContainer,
-          }}
-        >
-          <Routes>
-            <Route path="/dashboard" element={<DashboardPages />} />
-          </Routes>
-        </Content>
-      </Layout>
-    </Layout>
+    <>
+      <QueryClientProvider client={queryClient}>
+        <Routes>
+          <Route path="/" element={<AuthRoute />}>
+            <Route element={<LayoutPages />}>
+              <Route index element={<DashboardPages />} />
+            </Route>
+          </Route>
+          <Route path="/auth" element={<LoginPages />} />
+        </Routes>
+      </QueryClientProvider>
+    </>
   );
 };
 
