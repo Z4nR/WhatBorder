@@ -4,21 +4,24 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getLogged } from './utils/networks';
 import LoginPages from './pages/LoginPages';
-import storage from './utils/storage';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import useAuthState from './utils/state/auth/authState';
 
 const queryClient = new QueryClient();
 
 const AuthRoute = () => {
-  const token = storage;
+  const authState = useAuthState();
+  console.log(authState);
+
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ['user'],
     queryFn: async () => await getLogged(),
+    enabled: !!authState.accessToken,
   });
 
-  if (isError) token.removeAccessToken('token');
+  if (isError) authState.deleteToken();
 
   if (isLoading)
     return (
@@ -33,6 +36,8 @@ const AuthRoute = () => {
         </Spin>
       </Layout>
     );
+
+  console.log(data);
 
   return data && !error ? <Outlet /> : <Navigate to={'/auth'} />;
 };

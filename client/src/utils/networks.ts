@@ -1,7 +1,8 @@
 import axios from 'axios';
-import storage from './storage';
+import useAuthState from './state/auth/authState';
 
 const Server_URL = import.meta.env.VITE_BACKEND;
+const token = () => useAuthState.getState().accessToken;
 
 axios.defaults.baseURL = Server_URL;
 
@@ -19,11 +20,10 @@ const loginAcc = async (data: any) => {
 };
 
 const getLogged = async () => {
-  const token = storage.getAccessToken('token');
   return axios
     .get('/user/me', {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token()}`,
       },
     })
     .then((res) => {

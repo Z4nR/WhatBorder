@@ -1,22 +1,27 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Typography, theme } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { loginAcc } from '../utils/networks';
-import storage from '../utils/storage';
+import useAuthState from '../utils/state/auth/authState';
 
 const { Text, Title } = Typography;
 
 const LoginPages: React.FC = () => {
+  const authState = useAuthState();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const { mutateAsync } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: loginAcc,
     onSuccess: (data) => {
-      storage.setAccessToken('token', data);
+      console.log(data);
+
+      authState.setToken({
+        accessToken: data,
+      });
     },
     onError: (error: any) => {
       console.log(error.response.data.message);
@@ -24,8 +29,13 @@ const LoginPages: React.FC = () => {
   });
 
   const onFinish = (values: any) => {
-    mutateAsync(values);
+    mutate(values);
   };
+
+  if (authState.accessToken) {
+    console.log(authState.accessToken);
+    return <Navigate to={'/'} replace />;
+  }
 
   return (
     <Layout
@@ -60,6 +70,7 @@ const LoginPages: React.FC = () => {
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="Username"
+            autoComplete="off"
           />
         </Form.Item>
         <Form.Item
@@ -71,6 +82,7 @@ const LoginPages: React.FC = () => {
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="Password"
+            autoComplete="off"
           />
         </Form.Item>
         <Form.Item>
