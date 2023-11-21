@@ -17,8 +17,6 @@ const LoginPages: React.FC = () => {
   const { mutate } = useMutation({
     mutationFn: loginAcc,
     onSuccess: (data) => {
-      console.log(data);
-
       authState.setToken({
         accessToken: data,
       });

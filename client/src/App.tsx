@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Layout, Spin } from 'antd';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -8,12 +8,13 @@ import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import useAuthState from './utils/state/auth/authState';
+import useUserState from './utils/state/user/userState';
 
 const queryClient = new QueryClient();
 
 const AuthRoute = () => {
   const authState = useAuthState();
-  console.log(authState);
+  const userState = useUserState();
 
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ['user'],
@@ -21,7 +22,20 @@ const AuthRoute = () => {
     enabled: !!authState.accessToken,
   });
 
-  if (isError) authState.deleteToken();
+  useEffect(() => {
+    const d = data;
+    if (!d) return;
+    userState.setUser({
+      id: d.id,
+      name: d.username,
+      exp: d.exp,
+    });
+  }, [data]);
+
+  if (isError) {
+    authState.deleteToken();
+    userState.clearUser();
+  }
 
   if (isLoading)
     return (
@@ -36,8 +50,6 @@ const AuthRoute = () => {
         </Spin>
       </Layout>
     );
-
-  console.log(data);
 
   return data && !error ? <Outlet /> : <Navigate to={'/auth'} />;
 };

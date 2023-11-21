@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Layout, Button, theme } from 'antd';
+import { Layout, Button, Typography, theme } from 'antd';
 import Siders from '../components/Siders';
 import { Outlet } from 'react-router-dom';
+import useUserState from '../utils/state/user/userState';
 
 const { Header, Content } = Layout;
+const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const username = () => useUserState.getState().name;
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -37,6 +40,7 @@ const LayoutPages: React.FC = () => {
               height: 64,
             }}
           />
+          <Text>{username()}</Text>
         </Header>
         <Content
           style={{
