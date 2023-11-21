@@ -2,13 +2,15 @@ import React, { useEffect } from 'react';
 import { Layout, Spin } from 'antd';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getLogged } from './utils/networks';
+import useAuthState from './utils/state/auth/authState';
+import useUserState from './utils/state/user/userState';
 import LoginPages from './pages/LoginPages';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import useAuthState from './utils/state/auth/authState';
-import useUserState from './utils/state/user/userState';
+import CompareMapPages from './pages/CompareMapPages';
+import PlaceListPages from './pages/PlaceListPages';
 
 const queryClient = new QueryClient();
 
@@ -62,6 +64,8 @@ const App: React.FC = () => {
           <Route path="/" element={<AuthRoute />}>
             <Route element={<LayoutPages />}>
               <Route index element={<DashboardPages />} />
+              <Route path="/place-list" element={<PlaceListPages />} />
+              <Route path="/compare-map" element={<CompareMapPages />} />
             </Route>
           </Route>
           <Route path="/auth" element={<LoginPages />} />

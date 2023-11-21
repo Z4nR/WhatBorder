@@ -21,6 +21,9 @@ const LayoutPages: React.FC = () => {
       <Layout>
         <Header
           style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             padding: 0,
             background: colorBgContainer,
             position: 'sticky',
@@ -40,13 +43,16 @@ const LayoutPages: React.FC = () => {
               height: 64,
             }}
           />
-          <Text>{username()}</Text>
+          <Text strong style={{ margin: '0 16px' }}>
+            Hello Landers, {username()}
+          </Text>
         </Header>
         <Content
           style={{
-            margin: '24px 16px',
+            margin: '16px',
             padding: 24,
             background: colorBgContainer,
+            borderRadius: 8,
           }}
         >
           <Outlet />
