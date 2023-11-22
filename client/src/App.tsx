@@ -22,6 +22,7 @@ const AuthRoute = () => {
     queryKey: ['user'],
     queryFn: async () => await getLogged(),
     enabled: !!authState.accessToken,
+    staleTime: 60 * 60 * 1000,
   });
 
   useEffect(() => {
