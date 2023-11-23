@@ -11,6 +11,7 @@ import DashboardPages from './pages/DashboardPages';
 import CompareMapPages from './pages/CompareMapPages';
 import PlaceListPages from './pages/PlaceListPages';
 import VerifPages from './pages/VerifPages';
+import ProfilePages from './pages/ProfilePages';
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const AuthRoute = () => {
     const d = data;
     if (!d) return;
     userState.setUser({
+      role: d.role,
       name: d.username,
       exp: d.exp,
     });
@@ -66,6 +68,7 @@ const App: React.FC = () => {
               <Route index element={<DashboardPages />} />
               <Route path="/place-list" element={<PlaceListPages />} />
               <Route path="/compare-map" element={<CompareMapPages />} />
+              <Route path="/me" element={<ProfilePages />} />
             </Route>
           </Route>
           <Route path="/auth" element={<VerifPages />} />

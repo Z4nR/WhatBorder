@@ -44,7 +44,6 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={['1']}
         items={menuItems.map((item) => ({
           key: item.key,
           icon: item.icon,

@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
 import useUserState from '../utils/state/user/userState';
 import OptionMenu from '../components/OptionMenu';
 
-const { Header, Content } = Layout;
+const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
@@ -55,10 +55,20 @@ const LayoutPages: React.FC = () => {
             padding: 24,
             background: colorBgContainer,
             borderRadius: 8,
+            overflowY: 'scroll',
           }}
         >
           <Outlet />
         </Content>
+        <Footer
+          style={{
+            paddingTop: 4,
+            fontSize: '1rem',
+            textAlign: 'center',
+          }}
+        >
+          <Text>Create by Zulham 👋</Text>
+        </Footer>
       </Layout>
     </Layout>
   );

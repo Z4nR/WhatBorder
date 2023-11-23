@@ -1,51 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   SettingOutlined,
   UserOutlined,
   PoweroffOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
+import { Button, Dropdown, Space } from 'antd';
+import { Link } from 'react-router-dom';
 
 const items: MenuProps['items'] = [
   {
-    label: 'Settings',
-    key: 'setting',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        label: 'Profile',
-        key: 'profile',
-        icon: <UserOutlined />,
-      },
-      {
-        type: 'divider',
-      },
-      {
-        label: 'Sign Out',
-        key: 'signout',
-        icon: <PoweroffOutlined />,
-      },
-    ],
+    label: <Link to={'/me'}>Profile</Link>,
+    key: 'profile',
+    icon: <UserOutlined />,
+  },
+  {
+    type: 'divider',
+  },
+  {
+    label: 'Sign Out',
+    key: 'signout',
+    icon: <PoweroffOutlined />,
+    onClick: () => signOutHandler(),
   },
 ];
 
 const OptionMenu: React.FC = () => {
-  const [current, setCurrent] = useState('');
-
-  const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
-    setCurrent(e.key);
-  };
-
   return (
-    <Menu
-      onClick={onClick}
-      mode="horizontal"
-      items={items}
-      selectedKeys={[current]}
-    />
+    <Dropdown menu={{ items }} trigger={['click']}>
+      <Button style={{ marginRight: 24 }}>
+        <Space>
+          <SettingOutlined />
+          Settings
+        </Space>
+      </Button>
+    </Dropdown>
   );
 };
 
 export default OptionMenu;
+
+const signOutHandler = () => {
+  console.log('Function not implemented.');
+};
