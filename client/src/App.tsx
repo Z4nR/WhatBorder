@@ -6,11 +6,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getLogged } from './utils/networks';
 import useAuthState from './utils/state/auth/authState';
 import useUserState from './utils/state/user/userState';
-import LoginPages from './pages/LoginPages';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
 import CompareMapPages from './pages/CompareMapPages';
 import PlaceListPages from './pages/PlaceListPages';
+import VerifPages from './pages/VerifPages';
 
 const queryClient = new QueryClient();
 
@@ -29,7 +29,6 @@ const AuthRoute = () => {
     const d = data;
     if (!d) return;
     userState.setUser({
-      id: d.id,
       name: d.username,
       exp: d.exp,
     });
@@ -69,7 +68,7 @@ const App: React.FC = () => {
               <Route path="/compare-map" element={<CompareMapPages />} />
             </Route>
           </Route>
-          <Route path="/auth" element={<LoginPages />} />
+          <Route path="/auth" element={<VerifPages />} />
         </Routes>
       </QueryClientProvider>
     </>

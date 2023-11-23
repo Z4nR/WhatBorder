@@ -26,6 +26,7 @@ export class UserController {
       return {
         id: req.user.sub,
         username: req.user.user,
+        role: req.user.role,
         exp: req.user.exp,
       };
     } catch (error) {

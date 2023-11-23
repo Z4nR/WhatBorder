@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
@@ -17,6 +17,7 @@ model User {
   username    String    @unique() @db.VarChar(10)
   fullname    String?   @db.VarChar(30)
   password    String
+  admin       Boolean   @default(false)
   description String?   @db.Text()
   createdAt   DateTime  @default(now())
   updateAt    DateTime  @updatedAt
@@ -26,14 +27,14 @@ model User {
 }
 
 model GeoData {
-  uuid         String    @id @default(uuid())
-  createdAt    DateTime  @default(now())
-  updateAt     DateTime  @updatedAt
+  uuid         String   @id @default(uuid())
+  createdAt    DateTime @default(now())
+  updateAt     DateTime @updatedAt
   placeName    String
-  placeAddress String?   @db.MediumText()
-  placeDesc    String?   @db.LongText()
+  placeAddress String?  @db.MediumText()
+  placeDesc    String?  @db.LongText()
   placeGeojson Json
-  user         User      @relation(fields: [userId], references: [uuid])
+  user         User     @relation(fields: [userId], references: [uuid])
   userId       String
 
   @@index([userId])

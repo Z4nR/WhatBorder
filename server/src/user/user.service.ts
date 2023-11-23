@@ -70,6 +70,7 @@ export class UserService {
       select: {
         fullname: true,
         username: true,
+        admin: true,
         description: true,
         createdAt: true,
         updateAt: true,

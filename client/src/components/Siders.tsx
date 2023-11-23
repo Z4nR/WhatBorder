@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BiSolidDashboard, BiSolidMap, BiSolidMapAlt } from 'react-icons/bi';
+import {
+  AppstoreOutlined,
+  BlockOutlined,
+  EnvironmentOutlined,
+} from '@ant-design/icons';
 import { Avatar, Flex, Layout, Menu } from 'antd';
 import logoWeb from '../assets/react.svg';
 
@@ -14,19 +18,19 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
   const menuItems = [
     {
       key: '1',
-      icon: <BiSolidDashboard />,
+      icon: <AppstoreOutlined />,
       label: 'Dashboard',
       link: '/',
     },
     {
       key: '2',
-      icon: <BiSolidMap />,
+      icon: <EnvironmentOutlined />,
       label: 'Place List',
       link: '/place-list',
     },
     {
       key: '3',
-      icon: <BiSolidMapAlt />,
+      icon: <BlockOutlined />,
       label: 'Compare Map',
       link: '/compare-map',
     },

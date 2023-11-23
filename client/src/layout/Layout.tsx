@@ -4,6 +4,7 @@ import { Layout, Button, Typography, theme } from 'antd';
 import Siders from '../components/Siders';
 import { Outlet } from 'react-router-dom';
 import useUserState from '../utils/state/user/userState';
+import OptionMenu from '../components/OptionMenu';
 
 const { Header, Content } = Layout;
 const { Text } = Typography;
@@ -46,6 +47,7 @@ const LayoutPages: React.FC = () => {
           <Text strong style={{ margin: '0 16px' }}>
             Hello Landers, {username()}
           </Text>
+          <OptionMenu />
         </Header>
         <Content
           style={{

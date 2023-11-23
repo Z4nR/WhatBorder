@@ -5,11 +5,10 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 const useUserState = create<UserState>()(
   persist(
     (set) => ({
-      id: '',
       name: '',
       exp: 0,
       setUser: (state: UserData) => set(() => ({ ...state })),
-      clearUser: () => set(() => ({ id: '', name: '', exp: 0 })),
+      clearUser: () => set(() => ({ name: '', exp: 0 })),
     }),
     {
       name: 'user',
