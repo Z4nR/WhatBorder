@@ -19,17 +19,17 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
     {
       key: '1',
       icon: <AppstoreOutlined />,
-      label: <Link to={'/'}>Dashboard</Link>,
+      label: <Link to={'/'}>Beranda</Link>,
     },
     {
       key: '2',
       icon: <EnvironmentOutlined />,
-      label: <Link to={'/place-list'}>Place List</Link>,
+      label: <Link to={'/place-list'}>Daftar Tempat</Link>,
     },
     {
       key: '3',
       icon: <BlockOutlined />,
-      label: <Link to={'/compare-map'}>Compare Map</Link>,
+      label: <Link to={'/compare-map'}>Bandingkan Tempat</Link>,
     },
   ];
 

@@ -50,28 +50,28 @@ const Login: React.FC = () => {
       onFinish={onFinish}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
-        Login
+        Masuk
       </Title>
       <Form.Item
         name="username"
-        rules={[{ required: true, message: 'Please input your Username!' }]}
+        rules={[{ required: true, message: 'Tolong Masukan Nama Pengguna!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          placeholder="Nama Pengguna"
           autoComplete="off"
         />
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Please input your Password!' }]}
+        rules={[{ required: true, message: 'Tolong Masukan Kata Sandi!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
           prefix={<LockOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Password"
+          placeholder="Kata Sandi"
           autoComplete="off"
         />
       </Form.Item>
@@ -83,7 +83,7 @@ const Login: React.FC = () => {
           htmlType="submit"
           className="login-form-button"
         >
-          Sign In
+          Masuk
         </Button>
       </Form.Item>
     </Form>

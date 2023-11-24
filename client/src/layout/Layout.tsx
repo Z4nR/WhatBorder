@@ -45,7 +45,7 @@ const LayoutPages: React.FC = () => {
             }}
           />
           <Text strong style={{ margin: '0 16px' }}>
-            Hello Landers, {username}
+            Hallo {username}
           </Text>
           <OptionMenu />
         </Header>

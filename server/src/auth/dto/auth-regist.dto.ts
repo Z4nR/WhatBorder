@@ -12,4 +12,8 @@ export class AuthRegistDto {
   @IsString()
   @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
   password: string;
+
+  @IsString()
+  @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
+  verify: string;
 }

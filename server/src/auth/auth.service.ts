@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -11,6 +12,7 @@ import { PrismaService } from 'src/db/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegistDto } from './dto/auth-regist.dto';
+import { ChangePasswordDto } from './dto/change-pw.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,7 +23,27 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  async changePassword(dto: ChangePasswordDto) {
+    if (dto.password !== dto.verify)
+      throw new BadRequestException('Verifikasi Password Tidak Sesuai');
+
+    const username = await this.userService.findByUsername(dto.username);
+    if (username) throw new ConflictException('Nama Pengguna sudah digunakan');
+
+    await this.prisma.user.update({
+      where: {
+        username: dto.username,
+      },
+      data: {
+        password: await hash(dto.password, 10),
+      },
+    });
+  }
+
   async register(dto: AuthRegistDto) {
+    if (dto.password !== dto.verify)
+      throw new BadRequestException('Verifikasi Password Tidak Sesuai');
+
     const username = await this.userService.findByUsername(dto.username);
     if (username) throw new ConflictException('Nama Pengguna sudah digunakan');
 

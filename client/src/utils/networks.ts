@@ -6,6 +6,18 @@ const token = () => useAuthState.getState().accessToken;
 
 axios.defaults.baseURL = Server_URL;
 
+const registerAcc = async (data: any) => {
+  return axios
+    .post('/auth/register', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    });
+};
+
 const loginAcc = async (data: any) => {
   return axios
     .post('/auth/login', data, {
@@ -31,4 +43,4 @@ const getLogged = async () => {
     });
 };
 
-export { loginAcc, getLogged };
+export { registerAcc, loginAcc, getLogged };

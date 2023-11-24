@@ -1,3 +1,4 @@
+import { registerAcc } from '../../utils/networks';
 import {
   LockOutlined,
   UserOutlined,
@@ -6,6 +7,7 @@ import {
   EyeTwoTone,
   SafetyOutlined,
 } from '@ant-design/icons';
+import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input, Typography, theme } from 'antd';
 
 const { Title } = Typography;
@@ -15,8 +17,19 @@ const Register: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const { mutate } = useMutation({
+    mutationFn: registerAcc,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error: any) => {
+      console.log(error.response.data.message);
+    },
+  });
+
   const onFinish = (values: any) => {
     console.log(values);
+    mutate(values);
   };
 
   return (
@@ -36,38 +49,38 @@ const Register: React.FC = () => {
       onFinish={onFinish}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
-        Register
+        Buat Akun
       </Title>
       <Form.Item
         name="username"
-        rules={[{ required: true, message: 'Please input your Username!' }]}
+        rules={[{ required: true, message: 'Masukan Nama Pengguna!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
           prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Username"
+          placeholder="Nama Pengguna"
           autoComplete="off"
         />
       </Form.Item>
       <Form.Item
         name="fullname"
-        rules={[{ required: true, message: 'Please input your Fullname!' }]}
+        rules={[{ required: true, message: 'Masukan Nama Lengkap Anda!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
           prefix={<IdcardOutlined className="site-form-item-icon" />}
-          placeholder="Fullname"
+          placeholder="Nama Lengkap"
           autoComplete="off"
         />
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Please input your Password!' }]}
+        rules={[{ required: true, message: 'Masukan Kata Sandi!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder="Password"
+          placeholder="Kata Sandi"
           autoComplete="off"
           iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -75,14 +88,14 @@ const Register: React.FC = () => {
         />
       </Form.Item>
       <Form.Item
-        name="verify-password"
-        rules={[{ required: true, message: 'Please verify your Password!' }]}
+        name="verify"
+        rules={[{ required: true, message: 'Verifikasi Kata Sandi!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
           prefix={<SafetyOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Verify Your Password"
+          placeholder="Verifikasi Kata Sandi"
           autoComplete="off"
         />
       </Form.Item>
@@ -94,7 +107,7 @@ const Register: React.FC = () => {
           htmlType="submit"
           className="regist-form-button"
         >
-          Sign Up
+          Buat Akun
         </Button>
       </Form.Item>
     </Form>
