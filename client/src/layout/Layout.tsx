@@ -11,7 +11,7 @@ const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const username = () => useUserState.getState().name;
+  const username = useUserState().name;
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -45,7 +45,7 @@ const LayoutPages: React.FC = () => {
             }}
           />
           <Text strong style={{ margin: '0 16px' }}>
-            Hello Landers, {username()}
+            Hello Landers, {username}
           </Text>
           <OptionMenu />
         </Header>

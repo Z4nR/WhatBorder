@@ -19,20 +19,17 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
     {
       key: '1',
       icon: <AppstoreOutlined />,
-      label: 'Dashboard',
-      link: '/',
+      label: <Link to={'/'}>Dashboard</Link>,
     },
     {
       key: '2',
       icon: <EnvironmentOutlined />,
-      label: 'Place List',
-      link: '/place-list',
+      label: <Link to={'/place-list'}>Place List</Link>,
     },
     {
       key: '3',
       icon: <BlockOutlined />,
-      label: 'Compare Map',
-      link: '/compare-map',
+      label: <Link to={'/compare-map'}>Compare Map</Link>,
     },
   ];
 
@@ -47,7 +44,7 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
         items={menuItems.map((item) => ({
           key: item.key,
           icon: item.icon,
-          label: <Link to={item.link}>{item.label}</Link>,
+          label: item.label,
         }))}
       />
     </Sider>

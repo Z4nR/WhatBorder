@@ -1,4 +1,11 @@
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  LockOutlined,
+  UserOutlined,
+  IdcardOutlined,
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  SafetyOutlined,
+} from '@ant-design/icons';
 import { Button, Form, Input, Typography, theme } from 'antd';
 
 const { Title } = Typography;
@@ -14,8 +21,8 @@ const Register: React.FC = () => {
 
   return (
     <Form
-      name="normal_login"
-      className="login-form"
+      name="normal_regist"
+      className="regist-form"
       style={{
         maxWidth: '400px',
         width: '100%',
@@ -48,7 +55,7 @@ const Register: React.FC = () => {
         style={{ maxWidth: 400 }}
       >
         <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
+          prefix={<IdcardOutlined className="site-form-item-icon" />}
           placeholder="Fullname"
           autoComplete="off"
         />
@@ -58,10 +65,24 @@ const Register: React.FC = () => {
         rules={[{ required: true, message: 'Please input your Password!' }]}
         style={{ maxWidth: 400 }}
       >
-        <Input
+        <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
-          type="password"
           placeholder="Password"
+          autoComplete="off"
+          iconRender={(visible) =>
+            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          }
+        />
+      </Form.Item>
+      <Form.Item
+        name="verify-password"
+        rules={[{ required: true, message: 'Please verify your Password!' }]}
+        style={{ maxWidth: 400 }}
+      >
+        <Input
+          prefix={<SafetyOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="Verify Your Password"
           autoComplete="off"
         />
       </Form.Item>

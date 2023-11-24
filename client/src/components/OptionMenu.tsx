@@ -2,30 +2,43 @@ import React from 'react';
 import {
   SettingOutlined,
   UserOutlined,
-  PoweroffOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space } from 'antd';
-import { Link } from 'react-router-dom';
-
-const items: MenuProps['items'] = [
-  {
-    label: <Link to={'/me'}>Profile</Link>,
-    key: 'profile',
-    icon: <UserOutlined />,
-  },
-  {
-    type: 'divider',
-  },
-  {
-    label: 'Sign Out',
-    key: 'signout',
-    icon: <PoweroffOutlined />,
-    onClick: () => signOutHandler(),
-  },
-];
+import { Link, useNavigate } from 'react-router-dom';
+import useAuthState from '../utils/state/auth/authState';
+import useUserState from '../utils/state/user/userState';
 
 const OptionMenu: React.FC = () => {
+  const navigate = useNavigate();
+  const authState = useAuthState();
+  const userState = useUserState();
+
+  const handleSignOut = () => {
+    authState.deleteToken();
+    userState.clearUser();
+
+    navigate('/auth', { replace: true });
+  };
+
+  const items: MenuProps['items'] = [
+    {
+      label: <Link to={'/me'}>Profile</Link>,
+      key: 'profile',
+      icon: <UserOutlined />,
+    },
+    {
+      type: 'divider',
+    },
+    {
+      label: 'Sign Out',
+      key: 'signout',
+      icon: <LogoutOutlined />,
+      onClick: () => handleSignOut(),
+    },
+  ];
+
   return (
     <Dropdown menu={{ items }} trigger={['click']}>
       <Button style={{ marginRight: 24 }}>
@@ -39,7 +52,3 @@ const OptionMenu: React.FC = () => {
 };
 
 export default OptionMenu;
-
-const signOutHandler = () => {
-  console.log('Function not implemented.');
-};
