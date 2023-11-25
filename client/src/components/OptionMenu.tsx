@@ -24,7 +24,7 @@ const OptionMenu: React.FC = () => {
 
   const items: MenuProps['items'] = [
     {
-      label: <Link to={'/me'}>Profile</Link>,
+      label: <Link to={'/me'}>Profil</Link>,
       key: 'profile',
       icon: <UserOutlined />,
     },
@@ -32,7 +32,7 @@ const OptionMenu: React.FC = () => {
       type: 'divider',
     },
     {
-      label: 'Sign Out',
+      label: 'Keluar',
       key: 'signout',
       icon: <LogoutOutlined />,
       onClick: () => handleSignOut(),
@@ -44,7 +44,7 @@ const OptionMenu: React.FC = () => {
       <Button style={{ marginRight: 24 }}>
         <Space>
           <SettingOutlined />
-          Settings
+          Setelan
         </Space>
       </Button>
     </Dropdown>

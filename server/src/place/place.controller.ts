@@ -34,7 +34,7 @@ export class PlaceController {
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get('place-list')
+  @Get('search')
   searchPlace(@Query('name') name: string) {
     try {
       return this.placeService.findAll(name);

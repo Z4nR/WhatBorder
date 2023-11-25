@@ -24,20 +24,19 @@ export class AuthService {
   ) {}
 
   async changePassword(dto: ChangePasswordDto) {
-    if (dto.password !== dto.verify)
+    if (dto.newpass !== dto.verify)
       throw new BadRequestException('Verifikasi Password Tidak Sesuai');
-
-    const username = await this.userService.findByUsername(dto.username);
-    if (username) throw new ConflictException('Nama Pengguna sudah digunakan');
 
     await this.prisma.user.update({
       where: {
         username: dto.username,
       },
       data: {
-        password: await hash(dto.password, 10),
+        password: await hash(dto.newpass, 10),
       },
     });
+
+    return { message: 'Kata Sandi Berhasil Dirubah' };
   }
 
   async register(dto: AuthRegistDto) {
@@ -49,7 +48,8 @@ export class AuthService {
 
     await this.prisma.user.create({
       data: {
-        ...dto,
+        username: dto.username,
+        fullname: dto.fullname,
         password: await hash(dto.password, 10),
       },
     });

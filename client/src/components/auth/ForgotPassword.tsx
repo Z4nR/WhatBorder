@@ -1,3 +1,4 @@
+import { forgetPassword } from '../../utils/networks';
 import {
   LockOutlined,
   UserOutlined,
@@ -5,6 +6,7 @@ import {
   EyeTwoTone,
   SafetyOutlined,
 } from '@ant-design/icons';
+import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input, Typography, theme } from 'antd';
 
 const { Title } = Typography;
@@ -14,8 +16,19 @@ const ForgotPassword: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const { mutate } = useMutation({
+    mutationFn: forgetPassword,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (error: any) => {
+      console.log(error.response.data.message);
+    },
+  });
+
   const onFinish = (values: any) => {
     console.log(values);
+    mutate(values);
   };
 
   return (
@@ -49,7 +62,7 @@ const ForgotPassword: React.FC = () => {
         />
       </Form.Item>
       <Form.Item
-        name="password"
+        name="newpass"
         rules={[{ required: true, message: 'Please input your Password!' }]}
         style={{ maxWidth: 400 }}
       >
@@ -63,7 +76,7 @@ const ForgotPassword: React.FC = () => {
         />
       </Form.Item>
       <Form.Item
-        name="verify-password"
+        name="verify"
         rules={[{ required: true, message: 'Please verify your Password!' }]}
         style={{ maxWidth: 400 }}
       >

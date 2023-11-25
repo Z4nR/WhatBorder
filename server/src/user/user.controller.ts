@@ -10,6 +10,7 @@ import {
   HttpStatus,
   InternalServerErrorException,
   Query,
+  Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -34,13 +35,25 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard)
-  @HttpCode(HttpStatus.ACCEPTED)
-  @Get('place-data')
-  findPlace(@Request() req: any) {
+  @HttpCode(HttpStatus.OK)
+  @Get('profile')
+  profile(@Request() req: any) {
     try {
       const id = req.user.sub;
-      return this.userService.findPlaceData(id);
+      return this.userService.myProfile(id);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Get('place-view')
+  getGeoJson(@Request() req: any) {
+    try {
+      const id = req.user.sub;
+      return this.userService.showGeoJson(id);
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Terjadi masalah pada server');
@@ -48,7 +61,7 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get('user-list')
+  @Get('search')
   searchUser(@Query('name') name: string) {
     try {
       return this.userService.findAll(name);
@@ -59,10 +72,9 @@ export class UserController {
   }
 
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get('detail')
-  findOne(@Request() req: any) {
+  @Get(':id/detail')
+  findOne(@Param('id') id: string) {
     try {
-      const id = req.user.sub;
       return this.userService.findOne(id);
     } catch (error) {
       console.log(error);

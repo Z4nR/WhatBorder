@@ -11,6 +11,30 @@ import { compare } from 'bcrypt';
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
+  async myProfile(id: string) {
+    return await this.prisma.user.findUnique({
+      select: {
+        fullname: true,
+        username: true,
+        admin: true,
+        description: true,
+        createdAt: true,
+        updateAt: true,
+        place: {
+          select: {
+            uuid: true,
+            placeName: true,
+            placeAddress: true,
+            createdAt: true,
+          },
+        },
+      },
+      where: {
+        uuid: id,
+      },
+    });
+  }
+
   async findByUsername(username: string) {
     return await this.prisma.user.findUnique({
       where: {
@@ -27,7 +51,7 @@ export class UserService {
     });
   }
 
-  async findPlaceData(uuid: string) {
+  async showGeoJson(uuid: string) {
     return await this.prisma.user.findMany({
       select: {
         place: {
@@ -70,16 +94,12 @@ export class UserService {
       select: {
         fullname: true,
         username: true,
-        admin: true,
         description: true,
-        createdAt: true,
-        updateAt: true,
         place: {
           select: {
             uuid: true,
             placeName: true,
             placeAddress: true,
-            createdAt: true,
           },
         },
       },

@@ -14,7 +14,8 @@ const registerAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      console.log(res.data);
+      const { message } = res.data;
+      return message;
     });
 };
 
@@ -31,6 +32,17 @@ const loginAcc = async (data: any) => {
     });
 };
 
+const forgetPassword = async (data: any) => {
+  return axios
+    .patch('/auth/change-pass', data, {
+      headers: { 'Content-Type': 'application/json' },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const getLogged = async () => {
   return axios
     .get('/user/me', {
@@ -43,4 +55,4 @@ const getLogged = async () => {
     });
 };
 
-export { registerAcc, loginAcc, getLogged };
+export { registerAcc, loginAcc, forgetPassword, getLogged };

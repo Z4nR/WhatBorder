@@ -7,7 +7,7 @@ export class ChangePasswordDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
-  password: string;
+  newpass: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
