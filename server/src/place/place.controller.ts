@@ -33,11 +33,35 @@ export class PlaceController {
     }
   }
 
-  @HttpCode(HttpStatus.ACCEPTED)
-  @Get('search')
-  searchPlace(@Query('name') name: string) {
+  @HttpCode(HttpStatus.OK)
+  @Patch(':id/update')
+  update(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() updatePlaceDto: UpdatePlaceDto,
+  ) {
     try {
-      return this.placeService.findAll(name);
+      const userId = req.user.sub;
+      return this.placeService.update(userId, id, updatePlaceDto);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException('Terjadi masalah pada server');
+    }
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Delete(':id/delete')
+  remove(@Request() req: any, @Param('id') id: string) {
+    const userId = req.user.sub;
+    return this.placeService.remove(userId, id);
+  }
+
+  //All Place List
+  @HttpCode(HttpStatus.ACCEPTED)
+  @Get()
+  findAll() {
+    try {
+      return this.placeService.findAll();
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Terjadi masalah pada server');
@@ -55,22 +79,5 @@ export class PlaceController {
       console.log(error);
       throw new InternalServerErrorException('Terjadi masalah pada server');
     }
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Patch(':id/update')
-  update(@Param('id') id: string, @Body() updatePlaceDto: UpdatePlaceDto) {
-    try {
-      return this.placeService.update(id, updatePlaceDto);
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Terjadi masalah pada server');
-    }
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Delete(':id/delete')
-  remove(@Param('id') id: string) {
-    return this.placeService.remove(id);
   }
 }

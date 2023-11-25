@@ -43,7 +43,31 @@ export class PlaceService {
     return { message: 'Data tempat berhasil berhasil ditambahkan' };
   }
 
-  async findAll(name: string) {
+  async update(userId: string, uuid: string, dto: UpdatePlaceDto) {
+    await this.prisma.geoData.update({
+      where: {
+        uuid,
+        userId,
+      },
+      data: {
+        ...dto,
+      },
+    });
+    return { message: 'Data tempat berhasil diperbarui' };
+  }
+
+  async remove(userId: string, uuid: string) {
+    await this.prisma.geoData.delete({
+      where: {
+        uuid,
+        userId,
+      },
+    });
+    return { message: 'Data tempat berhasil dihapus' };
+  }
+
+  //All Place List
+  async findAll() {
     const placeList = await this.prisma.geoData.findMany({
       select: {
         uuid: true,
@@ -54,11 +78,6 @@ export class PlaceService {
             uuid: true,
             fullname: true,
           },
-        },
-      },
-      where: {
-        placeName: {
-          search: name,
         },
       },
     });
@@ -84,26 +103,5 @@ export class PlaceService {
         uuid,
       },
     });
-  }
-
-  async update(uuid: string, dto: UpdatePlaceDto) {
-    await this.prisma.geoData.update({
-      where: {
-        uuid,
-      },
-      data: {
-        ...dto,
-      },
-    });
-    return { message: 'Data tempat berhasil diperbarui' };
-  }
-
-  async remove(uuid: string) {
-    await this.prisma.geoData.delete({
-      where: {
-        uuid,
-      },
-    });
-    return { message: 'Data tempat berhasil dihapus' };
   }
 }
