@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   AppstoreOutlined,
   BlockOutlined,
-  EnvironmentOutlined,
+  FundViewOutlined,
 } from '@ant-design/icons';
 import { Avatar, Flex, Layout, Menu } from 'antd';
 import logoWeb from '../assets/react.svg';
@@ -19,12 +19,12 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
     {
       key: '1',
       icon: <AppstoreOutlined />,
-      label: <Link to={'/'}>Beranda</Link>,
+      label: <Link to={'/'}>Beranda Anda</Link>,
     },
     {
       key: '2',
-      icon: <EnvironmentOutlined />,
-      label: <Link to={'/place-list'}>Daftar Tempat</Link>,
+      icon: <FundViewOutlined />,
+      label: <Link to={'/place-list'}>Statistik Data</Link>,
     },
     {
       key: '3',

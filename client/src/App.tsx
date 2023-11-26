@@ -9,9 +9,9 @@ import useUserState from './utils/state/user/userState';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
 import CompareMapPages from './pages/CompareMapPages';
-import PlaceListPages from './pages/PlaceListPages';
 import VerifPages from './pages/VerifPages';
 import ProfilePages from './pages/ProfilePages';
+import StatisticPages from './pages/StatisticPages';
 
 const queryClient = new QueryClient();
 
@@ -66,7 +66,7 @@ const App: React.FC = () => {
           <Route path="/" element={<AuthRoute />}>
             <Route element={<LayoutPages />}>
               <Route index element={<DashboardPages />} />
-              <Route path="/place-list" element={<PlaceListPages />} />
+              <Route path="/place-list" element={<StatisticPages />} />
               <Route path="/compare-map" element={<CompareMapPages />} />
               <Route path="/me" element={<ProfilePages />} />
             </Route>
