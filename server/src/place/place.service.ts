@@ -65,43 +65,4 @@ export class PlaceService {
     });
     return { message: 'Data tempat berhasil dihapus' };
   }
-
-  //All Place List
-  async findAll() {
-    const placeList = await this.prisma.geoData.findMany({
-      select: {
-        uuid: true,
-        placeName: true,
-        placeAddress: true,
-        user: {
-          select: {
-            uuid: true,
-            fullname: true,
-          },
-        },
-      },
-    });
-
-    if (placeList.length === 0)
-      throw new NotFoundException('Data tempat tidak ditemukan');
-
-    return placeList;
-  }
-
-  async findOne(uuid: string) {
-    const data = await this.findByIdPlace(uuid);
-    if (!data) throw new NotFoundException('Data tempat tidak ditemukan');
-
-    return await this.prisma.geoData.findUnique({
-      select: {
-        placeName: true,
-        placeAddress: true,
-        placeDesc: true,
-        placeGeojson: true,
-      },
-      where: {
-        uuid,
-      },
-    });
-  }
 }

@@ -6,6 +6,7 @@ import { APP_GUARD, APP_PIPE } from '@nestjs/core';
 import { PlaceModule } from './place/place.module';
 import { AuthGuard } from './auth/auth.guard';
 import { AdminModule } from './admin/admin.module';
+import { StatModule } from './stat/stat.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AdminModule } from './admin/admin.module';
     AuthModule,
     PlaceModule,
     AdminModule,
+    StatModule,
   ],
   controllers: [],
   providers: [

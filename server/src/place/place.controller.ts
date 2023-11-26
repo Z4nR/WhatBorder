@@ -55,29 +55,4 @@ export class PlaceController {
     const userId = req.user.sub;
     return this.placeService.remove(userId, id);
   }
-
-  //All Place List
-  @HttpCode(HttpStatus.ACCEPTED)
-  @Get()
-  findAll() {
-    try {
-      return this.placeService.findAll();
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Terjadi masalah pada server');
-    }
-  }
-
-  @HttpCode(HttpStatus.ACCEPTED)
-  @Get(':id/detail')
-  findOne(@Param('id') id: string) {
-    try {
-      const data = this.placeService.findOne(id);
-      if (!data) throw new NotFoundException('Data tempat tidak ditemukan');
-      return data;
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Terjadi masalah pada server');
-    }
-  }
 }

@@ -47,13 +47,12 @@ export class UserController {
     }
   }
 
-  @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.ACCEPTED)
-  @Get('place-list')
+  @Get('place')
   getGeoJson(@Request() req: any) {
     try {
       const id = req.user.sub;
-      return this.userService.showGeoJson(id);
+      return this.userService.findMyPlace(id);
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Terjadi masalah pada server');
@@ -80,29 +79,6 @@ export class UserController {
       const { password } = data;
 
       return this.userService.remove(id, password);
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Terjadi masalah pada server');
-    }
-  }
-
-  //Search User
-  @HttpCode(HttpStatus.ACCEPTED)
-  @Get('search')
-  searchUser(@Query('name') name: string) {
-    try {
-      return this.userService.findAll(name);
-    } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Terjadi masalah pada server');
-    }
-  }
-
-  @HttpCode(HttpStatus.ACCEPTED)
-  @Get(':id/detail')
-  findOne(@Param('id') id: string) {
-    try {
-      return this.userService.findOne(id);
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Terjadi masalah pada server');

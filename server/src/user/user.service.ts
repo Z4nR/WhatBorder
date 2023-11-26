@@ -51,7 +51,7 @@ export class UserService {
     });
   }
 
-  async showGeoJson(uuid: string) {
+  async findMyPlace(uuid: string) {
     return await this.prisma.user.findMany({
       select: {
         place: {
@@ -106,47 +106,5 @@ export class UserService {
     await this.prisma.$transaction([deleteGeodata, deleteUserdata]);
 
     return { message: 'Seluruh data pengguna berhasil dihapus' };
-  }
-
-  //Search User
-  async findAll(name: string) {
-    const userList = await this.prisma.user.findMany({
-      select: {
-        uuid: true,
-        fullname: true,
-        createdAt: true,
-        _count: true,
-      },
-      where: {
-        fullname: {
-          search: name,
-        },
-      },
-    });
-
-    if (userList.length === 0)
-      throw new NotFoundException('Data pengguna tidak ditemukan');
-
-    return userList;
-  }
-
-  async findOne(id: string) {
-    return await this.prisma.user.findUnique({
-      select: {
-        fullname: true,
-        username: true,
-        description: true,
-        place: {
-          select: {
-            uuid: true,
-            placeName: true,
-            placeAddress: true,
-          },
-        },
-      },
-      where: {
-        uuid: id,
-      },
-    });
   }
 }
