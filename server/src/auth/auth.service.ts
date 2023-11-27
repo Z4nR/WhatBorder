@@ -57,11 +57,11 @@ export class AuthService {
     return { message: 'Akun berhasil dibuat' };
   }
 
-  async login(dto: AuthLoginDto) {
-    const user = await this.userService.findByUsername(dto.username);
+  async login(username: string, password: string) {
+    const user = await this.userService.findByUsername(username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
-    const pw = await compare(dto.password, user.password);
+    const pw = await compare(password, user.password);
     if (!pw)
       throw new UnauthorizedException(
         'Kata sandi yang anda masukan tidak sesuai',

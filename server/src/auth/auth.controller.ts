@@ -34,7 +34,9 @@ export class AuthController {
   @Post('login')
   login(@Body() loginDto: AuthLoginDto) {
     try {
-      return this.authService.login(loginDto);
+      const username = loginDto.username;
+      const password = loginDto.password;
+      return this.authService.login(username, password);
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException('Terjadi Masalah Pada Server');
