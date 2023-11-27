@@ -23,6 +23,13 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  async createToken(payload: any) {
+    return await this.jwtService.signAsync(payload, {
+      secret: this.configService.get('SECRET'),
+      expiresIn: '6h',
+    });
+  }
+
   async changePassword(dto: ChangePasswordDto) {
     if (dto.newpass !== dto.verify)
       throw new BadRequestException('Verifikasi Password Tidak Sesuai');
@@ -54,7 +61,7 @@ export class AuthService {
       },
     });
 
-    return { message: 'Akun berhasil dibuat' };
+    return await this.login(dto.username, dto.password);
   }
 
   async login(username: string, password: string) {
@@ -73,11 +80,10 @@ export class AuthService {
       role: user.admin,
     };
 
+    const createToken = await this.createToken(payload);
+
     return {
-      access_token: await this.jwtService.signAsync(payload, {
-        secret: this.configService.get('SECRET'),
-        expiresIn: '6h',
-      }),
+      access_token: createToken,
     };
   }
 }

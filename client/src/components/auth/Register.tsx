@@ -1,3 +1,4 @@
+import useAuthState from '../../utils/state/auth/authState';
 import { registerAcc } from '../../utils/networks';
 import {
   LockOutlined,
@@ -9,10 +10,12 @@ import {
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import { Button, Form, Input, Typography, theme } from 'antd';
+import { Navigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
 const Register: React.FC = () => {
+  const authState = useAuthState();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -20,7 +23,9 @@ const Register: React.FC = () => {
   const { mutate } = useMutation({
     mutationFn: registerAcc,
     onSuccess: (data) => {
-      console.log(data);
+      authState.setToken({
+        accessToken: data,
+      });
     },
     onError: (error: any) => {
       console.log(error.response.data.message);
@@ -28,9 +33,12 @@ const Register: React.FC = () => {
   });
 
   const onFinish = (values: any) => {
-    console.log(values);
     mutate(values);
   };
+
+  if (authState.accessToken) {
+    return <Navigate to={'/'} replace />;
+  }
 
   return (
     <Form

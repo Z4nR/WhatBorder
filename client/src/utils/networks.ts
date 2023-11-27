@@ -14,8 +14,8 @@ const registerAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      const { message } = res.data;
-      return message;
+      const { access_token } = res.data;
+      return access_token;
     });
 };
 
