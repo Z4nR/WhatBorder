@@ -11,7 +11,7 @@ import { StatModule } from './stat/stat.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env.development',
+      envFilePath: '.env',
       isGlobal: true,
     }),
     UserModule,

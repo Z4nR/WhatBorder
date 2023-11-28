@@ -84,6 +84,7 @@ export class AuthService {
 
     return {
       access_token: createToken,
+      message: `Selamat Datang ${username}`,
     };
   }
 }
