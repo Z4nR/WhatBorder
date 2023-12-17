@@ -55,4 +55,15 @@ const getLogged = async () => {
     });
 };
 
-export { registerAcc, loginAcc, forgetPassword, getLogged };
+const placeList = async () => {};
+
+const userList = async () => {};
+
+export {
+  registerAcc,
+  loginAcc,
+  forgetPassword,
+  getLogged,
+  placeList,
+  userList,
+};
