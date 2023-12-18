@@ -55,7 +55,17 @@ const getLogged = async () => {
     });
 };
 
-const placeList = async () => {};
+const placeList = async () => {
+  return axios
+    .get('stat/place-all', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    });
+};
 
 const userList = async () => {};
 

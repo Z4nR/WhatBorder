@@ -5,6 +5,8 @@ import type { InputRef } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import type { ColumnType, ColumnsType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
+import { useQuery } from '@tanstack/react-query';
+import { placeList } from '../../utils/networks';
 
 interface DataType {
   key: string;
@@ -15,7 +17,7 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
-const data: DataType[] = [
+const dummy: DataType[] = [
   {
     key: '1',
     name: 'John Brown',
@@ -46,6 +48,13 @@ const PlaceList: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
+
+  const { data } = useQuery({
+    queryKey: ['place-all'],
+    queryFn: async () => await placeList(),
+  });
+
+  console.log(data);
 
   const handleSearch = (
     selectedKeys: string[],
@@ -183,7 +192,7 @@ const PlaceList: React.FC = () => {
       sticky
       style={{ backgroundColor: 'transparent' }}
       columns={columns}
-      dataSource={data}
+      dataSource={dummy}
     />
   );
 };

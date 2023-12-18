@@ -14,11 +14,13 @@ import {
 import { StatService } from './stat.service';
 import { CreateStatDto } from './dto/create-stat.dto';
 import { UpdateStatDto } from './dto/update-stat.dto';
+import { Public } from 'src/auth/decorator/public.decorator';
 
 @Controller('stat')
 export class StatController {
   constructor(private readonly statService: StatService) {}
 
+  @Public()
   @HttpCode(HttpStatus.ACCEPTED)
   @Get('place-all')
   findAllPlace() {

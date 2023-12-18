@@ -15,6 +15,7 @@ export class StatService {
         uuid: true,
         placeName: true,
         placeAddress: true,
+        createdAt: true,
         user: {
           select: {
             uuid: true,
