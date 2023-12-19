@@ -67,7 +67,17 @@ const placeList = async () => {
     });
 };
 
-const userList = async () => {};
+const userList = async () => {
+  return axios
+    .get('stat/user-all', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      return res.data;
+    });
+};
 
 export {
   registerAcc,
