@@ -1,12 +1,10 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { UserModule } from './user/user.module';
-import { AuthModule } from './auth/auth.module';
+import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
-import { APP_GUARD, APP_PIPE } from '@nestjs/core';
-import { PlaceModule } from './place/place.module';
-import { AuthGuard } from './auth/auth.guard';
-import { AdminModule } from './admin/admin.module';
-import { StatModule } from './stat/stat.module';
+import { VersionModule } from './application/version.module';
+import { AuthGuard } from './application/auth/auth.guard';
+import { ResponseTransformInterceptor } from './utils/helper/response-transform.interceptor';
+import { camelCasedKey } from './utils/camel-cased';
 
 @Module({
   imports: [
@@ -14,11 +12,7 @@ import { StatModule } from './stat/stat.module';
       envFilePath: '.env',
       isGlobal: true,
     }),
-    UserModule,
-    AuthModule,
-    PlaceModule,
-    AdminModule,
-    StatModule,
+    VersionModule,
   ],
   controllers: [],
   providers: [
@@ -26,10 +20,12 @@ import { StatModule } from './stat/stat.module';
       provide: APP_PIPE,
       useClass: ValidationPipe,
     },
+    { provide: APP_INTERCEPTOR, useClass: ResponseTransformInterceptor },
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
     },
+    camelCasedKey,
   ],
 })
 export class AppModule {}

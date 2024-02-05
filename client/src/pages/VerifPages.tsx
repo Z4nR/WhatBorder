@@ -1,4 +1,3 @@
-import React from 'react';
 import { LoginOutlined, UserAddOutlined, KeyOutlined } from '@ant-design/icons';
 import { Layout, Tabs } from 'antd';
 import Login from '../components/auth/Login';

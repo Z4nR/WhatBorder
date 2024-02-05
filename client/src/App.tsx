@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
-import { Layout, Spin } from 'antd';
+import { useEffect } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getLogged } from './utils/networks';
 import useAuthState from './utils/state/auth/authState';
 import useUserState from './utils/state/user/userState';
+import Loading from './components/Loading';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
 import CompareMapPages from './pages/CompareMapPages';
 import VerifPages from './pages/VerifPages';
 import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
+import PlaceDetail from './pages/PlaceDetail';
 
 const queryClient = new QueryClient();
 
@@ -41,19 +42,7 @@ const AuthRoute = () => {
     userState.clearUser();
   }
 
-  if (isLoading)
-    return (
-      <Layout
-        style={{
-          minHeight: '100vh',
-          justifyContent: 'center',
-        }}
-      >
-        <Spin style={{ margin: '0 auto' }} tip="Loading..." size="large">
-          <div className="content" />
-        </Spin>
-      </Layout>
-    );
+  if (isLoading) return <Loading />;
 
   return data && !error ? <Outlet /> : <Navigate to={'/auth'} />;
 };
@@ -69,6 +58,7 @@ const App: React.FC = () => {
               <Route path="/place-list" element={<StatisticPages />} />
               <Route path="/compare-map" element={<CompareMapPages />} />
               <Route path="/me" element={<ProfilePages />} />
+              <Route path="/:id/detil" element={<PlaceDetail />} />
             </Route>
           </Route>
           <Route path="/auth" element={<VerifPages />} />

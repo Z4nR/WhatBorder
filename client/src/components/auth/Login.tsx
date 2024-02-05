@@ -2,7 +2,7 @@ import { loginAcc } from '../../utils/networks';
 import useAuthState from '../../utils/state/auth/authState';
 import { useMutation } from '@tanstack/react-query';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Typography, theme } from 'antd';
+import { Button, Form, Input, Typography, message, theme } from 'antd';
 import { Navigate } from 'react-router-dom';
 
 const { Title } = Typography;
@@ -22,6 +22,15 @@ const Login: React.FC = () => {
     },
     onError: (error: any) => {
       console.log(error.response.data.message);
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+      });
     },
   });
 

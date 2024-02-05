@@ -13,30 +13,45 @@ datasource db {
 }
 
 model User {
-  uuid        String    @id @default(uuid())
-  username    String    @unique() @db.VarChar(10)
-  fullname    String?   @db.VarChar(30)
+  user_id     String      @id @default(uuid())
+  user_name   String      @unique() @db.VarChar(10)
+  full_name   String?     @db.VarChar(30)
   password    String
-  admin       Boolean   @default(false)
-  description String?   @db.Text()
-  createdAt   DateTime  @default(now())
-  updateAt    DateTime  @updatedAt
-  place       GeoData[]
+  admin       Boolean     @default(false)
+  description String?     @db.Text()
+  created_at  DateTime    @default(now())
+  update_at   DateTime    @updatedAt
+  place       PlaceData[]
 
-  @@fulltext([fullname])
+  @@fulltext([full_name])
 }
 
-model GeoData {
-  uuid         String   @id @default(uuid())
-  createdAt    DateTime @default(now())
-  updateAt     DateTime @updatedAt
-  placeName    String
-  placeAddress String?  @db.MediumText()
-  placeDesc    String?  @db.LongText()
-  placeGeojson Json
-  user         User     @relation(fields: [userId], references: [uuid])
-  userId       String
+model PlaceData {
+  place_id          String   @id @default(uuid())
+  place_name        String
+  place_owner       String?
+  place_address     String   @db.MediumText()
+  place_description String?  @db.LongText()
+  place_type        String
+  place_map         PlaceMap @relation(fields: [map_id], references: [map_id])
+  map_id            String   @unique
+  user              User     @relation(fields: [user_id], references: [user_id])
+  user_id           String
+  created_by        String?
+  created_at        DateTime @default(now())
+  updated_by        String?
+  update_at         DateTime @updatedAt
 
-  @@index([userId])
-  @@fulltext([placeName])
+  @@index([user_id])
+  @@fulltext([place_name])
+}
+
+model PlaceMap {
+  map_id        String     @id @default(uuid())
+  place_geojson Json
+  place_data    PlaceData?
+  created_by    String?
+  created_at    DateTime   @default(now())
+  updated_by    String?
+  update_at     DateTime   @updatedAt
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Layout, Tabs } from 'antd';
 import PlaceList from '../components/statistic/PlaceList';
 import UserList from '../components/statistic/UserList';

@@ -14,8 +14,8 @@ const registerAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      const { access_token } = res.data;
-      return access_token;
+      const { accessToken } = res.data;
+      return accessToken;
     });
 };
 
@@ -27,8 +27,8 @@ const loginAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      const { access_token } = res.data;
-      return access_token;
+      const { accessToken } = res.data;
+      return accessToken;
     });
 };
 
@@ -51,19 +51,34 @@ const getLogged = async () => {
       },
     })
     .then((res) => {
-      return res.data;
+      const { data } = res.data;
+      return data;
     });
 };
 
 const placeList = async () => {
   return axios
-    .get('stat/place-all', {
+    .get('place', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
     })
     .then((res) => {
-      return res.data;
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const placeDetail = async (id: any) => {
+  return axios
+    .get(`place/${id}/detail`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
     });
 };
 
@@ -75,7 +90,8 @@ const userList = async () => {
       },
     })
     .then((res) => {
-      return res.data;
+      const { data } = res.data;
+      return data;
     });
 };
 
@@ -85,5 +101,6 @@ export {
   forgetPassword,
   getLogged,
   placeList,
+  placeDetail,
   userList,
 };
