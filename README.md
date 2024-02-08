@@ -1,4 +1,4 @@
 # WhatBorder
 
 ## Tech Stack
-## Informations
+## Information
