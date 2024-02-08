@@ -9,7 +9,7 @@ import {
   SafetyOutlined,
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Form, Input, Typography, theme } from 'antd';
+import { Button, Form, Input, Typography, message, theme } from 'antd';
 import { Navigate } from 'react-router-dom';
 
 const { Title } = Typography;
@@ -24,7 +24,12 @@ const Register: React.FC = () => {
     mutationFn: registerAcc,
     onSuccess: (data) => {
       authState.setToken({
-        accessToken: data,
+        accessToken: data.accessToken,
+      });
+      message.open({
+        type: 'success',
+        content: data.message,
+        duration: 3,
       });
     },
     onError: (error: any) => {

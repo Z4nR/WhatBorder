@@ -14,8 +14,7 @@ const registerAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      const { accessToken } = res.data;
-      return accessToken;
+      return res.data;
     });
 };
 
@@ -27,8 +26,7 @@ const loginAcc = async (data: any) => {
       },
     })
     .then((res) => {
-      const { accessToken } = res.data;
-      return accessToken;
+      return res.data;
     });
 };
 

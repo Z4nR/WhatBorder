@@ -17,7 +17,12 @@ const Login: React.FC = () => {
     mutationFn: loginAcc,
     onSuccess: (data) => {
       authState.setToken({
-        accessToken: data,
+        accessToken: data.accessToken,
+      });
+      message.open({
+        type: 'success',
+        content: data.message,
+        duration: 3,
       });
     },
     onError: (error: any) => {
