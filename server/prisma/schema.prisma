@@ -3,35 +3,32 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
-  provider     = "mysql"
+  provider     = "cockroachdb"
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model User {
   user_id     String      @id @default(uuid())
-  user_name   String      @unique() @db.VarChar(10)
-  full_name   String?     @db.VarChar(30)
+  user_name   String      @unique() @db.String(10)
+  full_name   String?     @db.String(30)
   password    String
   admin       Boolean     @default(false)
-  description String?     @db.Text()
+  description String?     @db.String()
   created_at  DateTime    @default(now())
   update_at   DateTime    @updatedAt
   place       PlaceData[]
-
-  @@fulltext([full_name])
 }
 
 model PlaceData {
   place_id          String   @id @default(uuid())
   place_name        String
   place_owner       String?
-  place_address     String   @db.MediumText()
-  place_description String?  @db.LongText()
+  place_address     String   @db.String()
+  place_description String?  @db.String()
   place_type        String
   place_map         PlaceMap @relation(fields: [map_id], references: [map_id])
   map_id            String   @unique
@@ -43,7 +40,6 @@ model PlaceData {
   update_at         DateTime @updatedAt
 
   @@index([user_id])
-  @@fulltext([place_name])
 }
 
 model PlaceMap {

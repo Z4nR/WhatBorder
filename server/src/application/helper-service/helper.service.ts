@@ -9,11 +9,14 @@ export class HelperService {
     console.log(username);
 
     try {
-      const data = await this.prisma
-        .$queryRaw`SELECT u.user_id, u.user_name, u.password, u.admin FROM User u WHERE BINARY u.user_name = ${username}`;
+      const data = await this.prisma.user.findFirst({
+        where: {
+          user_name: username,
+        },
+      });
 
       console.log(data);
-      return data[0];
+      return data;
     } catch (error) {
       console.log(error);
       throw error;
@@ -33,7 +36,17 @@ export class HelperService {
     }
   }
 
-  async checkingPlace(geojson: any) {
+  async checkingPlaceName(name: string) {
+    return await this.prisma.placeData.findFirst({
+      where: {
+        place_name: {
+          equals: name,
+        },
+      },
+    });
+  }
+
+  async checkingPlaceMap(geojson: any) {
     return await this.prisma.placeMap.findFirst({
       where: {
         place_geojson: {
