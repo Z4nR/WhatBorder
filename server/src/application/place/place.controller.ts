@@ -26,10 +26,18 @@ export class PlaceController {
     const id = req.user.sub;
     const name = req.user.user;
 
-    const place = await this.helperService.checkingPlace(
-      createPlaceDto.placeGeojson,
+    const place = await this.helperService.checkingPlaceName(
+      createPlaceDto.placeName,
     );
     if (place)
+      throw new ConflictException(
+        'Nama tempat sudah ditambahkan oleh orang lain',
+      );
+
+    const map = await this.helperService.checkingPlaceMap(
+      createPlaceDto.placeGeojson,
+    );
+    if (map)
       throw new ConflictException('Lokasi sudah ditambahkan oleh orang lain');
 
     return await this.placeService.create(id, name, createPlaceDto);
