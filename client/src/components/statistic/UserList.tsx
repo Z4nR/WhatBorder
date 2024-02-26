@@ -1,55 +1,49 @@
+import {
+  Button,
+  GetRef,
+  Input,
+  Space,
+  Table,
+  TableColumnType,
+  Tag,
+} from 'antd';
+import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
-import Highlighter from 'react-highlight-words';
-import type { InputRef } from 'antd';
-import { Button, Input, Space, Table } from 'antd';
-import type { ColumnType, ColumnsType } from 'antd/es/table';
-import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { useQuery } from '@tanstack/react-query';
 import { userList } from '../../utils/networks';
+import { dateFormatter } from '../../utils/helper';
+import { Link } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
 
+type InputRef = GetRef<typeof Input>;
 interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
+  userId: string;
+  userName: string;
+  description: string;
+  admin: boolean;
+  createdAt: Date;
 }
 
 type DataIndex = keyof DataType;
 
-const dummy: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Joe Black',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-];
-
 const UserList: React.FC = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef<InputRef>(null);
-
   const { data } = useQuery({
     queryKey: ['user-all'],
     queryFn: async () => await userList(),
   });
 
-  console.log(data);
+  const [searchText, setSearchText] = useState('');
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
     selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
+    confirm: FilterDropdownProps['confirm'],
     dataIndex: DataIndex
   ) => {
-    confirm();
+    confirm({ closeDropdown: true });
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
@@ -61,7 +55,7 @@ const UserList: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): ColumnType<DataType> => ({
+  ): TableColumnType<DataType> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -92,25 +86,17 @@ const UserList: React.FC = () => {
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            Cari
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              confirm({ closeDropdown: true });
+            }}
             size="small"
             style={{ width: 90 }}
           >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex);
-            }}
-          >
-            Filter
+            Hapus
           </Button>
           <Button
             type="link"
@@ -119,7 +105,7 @@ const UserList: React.FC = () => {
               close();
             }}
           >
-            close
+            Tutup
           </Button>
         </Space>
       </div>
@@ -132,11 +118,6 @@ const UserList: React.FC = () => {
         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
@@ -150,32 +131,68 @@ const UserList: React.FC = () => {
       ),
   });
 
-  const columns: ColumnsType<DataType> = [
+  const columns: TableProps<DataType>['columns'] = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '30%',
-      ...getColumnSearchProps('name'),
+      title: 'Nama Pengguna',
+      dataIndex: 'userName',
+      key: 'user-name',
+      width: '18%',
+      fixed: 'left',
+      ...getColumnSearchProps('userName'),
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      width: '20%',
-      ...getColumnSearchProps('age'),
+      title: 'Deskripsi Pengguna',
+      dataIndex: 'description',
+      key: 'user-desc',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      ...getColumnSearchProps('address'),
-      sorter: (a, b) => a.address.length - b.address.length,
+      title: 'Tipe',
+      dataIndex: 'userType',
+      key: 'user-type',
+      align: 'center',
+      width: '10%',
+      render: (_, tag) => {
+        const color: string = tag.admin === false ? 'volcano' : 'green';
+        const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
+        return <Tag color={color}>{admin.toUpperCase()}</Tag>;
+      },
+    },
+    {
+      title: 'Ditambahkan Pada',
+      dataIndex: 'createdAt',
+      key: 'user-create',
+      align: 'center',
+      width: '15%',
+      sorter: (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
+      defaultSortOrder: 'ascend',
+      render: (_, time) => {
+        const date = dateFormatter(time.createdAt);
+        return <p>{date}</p>;
+      },
+    },
+    {
+      title: 'Tindakan',
+      key: 'user-action',
+      fixed: 'right',
+      align: 'center',
+      width: '15%',
+      render: (_, detail) => (
+        <Link to={`/${detail.userId}/info`}>Lihat Pengguna</Link>
+      ),
     },
   ];
 
-  return <Table columns={columns} dataSource={dummy} />;
+  return (
+    <Table
+      sticky
+      scroll={{ x: 1000 }}
+      style={{ backgroundColor: 'transparent' }}
+      columns={columns}
+      dataSource={data}
+    />
+  );
 };
 
 export default UserList;
