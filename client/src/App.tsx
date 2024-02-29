@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -13,12 +13,14 @@ import VerifPages from './pages/VerifPages';
 import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
 import PlaceDetail from './pages/PlaceDetail';
+import { message } from 'antd';
 
 const queryClient = new QueryClient();
 
 const AuthRoute = () => {
   const authState = useAuthState();
   const userState = useUserState();
+  const [notified, setNotified] = useState(false);
 
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ['user'],
@@ -40,6 +42,19 @@ const AuthRoute = () => {
   if (isError) {
     authState.deleteToken();
     userState.clearUser();
+
+    if (!notified) {
+      message.open({
+        type: 'error',
+        content: 'Sesi Anda Telah Habis, Silahkan Login Kembali',
+        duration: 5,
+        className: 'custom-class',
+        style: {
+          marginTop: '20vh',
+        },
+      });
+      setNotified(true);
+    }
   }
 
   if (isLoading) return <Loading />;
