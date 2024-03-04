@@ -1,18 +1,18 @@
+import PlaceList from '@/components/statistic/PlaceList';
+import UserList from '@/components/statistic/UserList';
 import { Layout, Tabs } from 'antd';
-import PlaceList from '../components/statistic/PlaceList';
-import UserList from '../components/statistic/UserList';
 
 const StatisticPages: React.FC = () => {
   const menuItems = [
     {
       key: '1',
       children: <PlaceList />,
-      label: 'Place List',
+      label: 'Daftar Tempat',
     },
     {
       key: '2',
       children: <UserList />,
-      label: 'User List',
+      label: 'Daftar Pengguna',
     },
   ];
 
@@ -25,7 +25,6 @@ const StatisticPages: React.FC = () => {
     >
       <Tabs
         defaultActiveKey="1"
-        centered
         items={menuItems.map((item) => ({
           key: item.key,
           children: item.children,
