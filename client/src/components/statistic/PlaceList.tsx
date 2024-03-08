@@ -150,12 +150,12 @@ const PlaceList: React.FC = () => {
       dataIndex: 'placeType',
       key: 'place-type',
       width: '10%',
-      render: (_, tag) => {
+      render: (_, { placeType }) => {
         let color: string = '';
-        if (tag.placeType === 'Bangunan') {
+        if (placeType === 'Bangunan') {
           color = 'volcano';
         }
-        return <Tag color={color}>{tag.placeType.toUpperCase()}</Tag>;
+        return <Tag color={color}>{placeType.toUpperCase()}</Tag>;
       },
     },
     {
@@ -175,8 +175,8 @@ const PlaceList: React.FC = () => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
       defaultSortOrder: 'ascend',
-      render: (_, time) => {
-        const date = dateFormatter(time.createdAt);
+      render: (_, { createdAt }) => {
+        const date = dateFormatter(createdAt);
         return <p>{date}</p>;
       },
     },
@@ -186,8 +186,8 @@ const PlaceList: React.FC = () => {
       fixed: 'right',
       align: 'center',
       width: '10%',
-      render: (_, detail) => (
-        <Link to={`/${detail.placeId}/detil`}>Lihat Detil</Link>
+      render: (_, { placeId }) => (
+        <Link to={`/${placeId}/detil`}>Lihat Detil</Link>
       ),
     },
   ];
@@ -199,6 +199,7 @@ const PlaceList: React.FC = () => {
       style={{ backgroundColor: 'transparent' }}
       columns={columns}
       dataSource={data}
+      rowKey={({ placeId }) => placeId}
     />
   );
 };
