@@ -11,3 +11,9 @@ html {
   margin: 0;
   box-sizing: border-box;
 }
+
+.leaflet-container {
+  width: 50%;
+  height: 60vh;
+  z-index: 0;
+}
