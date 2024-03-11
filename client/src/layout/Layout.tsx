@@ -5,6 +5,7 @@ import Siders from '../components/Siders';
 import { Outlet } from 'react-router-dom';
 import useUserState from '../utils/state/user/userState';
 import OptionMenu from '../components/OptionMenu';
+import { getGreeting } from '../utils/helper';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -12,6 +13,7 @@ const { Text } = Typography;
 const LayoutPages: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const username = useUserState().name;
+  const greeting = getGreeting();
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -45,7 +47,7 @@ const LayoutPages: React.FC = () => {
             }}
           />
           <Text strong style={{ margin: '0 16px' }}>
-            Hallo {username}
+            {greeting}, {username}
           </Text>
           <OptionMenu />
         </Header>
