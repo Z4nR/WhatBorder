@@ -85,6 +85,7 @@ export class PlaceService {
           place_address: true,
           place_description: true,
           created_by: true,
+          update_at: true,
           place_map: {
             select: {
               place_geojson: true,
