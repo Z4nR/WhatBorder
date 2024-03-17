@@ -23,6 +23,7 @@ export class UpdateUserDto {
   fullname: string;
 
   @IsString()
+  @MaxLength(200)
   @IsOptional()
   description: string;
 }
