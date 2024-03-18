@@ -82,7 +82,7 @@ const placeDetail = async (id: any) => {
 
 const userList = async () => {
   return axios
-    .get('stat/user-all', {
+    .get('user', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
