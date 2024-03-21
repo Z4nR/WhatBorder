@@ -21,9 +21,12 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Alias */
-    "baseUrl": "./src",
-    "paths": { "@/*": ["./src/*"] }
+    "baseUrl": "./",
+    "paths": { "@/*": ["src/*"], "@src/*": ["src/*"] },
+
+    /*Declaring Import File*/
+    "declaration": true
   },
-  "include": ["src"],
+  "include": ["src/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
