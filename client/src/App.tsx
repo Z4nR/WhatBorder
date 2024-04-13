@@ -11,7 +11,7 @@ import DashboardPages from './pages/DashboardPages';
 import CompareMapPages from './pages/CompareMapPages';
 import VerifPages from './pages/VerifPages';
 import ProfilePages from './pages/ProfilePages';
-import StatisticPages from './pages/statistic/StatisticPages';
+import StatisticPages from './pages/StatisticPages';
 import PlaceDetail from './pages/PlaceDetail';
 import { message } from 'antd';
 
