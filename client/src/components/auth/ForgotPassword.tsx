@@ -1,4 +1,4 @@
-import { forgetPassword } from '../../utils/networks';
+import { forgetPassword } from '@/utils/networks';
 import {
   LockOutlined,
   UserOutlined,
@@ -7,7 +7,16 @@ import {
   SafetyOutlined,
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Form, Input, Typography, theme } from 'antd';
+import {
+  Button,
+  Form,
+  FormInstance,
+  Input,
+  Typography,
+  message,
+  theme,
+} from 'antd';
+import { useRef } from 'react';
 
 const { Title } = Typography;
 
@@ -15,19 +24,34 @@ const ForgotPassword: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const formRef = useRef<FormInstance | null>(null);
 
   const { mutate } = useMutation({
     mutationFn: forgetPassword,
     onSuccess: (data) => {
-      console.log(data);
+      formRef.current?.resetFields();
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
     },
     onError: (error: any) => {
-      console.log(error.response.data.message);
+      {
+        message.open({
+          type: 'error',
+          content: error.response.data.message,
+          duration: 5,
+          className: 'custom-class',
+          style: {
+            marginTop: '20vh',
+          },
+        });
+      }
     },
   });
 
   const onFinish = (values: any) => {
-    console.log(values);
     mutate(values);
   };
 
@@ -45,14 +69,19 @@ const ForgotPassword: React.FC = () => {
         background: colorBgContainer,
       }}
       initialValues={{ remember: true }}
+      ref={(form) => {
+        formRef.current = form;
+      }}
       onFinish={onFinish}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
-        Forgot Your Password
+        Lupa Kata Sandi
       </Title>
       <Form.Item
         name="username"
-        rules={[{ required: true, message: 'Please input your Username!' }]}
+        rules={[
+          { required: true, message: 'Silahkan Masukkan Nama Pengguna!' },
+        ]}
         style={{ maxWidth: 400 }}
       >
         <Input
@@ -63,12 +92,12 @@ const ForgotPassword: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="newpass"
-        rules={[{ required: true, message: 'Please input your Password!' }]}
+        rules={[{ required: true, message: 'Harap Masukkan Kata Sandi Baru!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder="Password"
+          placeholder="Kata Sandi"
           autoComplete="off"
           iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -77,17 +106,28 @@ const ForgotPassword: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="verify"
-        rules={[{ required: true, message: 'Please verify your Password!' }]}
+        rules={[{ required: true, message: 'Verifikasi Kata Sandi Baru Anda' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
           prefix={<SafetyOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Verify Your Password"
+          placeholder="Verifikasi Kata Sandi Anda"
           autoComplete="off"
         />
       </Form.Item>
-
+      <Form.Item
+        name="code"
+        rules={[{ required: true, message: 'Masukkan Kode Keamanan Anda!' }]}
+        style={{ maxWidth: 400 }}
+      >
+        <Input
+          prefix={<SafetyOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="Masukkan Angka Ajaib Anda"
+          autoComplete="off"
+        />
+      </Form.Item>
       <Form.Item style={{ marginBottom: 8 }}>
         <Button
           style={{ width: '100%', marginBottom: 8 }}
@@ -95,7 +135,7 @@ const ForgotPassword: React.FC = () => {
           htmlType="submit"
           className="forget-form-button"
         >
-          Change Password
+          Ubah Kata Sandi
         </Button>
       </Form.Item>
     </Form>
