@@ -1,5 +1,3 @@
-import useAuthState from '../../utils/state/auth/authState';
-import { registerAcc } from '../../utils/networks';
 import {
   LockOutlined,
   UserOutlined,
@@ -9,8 +7,19 @@ import {
   SafetyOutlined,
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
-import { Button, Form, Input, Typography, message, theme } from 'antd';
+import {
+  Button,
+  Form,
+  FormInstance,
+  Input,
+  Typography,
+  message,
+  theme,
+} from 'antd';
 import { Navigate } from 'react-router-dom';
+import { useRef } from 'react';
+import useAuthState from '@/utils/state/auth/authState';
+import { registerAcc } from '@/utils/networks';
 
 const { Title } = Typography;
 
@@ -19,6 +28,7 @@ const Register: React.FC = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  const formRef = useRef<FormInstance | null>(null);
 
   const { mutate } = useMutation({
     mutationFn: registerAcc,
@@ -26,6 +36,7 @@ const Register: React.FC = () => {
       authState.setToken({
         accessToken: data.accessToken,
       });
+      formRef.current?.resetFields();
       message.open({
         type: 'success',
         content: data.message,
@@ -33,7 +44,17 @@ const Register: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      console.log(error.response.data.message);
+      {
+        message.open({
+          type: 'error',
+          content: error.response.data.message,
+          duration: 5,
+          className: 'custom-class',
+          style: {
+            marginTop: '20vh',
+          },
+        });
+      }
     },
   });
 
@@ -59,6 +80,9 @@ const Register: React.FC = () => {
         background: colorBgContainer,
       }}
       initialValues={{ remember: true }}
+      ref={(form) => {
+        formRef.current = form;
+      }}
       onFinish={onFinish}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
@@ -70,6 +94,10 @@ const Register: React.FC = () => {
         style={{ maxWidth: 400 }}
       >
         <Input
+          count={{
+            show: true,
+            max: 10,
+          }}
           prefix={<UserOutlined className="site-form-item-icon" />}
           placeholder="Nama Pengguna"
           autoComplete="off"
@@ -81,6 +109,10 @@ const Register: React.FC = () => {
         style={{ maxWidth: 400 }}
       >
         <Input
+          count={{
+            show: true,
+            max: 30,
+          }}
           prefix={<IdcardOutlined className="site-form-item-icon" />}
           placeholder="Nama Lengkap"
           autoComplete="off"
@@ -112,7 +144,28 @@ const Register: React.FC = () => {
           autoComplete="off"
         />
       </Form.Item>
-
+      <Form.Item
+        name="code"
+        rules={[
+          {
+            required: true,
+            message: 'Masukkan Kode Keamanan Anda!',
+            pattern: /^[0-9]{6}$/,
+          },
+        ]}
+        style={{ maxWidth: 400 }}
+      >
+        <Input
+          count={{
+            show: true,
+            max: 6,
+          }}
+          prefix={<SafetyOutlined className="site-form-item-icon" />}
+          type="password"
+          placeholder="Masukkan Angka Ajaib Anda"
+          autoComplete="off"
+        />
+      </Form.Item>
       <Form.Item style={{ marginBottom: 8 }}>
         <Button
           style={{ width: '100%', marginBottom: 8 }}
