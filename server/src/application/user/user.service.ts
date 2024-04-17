@@ -13,6 +13,7 @@ export class UserService {
         select: {
           user_id: true,
           user_name: true,
+          description: true,
           admin: true,
           created_at: true,
         },

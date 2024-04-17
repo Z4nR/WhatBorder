@@ -26,7 +26,6 @@ const Login: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      console.log(error.response.data.message);
       message.open({
         type: 'error',
         content: error.response.data.message,
