@@ -19,6 +19,8 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async regist(@Body() registDto: AuthRegistDto) {
+    if (registDto.password !== registDto.verify)
+      throw new BadRequestException('Verifikasi Password Tidak Sesuai');
     return await this.authService.register(registDto);
   }
 
