@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -12,15 +12,16 @@ datasource db {
 }
 
 model User {
-  user_id     String      @id @default(uuid())
-  user_name   String      @unique() @db.String(10)
-  full_name   String?     @db.String(30)
-  password    String
-  admin       Boolean     @default(false)
-  description String?     @db.String()
-  created_at  DateTime    @default(now())
-  update_at   DateTime    @updatedAt
-  place       PlaceData[]
+  user_id      String      @id @default(uuid())
+  user_name    String      @unique() @db.String(10)
+  full_name    String?     @db.String(30)
+  password     String
+  special_code String      
+  admin        Boolean     @default(false)
+  description  String?     @db.String()
+  created_at   DateTime    @default(now())
+  update_at    DateTime    @updatedAt
+  place        PlaceData[]
 }
 
 model PlaceData {
