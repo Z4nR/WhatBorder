@@ -1,6 +1,7 @@
 import {
   IsNotEmpty,
   IsString,
+  Length,
   Matches,
   MaxLength,
   MinLength,
@@ -33,6 +34,11 @@ export class AuthRegistDto {
   @IsString()
   @IsNotEmpty({ message: 'Verifikasi kata sandi tidak boleh kosong' })
   verify: string;
+
+  @IsString()
+  @Length(6, 6)
+  @IsNotEmpty({ message: 'Kode spesial tidak boleh kosong' })
+  code: string;
 }
 
 export class AuthLoginDto {
@@ -57,4 +63,9 @@ export class ChangePasswordDto {
   @IsString()
   @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
   verify: string;
+
+  @IsString()
+  @Length(6, 6)
+  @IsNotEmpty({ message: 'Kode spesial tidak boleh kosong' })
+  code: string;
 }
