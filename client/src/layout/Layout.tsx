@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout, Button, Typography, theme } from 'antd';
-import Siders from '../components/Siders';
 import { Outlet } from 'react-router-dom';
-import useUserState from '../utils/state/user/userState';
-import OptionMenu from '../components/OptionMenu';
-import { getGreeting } from '../utils/helper';
+import useUserState from '@/utils/state/user/userState';
+import { getGreeting } from '@/utils/helper';
+import Siders from '@/components/Siders';
+import OptionMenu from '@/components/OptionMenu';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
