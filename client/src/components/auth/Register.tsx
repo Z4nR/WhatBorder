@@ -5,6 +5,7 @@ import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   SafetyOutlined,
+  KeyOutlined,
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -44,17 +45,13 @@ const Register: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      {
-        message.open({
-          type: 'error',
-          content: error.response.data.message,
-          duration: 5,
-          className: 'custom-class',
-          style: {
-            marginTop: '20vh',
-          },
-        });
-      }
+      error.response.data.message.map((msg:any) => {
+          message.open({
+            type: 'error',
+            content: msg,
+            duration: 5,
+          });
+      })
     },
   });
 
@@ -137,33 +134,40 @@ const Register: React.FC = () => {
         rules={[{ required: true, message: 'Verifikasi Kata Sandi!' }]}
         style={{ maxWidth: 400 }}
       >
-        <Input
+        <Input.Password
           prefix={<SafetyOutlined className="site-form-item-icon" />}
-          type="password"
           placeholder="Verifikasi Kata Sandi"
           autoComplete="off"
         />
       </Form.Item>
       <Form.Item
+        label="Kode Ajaib"
         name="code"
+        tooltip="Gunakan Kode Khusus Untuk Merubah Kata Sandi"
+        extra="Ingat Kode Anda Dengan Baik"
         rules={[
           {
             required: true,
-            message: 'Masukkan Kode Keamanan Anda!',
+            message: 'Masukkan Kode Ajaib Anda!',
+          },
+          {
             pattern: /^[0-9]{6}$/,
+            message: 'Masukkan Kode Berupa 6 Angka',
           },
         ]}
         style={{ maxWidth: 400 }}
       >
-        <Input
+        <Input.Password
           count={{
             show: true,
             max: 6,
           }}
-          prefix={<SafetyOutlined className="site-form-item-icon" />}
-          type="password"
-          placeholder="Masukkan Angka Ajaib Anda"
+          prefix={<KeyOutlined className="site-form-item-icon" />}
+          placeholder="Masukkan Kode Ajaib"
           autoComplete="off"
+          iconRender={(visible) =>
+            visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+          }
         />
       </Form.Item>
       <Form.Item style={{ marginBottom: 8 }}>
