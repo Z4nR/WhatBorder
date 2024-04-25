@@ -5,6 +5,7 @@ import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   SafetyOutlined,
+  KeyOutlined,
 } from '@ant-design/icons';
 import { useMutation } from '@tanstack/react-query';
 import {
@@ -37,17 +38,13 @@ const ForgotPassword: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      {
-        message.open({
-          type: 'error',
-          content: error.response.data.message,
-          duration: 5,
-          className: 'custom-class',
-          style: {
-            marginTop: '20vh',
-          },
-        });
-      }
+      error.response.data.message.map((msg:any) => {
+          message.open({
+            type: 'error',
+            content: msg,
+            duration: 5,
+          });
+      })
     },
   });
 
@@ -97,7 +94,7 @@ const ForgotPassword: React.FC = () => {
       >
         <Input.Password
           prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder="Kata Sandi"
+          placeholder="Kata Sandi Baru"
           autoComplete="off"
           iconRender={(visible) =>
             visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
@@ -112,19 +109,21 @@ const ForgotPassword: React.FC = () => {
         <Input
           prefix={<SafetyOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Verifikasi Kata Sandi Anda"
+          placeholder="Verifikasi Kata Sandi Baru"
           autoComplete="off"
         />
       </Form.Item>
       <Form.Item
+        label="Kode Ajaib"
         name="code"
+        tooltip="Gunakan Kode Yang Telah Anda Buat"
         rules={[{ required: true, message: 'Masukkan Kode Keamanan Anda!' }]}
         style={{ maxWidth: 400 }}
       >
         <Input
-          prefix={<SafetyOutlined className="site-form-item-icon" />}
+          prefix={<KeyOutlined className="site-form-item-icon" />}
           type="password"
-          placeholder="Masukkan Angka Ajaib Anda"
+          placeholder="Masukkan Kode Ajaib"
           autoComplete="off"
         />
       </Form.Item>
