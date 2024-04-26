@@ -26,15 +26,13 @@ const Login: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      message.open({
-        type: 'error',
-        content: error.response.data.message,
-        duration: 5,
-        className: 'custom-class',
-        style: {
-          marginTop: '20vh',
-        },
-      });
+      error.response.data.message.map((msg:any) => {
+          message.open({
+            type: 'error',
+            content: msg,
+            duration: 5,
+          });
+      })
     },
   });
 
