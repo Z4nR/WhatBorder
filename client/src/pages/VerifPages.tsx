@@ -1,4 +1,8 @@
-import { LoginOutlined, UserAddOutlined, KeyOutlined } from '@ant-design/icons';
+import {
+  LoginOutlined,
+  UserAddOutlined,
+  UnlockOutlined,
+} from '@ant-design/icons';
 import { Layout, Tabs } from 'antd';
 import Login from '../components/auth/Login';
 import Register from '../components/auth/Register';
@@ -19,7 +23,7 @@ const VerifPages: React.FC = () => {
     {
       key: '3',
       children: <ForgotPassword />,
-      label: <KeyOutlined style={{ margin: '0 auto' }} />,
+      label: <UnlockOutlined style={{ margin: '0 auto' }} />,
     },
   ];
 
