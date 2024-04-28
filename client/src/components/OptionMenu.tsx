@@ -1,3 +1,5 @@
+import useAuthState from '@/utils/state/auth/authState';
+import useUserState from '@/utils/state/user/userState';
 import {
   SettingOutlined,
   UserOutlined,
@@ -6,8 +8,6 @@ import {
 import type { MenuProps } from 'antd';
 import { Button, Dropdown, Space } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuthState from '../utils/state/auth/authState';
-import useUserState from '../utils/state/user/userState';
 
 const OptionMenu: React.FC = () => {
   const navigate = useNavigate();
