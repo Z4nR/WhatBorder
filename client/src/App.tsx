@@ -22,7 +22,7 @@ const AuthRoute = () => {
   const userState = useUserState();
   const [notified, setNotified] = useState(false);
 
-  const { data, error, isError, isLoading } = useQuery({
+  const { data, error, isError, isFetching } = useQuery({
     queryKey: ['user'],
     queryFn: async () => await getLogged(),
     enabled: !!authState.accessToken,
@@ -57,7 +57,7 @@ const AuthRoute = () => {
     }
   }
 
-  if (isLoading) return <Loading />;
+  if (isFetching) return <Loading />;
 
   return data && !error ? <Outlet /> : <Navigate to={'/auth'} />;
 };
