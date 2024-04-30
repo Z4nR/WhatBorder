@@ -26,13 +26,11 @@ const Login: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      error.response.data.message.map((msg:any) => {
-          message.open({
+      message.open({
             type: 'error',
-            content: msg,
+            content: error.response.data.message,
             duration: 5,
           });
-      })
     },
   });
 
