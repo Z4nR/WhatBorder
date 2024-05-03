@@ -22,11 +22,8 @@
 
     /* Alias */
     "baseUrl": "./",
-    "paths": { "@/*": ["src/*"], "@src/*": ["src/*"] },
-
-    /*Declaring Import File*/
-    "declaration": true
+    "paths": { "@/*": ["src/*"] }
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
