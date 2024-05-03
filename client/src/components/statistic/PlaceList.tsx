@@ -10,12 +10,12 @@ import {
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { placeList } from '../../utils/networks';
-import { dateFormatter } from '../../utils/helper';
 import { Link } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
+import { placeList } from '@/utils/networks';
+import { dateFormatter } from '@/utils/helper';
 
 type InputRef = GetRef<typeof Input>;
 interface DataType {
