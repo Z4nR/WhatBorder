@@ -6,10 +6,7 @@ const useUserState = create<UserState>()((set) => ({
   name: '',
   exp: 0,
   setUser: (state: UserData) => set(() => ({ ...state })),
-  clearUser: () => {
-    console.log('cleanUserJalan');
-    set(() => ({ role: false, exp: 0 }));
-  },
+  clearUser: () => set(() => ({ role: false, exp: 0 })),
 }));
 
 export default useUserState;
