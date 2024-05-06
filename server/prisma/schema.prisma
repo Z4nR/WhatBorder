@@ -1,54 +1,48 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider     = "cockroachdb"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   user_id      String      @id @default(uuid())
-  user_name    String      @unique() @db.String(10)
+  user_name    String      @unique @db.String(10)
   full_name    String?     @db.String(30)
   password     String
-  special_code String      
   admin        Boolean     @default(false)
-  description  String?     @db.String()
+  description  String?
   created_at   DateTime    @default(now())
   update_at    DateTime    @updatedAt
+  special_code String
   place        PlaceData[]
 }
 
 model PlaceData {
-  place_id          String   @id @default(uuid())
+  place_id          String    @id @default(uuid())
   place_name        String
   place_owner       String?
-  place_address     String   @db.String()
-  place_description String?  @db.String()
+  place_address     String
+  place_description String?
   place_type        String
-  place_map         PlaceMap @relation(fields: [map_id], references: [map_id])
-  map_id            String   @unique
-  user              User     @relation(fields: [user_id], references: [user_id])
-  user_id           String
+  map_id            String?   @unique
+  user_id           String?
   created_by        String?
-  created_at        DateTime @default(now())
+  created_at        DateTime  @default(now())
   updated_by        String?
-  update_at         DateTime @updatedAt
-
-  @@index([user_id])
+  update_at         DateTime  @updatedAt
+  place_map         PlaceMap? @relation(fields: [map_id], references: [map_id], map: "FK_place_data_place_map")
+  user              User?     @relation(fields: [user_id], references: [user_id], map: "FK_place_data_user")
 }
 
 model PlaceMap {
   map_id        String     @id @default(uuid())
   place_geojson Json
-  place_data    PlaceData?
   created_by    String?
   created_at    DateTime   @default(now())
   updated_by    String?
   update_at     DateTime   @updatedAt
+  place_data    PlaceData?
 }
