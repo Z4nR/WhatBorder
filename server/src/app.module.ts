@@ -2,9 +2,10 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { VersionModule } from './application/version.module';
-import { AuthGuard } from './application/auth/auth.guard';
+import { AuthGuard } from './application/auth/authentic/auth.guard';
 import { ResponseTransformInterceptor } from './utils/helper/response-transform.interceptor';
 import { camelCasedKey } from './utils/camel-cased';
+import { RolesGuard } from './application/auth/authorize/role.guard';
 
 @Module({
   imports: [
@@ -24,6 +25,10 @@ import { camelCasedKey } from './utils/camel-cased';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     camelCasedKey,
   ],

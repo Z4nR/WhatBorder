@@ -10,7 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
 import { AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
-import { HelperService } from '../helper-service/helper.service';
+import { HelperService } from '../../helper-service/helper.service';
 import { randomUUID } from 'crypto';
 
 @Injectable()
