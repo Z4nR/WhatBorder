@@ -7,24 +7,30 @@ import {
   Param,
   Delete,
   ConflictException,
-  Request,
+  Req,
 } from '@nestjs/common';
 import { PlaceService } from './place.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
 import { HelperService } from '../helper-service/helper.service';
+import { Roles } from '../auth/authorize/decorator/role.decorator';
+import { Role } from '../auth/authorize/enum/role.enum';
+import { Request } from 'express';
+import { Place } from './entities/place.entity';
 
 @Controller('place')
 export class PlaceController {
   constructor(
     private readonly placeService: PlaceService,
-    private helperService: HelperService,
+    private readonly helperService: HelperService,
   ) {}
 
+  @Roles(Role.USER)
   @Post()
-  async create(@Request() req: any, @Body() createPlaceDto: CreatePlaceDto) {
-    const id = req.user.sub;
-    const name = req.user.user;
+  async create(@Req() req: Request, @Body() createPlaceDto: CreatePlaceDto) {
+    const user = req['user'];
+    const id = user.sub;
+    const name = user.user;
 
     const place = await this.helperService.checkingPlaceName(
       createPlaceDto.placeName,
@@ -49,8 +55,9 @@ export class PlaceController {
   }
 
   @Get('my-list')
-  async findMyPlace(@Request() req: any) {
-    const userId = req.user.sub;
+  async findMyPlace(@Req() req: Request) {
+    const user = req['user'];
+    const userId = user.sub;
     return this.placeService.findPlace(userId);
   }
 
@@ -59,19 +66,25 @@ export class PlaceController {
     return await this.placeService.findOne(id);
   }
 
+  @Roles(Role.USER)
   @Patch(':id/update')
   update(
     @Param('id') id: string,
-    @Request() req: any,
+    @Req() req: Request,
     @Body() updatePlaceDto: UpdatePlaceDto,
   ) {
-    const userId = req.user.sub;
-    return this.placeService.update(+id, updatePlaceDto);
+    const user = req['user'];
+    const userId = user.sub;
+    const userName = user.user;
+
+    return this.placeService.update(id, userId, userName, updatePlaceDto);
   }
 
+  @Roles(Role.USER)
   @Delete(':id/remove')
-  async remove(@Param('id') id: string, @Request() req: any) {
-    const userId = req.user.sub;
+  async remove(@Param('id') id: string, @Req() req: Request) {
+    const user = req['user'];
+    const userId = user.sub;
 
     return await this.placeService.remove(id, userId);
   }
