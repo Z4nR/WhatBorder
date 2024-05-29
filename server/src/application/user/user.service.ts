@@ -5,7 +5,7 @@ import { compare } from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findAll() {
     try {
@@ -14,8 +14,10 @@ export class UserService {
           user_id: true,
           user_name: true,
           description: true,
-          admin: true,
           created_at: true,
+        },
+        where: {
+          admin: false,
         },
       });
     } catch (error) {
@@ -78,9 +80,7 @@ export class UserService {
         where: {
           user_id: id,
         },
-        data: {
-          ...dto,
-        },
+        data: dto,
       });
       return { message: 'Data pengguna berhasil diperbarui' };
     } catch (error) {
@@ -117,17 +117,13 @@ export class UserService {
           );
         console.log(findPlaceId);
 
-        const flatPlaceId = findPlaceId.flat();
+        const flatPlaceId = findPlaceId[0][0];
 
-        await Promise.all(
-          flatPlaceId.map(async (placeid) => {
-            await tx.placeMap.delete({
-              where: {
-                map_id: placeid,
-              },
-            });
-          }),
-        );
+        await tx.placeMap.delete({
+          where: {
+            map_id: flatPlaceId,
+          },
+        });
 
         await tx.placeData.deleteMany({
           where: {
