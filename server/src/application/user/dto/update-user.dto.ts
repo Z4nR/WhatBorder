@@ -15,11 +15,11 @@ export class UpdateUserDto {
     message:
       'Nama pengguna harus mengandung huruf kapital, huruf kecil, dan angka',
   })
-  @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
+  @IsOptional()
   username: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Nama asli tidak boleh kosong' })
+  @IsOptional()
   fullname: string;
 
   @IsString()
