@@ -1,4 +1,29 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreatePlaceDto } from './create-place.dto';
+import { CreatePlaceDto, GeoJson } from './create-place.dto';
+import { IsObject, IsOptional, IsString } from 'class-validator';
 
-export class UpdatePlaceDto extends PartialType(CreatePlaceDto) {}
+export class UpdatePlaceDto extends PartialType(CreatePlaceDto) {
+  @IsString()
+  @IsOptional()
+  placeName?: string;
+
+  @IsString()
+  @IsOptional()
+  placeAddress?: string;
+
+  @IsString()
+  @IsOptional()
+  placeType?: string;
+
+  @IsString()
+  @IsOptional()
+  placeOwner?: string;
+
+  @IsString()
+  @IsOptional()
+  placeDescription?: string;
+
+  @IsObject()
+  @IsOptional()
+  placeGeojson?: GeoJson;
+}
