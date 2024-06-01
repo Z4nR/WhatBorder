@@ -3,7 +3,7 @@ import { PrismaService } from 'src/db/prisma.service';
 
 @Injectable()
 export class HelperService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async findByUsername(username: string) {
     console.log(username);
