@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsObject, IsString } from 'class-validator';
+import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
 
-interface GeoJson {
+export interface GeoJson {
   [key: string]: any;
 }
 
@@ -8,6 +8,14 @@ export class CreatePlaceDto {
   @IsString()
   @IsNotEmpty({ message: 'Nama tempat tidak boleh kosong' })
   placeName: string;
+
+  @IsString()
+  @IsOptional()
+  placeOwner?: string;
+
+  @IsString()
+  @IsOptional()
+  placeDescription?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Alamat tempat tidak boleh kosong' })
