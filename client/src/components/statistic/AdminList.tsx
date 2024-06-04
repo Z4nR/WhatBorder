@@ -15,7 +15,7 @@ import { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
-import { userList } from '@/utils/networks';
+import { adminUserList } from '@/utils/networks';
 
 type InputRef = GetRef<typeof Input>;
 interface DataType {
@@ -28,10 +28,10 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
-const UserList: React.FC = () => {
+const AdminList: React.FC = () => {
   const { data } = useQuery({
-    queryKey: ['user-all'],
-    queryFn: async () => await userList(),
+    queryKey: ['user-all-admin'],
+    queryFn: async () => await adminUserList(),
   });
 
   const [searchText, setSearchText] = useState('');
@@ -195,4 +195,4 @@ const UserList: React.FC = () => {
   );
 };
 
-export default UserList;
+export default AdminList;
