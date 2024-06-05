@@ -152,8 +152,22 @@ const PlaceList: React.FC = () => {
       width: '10%',
       render: (_, { placeType }) => {
         let color: string = '';
-        if (placeType === 'Bangunan') {
-          color = 'volcano';
+        switch (true) {
+          case placeType === 'Lahan Kosong':
+            color = 'orange';
+            break;
+          case placeType === 'Bangunan':
+            color = 'volcano';
+            break;
+          case placeType === 'Pertanian':
+            color = 'lime';
+            break;
+          case placeType === 'Peternakan':
+            color = 'geekblue';
+            break;
+          default:
+            color = 'gray';
+            break;
         }
         return <Tag color={color}>{placeType.toUpperCase()}</Tag>;
       },

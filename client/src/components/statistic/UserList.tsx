@@ -1,12 +1,4 @@
-import {
-  Button,
-  GetRef,
-  Input,
-  Space,
-  Table,
-  TableColumnType,
-  Tag,
-} from 'antd';
+import { Button, GetRef, Input, Space, Table, TableColumnType } from 'antd';
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
@@ -16,19 +8,22 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
 import { userList } from '@/utils/networks';
+import useUserState from '@/utils/state/user/userState';
+import AdminList from './AdminList';
 
 type InputRef = GetRef<typeof Input>;
 interface DataType {
   userId: string;
   userName: string;
   description: string;
-  admin: boolean;
   createdAt: Date;
 }
 
 type DataIndex = keyof DataType;
 
 const UserList: React.FC = () => {
+  const user = useUserState().role;
+
   const { data } = useQuery({
     queryKey: ['user-all'],
     queryFn: async () => await userList(),
@@ -146,18 +141,6 @@ const UserList: React.FC = () => {
       key: 'user-desc',
     },
     {
-      title: 'Tipe',
-      dataIndex: 'userType',
-      key: 'user-type',
-      align: 'center',
-      width: '10%',
-      render: (_, tag) => {
-        const color: string = tag.admin === false ? 'volcano' : 'green';
-        const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
-        return <Tag color={color}>{admin.toUpperCase()}</Tag>;
-      },
-    },
-    {
       title: 'Ditambahkan Pada',
       dataIndex: 'createdAt',
       key: 'user-create',
@@ -184,7 +167,9 @@ const UserList: React.FC = () => {
     },
   ];
 
-  return (
+  return user ? (
+    <AdminList />
+  ) : (
     <Table
       sticky
       scroll={{ x: 1000 }}
