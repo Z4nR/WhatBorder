@@ -93,6 +93,19 @@ const userList = async () => {
     });
 };
 
+const adminUserList = async () => {
+  return axios
+    .get('admin', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 export {
   registerAcc,
   loginAcc,
@@ -101,4 +114,5 @@ export {
   placeList,
   placeDetail,
   userList,
+  adminUserList,
 };
