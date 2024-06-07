@@ -45,13 +45,13 @@ const Register: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      error.response.data.message.map((msg:any) => {
-          message.open({
-            type: 'error',
-            content: msg,
-            duration: 5,
-          });
-      })
+      error.response.data.message.map((msg: any) => {
+        message.open({
+          type: 'error',
+          content: msg,
+          duration: 5,
+        });
+      });
     },
   });
 
@@ -86,21 +86,6 @@ const Register: React.FC = () => {
         Buat Akun
       </Title>
       <Form.Item
-        name="username"
-        rules={[{ required: true, message: 'Masukan Nama Pengguna!' }]}
-        style={{ maxWidth: 400 }}
-      >
-        <Input
-          count={{
-            show: true,
-            max: 10,
-          }}
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Nama Pengguna"
-          autoComplete="off"
-        />
-      </Form.Item>
-      <Form.Item
         name="fullname"
         rules={[{ required: true, message: 'Masukan Nama Lengkap Anda!' }]}
         style={{ maxWidth: 400 }}
@@ -112,6 +97,21 @@ const Register: React.FC = () => {
           }}
           prefix={<IdcardOutlined className="site-form-item-icon" />}
           placeholder="Nama Lengkap"
+          autoComplete="off"
+        />
+      </Form.Item>
+      <Form.Item
+        name="username"
+        rules={[{ required: true, message: 'Masukan Nama Pengguna!' }]}
+        style={{ maxWidth: 400 }}
+      >
+        <Input
+          count={{
+            show: true,
+            max: 8,
+          }}
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="Nama Pengguna"
           autoComplete="off"
         />
       </Form.Item>
