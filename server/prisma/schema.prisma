@@ -21,20 +21,21 @@ model User {
 }
 
 model PlaceData {
-  place_id          String    @id @default(uuid())
-  place_name        String
-  place_owner       String?
-  place_address     String
-  place_description String?
-  place_type        String
-  map_id            String?   @unique
-  user_id           String?
-  created_by        String?
-  created_at        DateTime  @default(now())
-  updated_by        String?
-  update_at         DateTime  @updatedAt
-  place_map         PlaceMap? @relation(fields: [map_id], references: [map_id], map: "FK_place_data_place_map")
-  user              User?     @relation(fields: [user_id], references: [user_id], map: "FK_place_data_user")
+  place_id           String    @id @default(uuid())
+  place_name         String
+  place_owner        String?
+  place_address      String
+  place_description  String?
+  place_type         String
+  place_center_point Float[]
+  map_id             String?   @unique
+  user_id            String?
+  created_by         String?
+  created_at         DateTime  @default(now())
+  updated_by         String?
+  update_at          DateTime  @updatedAt
+  place_map          PlaceMap? @relation(fields: [map_id], references: [map_id], map: "FK_place_data_place_map")
+  user               User?     @relation(fields: [user_id], references: [user_id], map: "FK_place_data_user")
 }
 
 model PlaceMap {
