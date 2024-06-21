@@ -15,8 +15,6 @@ const PlaceDetail: React.FC = () => {
   const { data, isPending, isLoading } = useQuery({
     queryKey: ['place', id],
     queryFn: async () => await placeDetail(id),
-    gcTime: Infinity,
-    refetchOnWindowFocus: false,
   });
 
   const placeMap = useMemo(() => {
@@ -26,9 +24,7 @@ const PlaceDetail: React.FC = () => {
 
   let position = null;
   if (data) {
-    const coordinates =
-      data?.placeMap.place_geojson.features[0].properties.coordinates;
-    console.log('Coordinates:', coordinates);
+    const coordinates = data?.placeCenterPoint;
     if (coordinates && coordinates.length === 2) {
       position = coordinates;
     }
