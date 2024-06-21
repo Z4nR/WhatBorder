@@ -94,7 +94,6 @@ export class AuthService {
       const payload = {
         sub: user.user_id,
         user: user.user_name,
-        role: user.admin,
         id: randomUUID(),
       };
 
