@@ -30,6 +30,7 @@ export class PlaceService {
             place_type: createPlaceDto.placeType,
             place_owner: createPlaceDto.placeOwner ?? null,
             place_description: createPlaceDto.placeDescription ?? null,
+            place_center_point: createPlaceDto.placePoints,
             map_id: placeMap.map_id,
             created_by: name,
             user_id: id,
@@ -89,6 +90,7 @@ export class PlaceService {
           place_owner: true,
           place_address: true,
           place_description: true,
+          place_center_point: true,
           created_by: true,
           update_at: true,
           place_map: {
