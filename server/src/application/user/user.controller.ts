@@ -28,13 +28,13 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Get('me')
-  user(@Req() req: Request) {
+  async user(@Req() req: Request) {
     const user = req['user'];
 
     try {
+      const data = await this.userService.me(user.sub);
       return {
-        username: user.user,
-        role: user.role,
+        ...data,
         exp: user.exp,
       };
     } catch (error) {
@@ -67,7 +67,7 @@ export class UserController {
     return this.userService.myProfile(id);
   }
 
-  @Roles(Role.USER)
+  @Roles(Role.USER, Role.ADMIN)
   @Patch('update')
   async update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
     const user = req['user'];
@@ -79,7 +79,7 @@ export class UserController {
     return await this.userService.update(id, updateUserDto);
   }
 
-  @Roles(Role.USER)
+  @Roles(Role.USER, Role.ADMIN)
   @Delete('delete')
   async remove(@Req() req: Request, @Body() data: any) {
     const user = req['user'];
