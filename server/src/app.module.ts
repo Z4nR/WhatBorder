@@ -6,6 +6,8 @@ import { AuthGuard } from './application/auth/authentic/auth.guard';
 import { ResponseTransformInterceptor } from './utils/helper/response-transform.interceptor';
 import { camelCasedKey } from './utils/camel-cased';
 import { RolesGuard } from './application/auth/authorize/role.guard';
+import { HelperService } from './application/helper-service/helper.service';
+import { PrismaService } from './db/prisma.service';
 
 @Module({
   imports: [
@@ -31,6 +33,8 @@ import { RolesGuard } from './application/auth/authorize/role.guard';
       useClass: RolesGuard,
     },
     camelCasedKey,
+    HelperService,
+    PrismaService,
   ],
 })
 export class AppModule {}
