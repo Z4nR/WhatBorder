@@ -10,10 +10,14 @@ import {
 import { AuthService } from './auth.service';
 import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
 import { Public } from './decorator/public.decorator';
+import { HelperService } from 'src/application/helper-service/helper.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly helperService: HelperService,
+  ) {}
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
@@ -30,7 +34,10 @@ export class AuthController {
   async login(@Body() loginDto: AuthLoginDto) {
     const username = loginDto.username;
     const password = loginDto.password;
-    return await this.authService.login(username, password);
+
+    const parsePassword = this.helperService.decryptPassword(password);
+
+    return await this.authService.login(username, parsePassword);
   }
 
   @Public()
