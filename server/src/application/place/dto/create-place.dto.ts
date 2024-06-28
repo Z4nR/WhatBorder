@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsObject, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayNotEmpty,
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export interface GeoJson {
   [key: string]: any;
@@ -24,6 +32,11 @@ export class CreatePlaceDto {
   @IsString()
   @IsNotEmpty({ message: 'Jenis tempat tidak boleh kosong' })
   placeType: string;
+
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsNumber({}, { each: true }) // Ensures each element in the array is a number
+  placePoints: number[];
 
   @IsObject({ message: 'Pastikan data yang dikirim berupa Javascript Object' })
   @IsNotEmpty({ message: 'Koordinat tempat tidak boleh kosong' })
