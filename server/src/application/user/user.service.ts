@@ -7,6 +7,25 @@ import { compare } from 'bcrypt';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async me(id: string) {
+    try {
+      const data = await this.prisma.user.findFirst({
+        select: {
+          user_name: true,
+          admin: true,
+        },
+        where: {
+          user_id: id,
+        },
+      });
+
+      return { username: data.user_name, role: data.admin };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async findAll() {
     try {
       return await this.prisma.user.findMany({
