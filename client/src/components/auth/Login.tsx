@@ -4,8 +4,14 @@ import { useMutation } from '@tanstack/react-query';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Typography, message, theme } from 'antd';
 import { Navigate } from 'react-router-dom';
+import CryptoJS from 'crypto-js';
 
 const { Title } = Typography;
+
+interface LoginData {
+  username: string;
+  password: string;
+}
 
 const Login: React.FC = () => {
   const authState = useAuthState();
@@ -27,15 +33,23 @@ const Login: React.FC = () => {
     },
     onError: (error: any) => {
       message.open({
-            type: 'error',
-            content: error.response.data.message,
-            duration: 5,
-          });
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
     },
   });
 
-  const onFinish = (values: any) => {
-    mutate(values);
+  const onFinish = (values: LoginData) => {
+    const pw = CryptoJS.AES.encrypt(
+      values.password,
+      import.meta.env.VITE_SECRET
+    ).toString();
+
+    mutate({
+      username: values.username,
+      password: import.meta.env.VITE_USER + pw,
+    });
   };
 
   if (authState.accessToken) {
