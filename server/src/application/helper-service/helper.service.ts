@@ -15,7 +15,7 @@ export class HelperService {
     const fullString = password.indexOf(specialValue);
 
     if (fullString === -1) {
-      throw new BadRequestException(`Special value not found in '${password}'`);
+      throw new BadRequestException(`Your password is hijacked`);
     }
 
     const word = password.slice(fullString + specialValue.length);

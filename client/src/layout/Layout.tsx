@@ -12,10 +12,7 @@ const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-  const username = useUserState(state => state.name);
-
-  console.log(username);
-  
+  const username = useUserState((state) => state.name);
 
   const greeting = getGreeting();
   const {
