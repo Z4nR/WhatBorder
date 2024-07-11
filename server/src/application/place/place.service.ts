@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
@@ -8,7 +8,7 @@ import { Place } from './entities/place.entity';
 export class PlaceService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(id: string, name: string, createPlaceDto: CreatePlaceDto) {
+  async create(user_id: string, name: string, createPlaceDto: CreatePlaceDto) {
     try {
       await this.prisma.$transaction(async (tx) => {
         const placeMap = await tx.placeMap.create({
@@ -21,19 +21,26 @@ export class PlaceService {
           },
         });
 
-        console.log(placeMap);
+        const buildingType = await tx.buildingType.findFirst({
+          select: {
+            building_id: true,
+          },
+          where: {
+            name: createPlaceDto.placeType,
+          },
+        });
 
         await tx.placeData.create({
           data: {
             place_name: createPlaceDto.placeName,
             place_address: createPlaceDto.placeAddress,
-            place_type: createPlaceDto.placeType,
             place_owner: createPlaceDto.placeOwner ?? null,
             place_description: createPlaceDto.placeDescription ?? null,
             place_center_point: createPlaceDto.placePoints,
+            type_id: buildingType.building_id,
             map_id: placeMap.map_id,
             created_by: name,
-            user_id: id,
+            user_id,
           },
         });
       });
@@ -52,7 +59,12 @@ export class PlaceService {
           place_id: true,
           place_name: true,
           place_address: true,
-          place_type: true,
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
           created_by: true,
           created_at: true,
         },
@@ -63,7 +75,7 @@ export class PlaceService {
     }
   }
 
-  async findPlace(userId: string) {
+  async findPlace(user_id: string) {
     try {
       return await this.prisma.placeData.findMany({
         select: {
@@ -73,7 +85,7 @@ export class PlaceService {
           created_at: true,
         },
         where: {
-          user_id: userId,
+          user_id,
         },
       });
     } catch (error) {
@@ -82,7 +94,7 @@ export class PlaceService {
     }
   }
 
-  async findOne(id: string) {
+  async findOne(place_id: string) {
     try {
       return await this.prisma.placeData.findUnique({
         select: {
@@ -93,6 +105,13 @@ export class PlaceService {
           place_center_point: true,
           created_by: true,
           update_at: true,
+          type: {
+            select: {
+              color: true,
+              label: true,
+              name: true,
+            },
+          },
           place_map: {
             select: {
               place_geojson: true,
@@ -105,7 +124,7 @@ export class PlaceService {
           },
         },
         where: {
-          place_id: id,
+          place_id,
         },
       });
     } catch (error) {
@@ -114,9 +133,70 @@ export class PlaceService {
     }
   }
 
+  async statistic(user_id: string) {
+    try {
+      const totalPlaceCount = await this.prisma.placeData.count();
+      const buildingCount = await this.prisma.buildingType.findMany({
+        select: {
+          name: true,
+          _count: {
+            select: {
+              PlaceData: {
+                where: {
+                  user_id,
+                },
+              },
+            },
+          },
+        },
+      });
+      const newestPlace = await this.prisma.placeData.findMany({
+        take: 5,
+        orderBy: {
+          created_at: 'desc',
+        },
+        select: {
+          place_name: true,
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
+          place_id: true,
+          created_at: true,
+        },
+        where: {
+          user_id,
+        },
+      });
+
+      const building = buildingCount.map((item) => ({
+        buildingName: item.name,
+        placeCount: item._count.PlaceData,
+      }));
+
+      const newest = newestPlace.map((item) => ({
+        placeId: item.place_id,
+        placeName: item.place_name,
+        placeType: item.type,
+        createdAt: item.created_at,
+      }));
+
+      return {
+        total_place: totalPlaceCount,
+        detail: building,
+        new_place: newest,
+      };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async update(
-    id: string,
-    userId: string,
+    place_id: string,
+    user_id: string,
     userName: string,
     updatePlaceDto: UpdatePlaceDto,
   ) {
@@ -136,8 +216,8 @@ export class PlaceService {
             map_id: true,
           },
           where: {
-            place_id: id,
-            user_id: userId,
+            place_id,
+            user_id,
           },
         });
 
@@ -150,8 +230,8 @@ export class PlaceService {
         await tx.placeData.update({
           data: updatePlaceData,
           where: {
-            place_id: id,
-            user_id: userId,
+            place_id,
+            user_id,
           },
         });
 
@@ -174,7 +254,7 @@ export class PlaceService {
     }
   }
 
-  async remove(id: string, userId: string) {
+  async remove(place_id: string, user_id: string) {
     try {
       await this.prisma.$transaction(async (tx) => {
         const mapId = await tx.placeData.findUnique({
@@ -182,8 +262,8 @@ export class PlaceService {
             map_id: true,
           },
           where: {
-            place_id: id,
-            user_id: userId,
+            place_id,
+            user_id,
           },
         });
 
@@ -195,8 +275,8 @@ export class PlaceService {
 
         await tx.placeData.delete({
           where: {
-            place_id: id,
-            user_id: userId,
+            place_id,
+            user_id,
           },
         });
       });
