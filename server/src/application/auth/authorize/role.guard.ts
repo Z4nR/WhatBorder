@@ -11,7 +11,7 @@ export class RolesGuard implements CanActivate {
     private readonly helperService: HelperService,
   ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -20,10 +20,10 @@ export class RolesGuard implements CanActivate {
       return true;
     }
     const request = context.switchToHttp().getRequest();
-    const role = this.helperService.findByUsername(request['user'].user);
+    const role = await this.helperService.findByIdUser(request['user'].sub);
 
     const admin: string[] = [];
-    role ? admin.push('ADMIN') : admin.push('USER');
+    role.admin ? admin.push('ADMIN') : admin.push('USER');
 
     return requiredRoles.some((role) => admin.includes(role));
   }
