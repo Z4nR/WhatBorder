@@ -11,7 +11,7 @@ import { Button, Dropdown, Space } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 
 const OptionMenu: React.FC = () => {
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const navigate = useNavigate();
   const authState = useAuthState();
@@ -20,7 +20,7 @@ const OptionMenu: React.FC = () => {
   const handleSignOut = () => {
     authState.deleteToken();
     userState.clearUser();
-    queryClient.removeQueries({queryKey: ['user']})
+    queryClient.removeQueries({ queryKey: ['user'] });
 
     navigate('/auth', { replace: true });
   };

@@ -30,13 +30,13 @@ const AuthRoute = () => {
   });
 
   useEffect(() => {
-    const d = data;
-    if (!d) return;
+    if (!data) return;
     userState.setUser({
-      role: d.role,
-      name: d.username,
-      exp: d.exp,
+      role: data.role,
+      name: data.username,
+      exp: data.exp,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   if (isError) {

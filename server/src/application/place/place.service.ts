@@ -139,6 +139,7 @@ export class PlaceService {
       const buildingCount = await this.prisma.buildingType.findMany({
         select: {
           name: true,
+          color: true,
           _count: {
             select: {
               PlaceData: {
@@ -173,6 +174,7 @@ export class PlaceService {
 
       const building = buildingCount.map((item) => ({
         buildingName: item.name,
+        color: item.color,
         placeCount: item._count.PlaceData,
       }));
 
