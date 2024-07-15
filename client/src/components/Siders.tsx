@@ -9,11 +9,7 @@ import logoWeb from '../assets/react.svg';
 
 const { Sider } = Layout;
 
-interface SidersProps {
-  collapse: boolean;
-}
-
-const Siders: React.FC<SidersProps> = ({ collapse }) => {
+const Siders: React.FC = () => {
   const menuItems = [
     {
       key: '1',
@@ -33,7 +29,7 @@ const Siders: React.FC<SidersProps> = ({ collapse }) => {
   ];
 
   return (
-    <Sider trigger={null} collapsible collapsed={collapse}>
+    <Sider breakpoint="lg" collapsedWidth="0">
       <Flex justify="center" style={{ padding: 10 }}>
         <Avatar src={logoWeb} size={30} />
       </Flex>
