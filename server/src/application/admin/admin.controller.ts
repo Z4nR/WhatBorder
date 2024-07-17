@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Req,
@@ -11,12 +10,12 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
+import { AddBuildingDto } from './dto/create-admin.dto';
 import { HelperService } from '../helper-service/helper.service';
 import { Roles } from '../auth/authorize/decorator/role.decorator';
 import { Role } from '../auth/authorize/enum/role.enum';
 import { PlaceService } from '../place/place.service';
+import { Request } from 'express';
 
 @Roles(Role.ADMIN)
 @Controller('admin')
@@ -27,24 +26,16 @@ export class AdminController {
     private readonly placeService: PlaceService,
   ) {}
 
-  @Post()
-  create(@Body() createAdminDto: CreateAdminDto) {
-    return this.adminService.create(createAdminDto);
+  @Post('building')
+  create(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
+    const user = req['user'].user;
+
+    return this.adminService.addBuilding(buildingDto, user);
   }
 
   @Get()
   findAll() {
     return this.adminService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.adminService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminService.update(+id, updateAdminDto);
   }
 
   @Delete(':id/remove/place')
