@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { AuthData, AuthState } from './auth.types';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 const useAuthState = create<AuthState>()(
   persist(
@@ -11,6 +11,7 @@ const useAuthState = create<AuthState>()(
     }),
     {
       name: 'authToken',
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
