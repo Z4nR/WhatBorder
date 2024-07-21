@@ -9,7 +9,7 @@ import { PrismaService } from 'src/db/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { compare, hash } from 'bcrypt';
-import { AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
+import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
 import { HelperService } from '../../helper-service/helper.service';
 import { randomUUID } from 'crypto';
 
@@ -73,18 +73,18 @@ export class AuthService {
         },
       });
 
-      return await this.login(dto.username, dto.password);
+      return await this.login(dto);
     } catch (error) {
       console.log(error);
       throw error;
     }
   }
 
-  async login(username: string, password: string) {
-    const user = await this.helperService.findByUsername(username);
+  async login(dto: AuthLoginDto) {
+    const user = await this.helperService.findByUsername(dto.username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
-    const pw = await compare(password, user.password);
+    const pw = await compare(dto.password, user.password);
     if (!pw)
       throw new UnauthorizedException(
         'Kata sandi yang anda masukan tidak sesuai',
@@ -101,12 +101,15 @@ export class AuthService {
 
       const data = {
         accessToken: createToken,
-        message: `Selamat Datang ${username}`,
+        message: `Selamat Datang ${dto.username}`,
       };
 
       return data;
     } catch (error) {
       console.log(error);
+      throw new BadRequestException(
+        'Maaf terjadi kesalahan ketika berusaha masuk',
+      );
     }
   }
 }
