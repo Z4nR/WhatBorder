@@ -16,7 +16,6 @@ import { HelperService } from '../helper-service/helper.service';
 import { Roles } from '../auth/authorize/decorator/role.decorator';
 import { Role } from '../auth/authorize/enum/role.enum';
 import { Request } from 'express';
-import { Place } from './entities/place.entity';
 
 @Controller('place')
 export class PlaceController {
@@ -29,7 +28,7 @@ export class PlaceController {
   @Post()
   async create(@Req() req: Request, @Body() createPlaceDto: CreatePlaceDto) {
     const user = req['user'];
-    const id = user.sub;
+    const userId = user.sub;
     const name = user.user;
 
     const place = await this.helperService.checkingPlaceName(
@@ -46,7 +45,7 @@ export class PlaceController {
     if (map)
       throw new ConflictException('Lokasi sudah ditambahkan oleh orang lain');
 
-    return await this.placeService.create(id, name, createPlaceDto);
+    return await this.placeService.create(userId, name, createPlaceDto);
   }
 
   @Get()
@@ -54,11 +53,19 @@ export class PlaceController {
     return await this.placeService.findAll();
   }
 
+  @Roles(Role.USER)
+  @Get('statistic')
+  async showStatistic(@Req() req: Request) {
+    const user = req['user'];
+    const userId = user.sub;
+    return await this.placeService.statistic(userId);
+  }
+
   @Get('my-list')
   async findMyPlace(@Req() req: Request) {
     const user = req['user'];
     const userId = user.sub;
-    return this.placeService.findPlace(userId);
+    return await this.placeService.findPlace(userId);
   }
 
   @Get(':id/detail')
@@ -68,7 +75,7 @@ export class PlaceController {
 
   @Roles(Role.USER)
   @Patch(':id/update')
-  update(
+  async update(
     @Param('id') id: string,
     @Req() req: Request,
     @Body() updatePlaceDto: UpdatePlaceDto,
@@ -77,7 +84,7 @@ export class PlaceController {
     const userId = user.sub;
     const userName = user.user;
 
-    return this.placeService.update(id, userId, userName, updatePlaceDto);
+    return await this.placeService.update(id, userId, userName, updatePlaceDto);
   }
 
   @Roles(Role.USER)
