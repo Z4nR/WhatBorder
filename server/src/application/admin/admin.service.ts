@@ -1,15 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAdminDto } from './dto/create-admin.dto';
-import { UpdateAdminDto } from './dto/update-admin.dto';
+import { AddBuildingDto } from './dto/create-admin.dto';
 import { PrismaService } from 'src/db/prisma.service';
 
 @Injectable()
 export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
-
-  create(createAdminDto: CreateAdminDto) {
-    return 'This action adds a new admin';
-  }
 
   async findAll() {
     try {
@@ -26,14 +21,6 @@ export class AdminService {
       console.log(error);
       throw error;
     }
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} admin`;
-  }
-
-  update(id: number, updateAdminDto: UpdateAdminDto) {
-    return `This action updates a #${id} admin`;
   }
 
   async removePlace(id: string) {
@@ -117,6 +104,21 @@ export class AdminService {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  async addBuilding(building: AddBuildingDto, user: string) {
+    try {
+      await this.prisma.buildingType.create({
+        data: {
+          ...building,
+          created_by: user,
+        },
+      });
+
+      return { message: 'Data Jenis Bangunan Berhasil Ditambahkan' };
+    } catch (error) {
+      console.log(error);
     }
   }
 }
