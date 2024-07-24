@@ -23,21 +23,38 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('register')
   async regist(@Body() registDto: AuthRegistDto) {
-    if (registDto.password !== registDto.verify)
+    const password = registDto.password;
+    const parsePassword = this.helperService.decryptPassword(password);
+
+    console.log(parsePassword);
+
+    if (parsePassword !== registDto.verify)
       throw new BadRequestException('Verifikasi Password Tidak Sesuai');
-    return await this.authService.register(registDto);
+
+    const registData: AuthRegistDto = {
+      username: registDto.username,
+      fullname: registDto.fullname,
+      password: parsePassword,
+      verify: registDto.verify,
+      code: registDto.code,
+    };
+
+    return await this.authService.register(registData);
   }
 
   @Public()
   @HttpCode(HttpStatus.ACCEPTED)
   @Post('login')
   async login(@Body() loginDto: AuthLoginDto) {
-    const username = loginDto.username;
     const password = loginDto.password;
-
     const parsePassword = this.helperService.decryptPassword(password);
 
-    return await this.authService.login(username, parsePassword);
+    const loginData: AuthLoginDto = {
+      username: loginDto.username,
+      password: parsePassword,
+    };
+
+    return await this.authService.login(loginData);
   }
 
   @Public()
