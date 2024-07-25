@@ -80,6 +80,19 @@ const placeDetail = async (id: any) => {
     });
 };
 
+const placeStatistic = async () => {
+  return axios
+    .get(`place/statistic`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 const userList = async () => {
   return axios
     .get('user', {
@@ -113,6 +126,7 @@ export {
   getLogged,
   placeList,
   placeDetail,
+  placeStatistic,
   userList,
   adminUserList,
 };
