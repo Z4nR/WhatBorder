@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Chart } from '@antv/g2';
-import { Flex, Table, TableProps, Tag } from 'antd';
+import { Col, Flex, Row, Skeleton, Table, TableProps, Tag } from 'antd';
 import { useQuery } from '@tanstack/react-query';
 import { placeStatistic } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
@@ -8,19 +8,21 @@ import { dateFormatter } from '@/utils/helper';
 interface Statistic {
   buildingName: string;
   placeCount: number;
+  color: string;
 }
 
 interface DataType {
-  place_name: string;
-  type: {
+  placeId: string;
+  placeName: string;
+  placeType: {
     name: string;
     label: string;
   };
-  created_at: Date;
+  createdAt: Date;
 }
 
 const UserDashboard: React.FC = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['place-statistic'],
     queryFn: async () => await placeStatistic(),
   });
@@ -31,36 +33,24 @@ const UserDashboard: React.FC = () => {
     const chart = new Chart({
       container: 'statistic',
       autoFit: true,
-      height: 530,
     });
 
-    chart.coordinate({ type: 'radial', endAngle: Math.PI });
+    const chartData = data?.detail.map((item: Statistic) => ({
+      Jenis: item.buildingName,
+      Jumlah: item.placeCount,
+      color: item.color,
+    }));
 
     chart
       .interval()
-      .data({
-        value: data.detail.map((item: Statistic) => ({
-          name: item.buildingName,
-          star: item.placeCount,
-        })),
-        transform: [{ type: 'sortBy', fields: [['star', true]] }],
-      })
-      .encode('x', 'name')
-      .encode('y', 'star')
-      .scale('y', { type: 'sqrt' })
-      .encode('color', 'name')
-      .encode('size', 40)
-      .style('radius', 20)
-      .label({
-        text: 'star',
-        position: 'outside',
-        autoRotate: true,
-        rotateToAlignArc: true,
-        dx: 4,
-      })
-      .axis('x', { title: false })
-      .axis('y', false)
-      .animate('enter', { type: 'waveIn', duration: 1000 });
+      .data(chartData)
+      .encode('x', 'Jenis')
+      .encode('y', 'Jumlah')
+      .encode('color', 'Jenis')
+      .style('minHeight', 10)
+      .scale('color', {
+        range: chartData.map((item: Statistic) => item.color),
+      });
 
     chart.render();
 
@@ -72,17 +62,17 @@ const UserDashboard: React.FC = () => {
   const columns: TableProps<DataType>['columns'] = [
     {
       title: 'Nama Tempat',
-      dataIndex: 'place_name',
+      dataIndex: 'placeName',
       key: 'place-name',
     },
     {
       title: 'Tipe',
-      dataIndex: 'type',
+      dataIndex: 'placeType',
       key: 'place-type',
-      render: (_, { type }) => {
+      render: (_, { placeType }) => {
         return (
-          <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name}
+          <Tag style={{ margin: '0' }} color={placeType.label}>
+            {placeType.name}
           </Tag>
         );
       },
@@ -92,18 +82,31 @@ const UserDashboard: React.FC = () => {
       dataIndex: 'createdAt',
       key: 'place-create',
       align: 'center',
-      render: (_, { created_at }) => {
-        const date = dateFormatter(created_at);
+      render: (_, { createdAt }) => {
+        const date = dateFormatter(createdAt);
         return <p>{date}</p>;
       },
     },
   ];
 
   return (
-    <Flex>
-      <div id="statistic"></div>
-      <Table pagination={false} columns={columns} dataSource={data.newPlace} />
-    </Flex>
+    <Row wrap>
+      <Col xs={{ flex: '100%' }} sm={{ flex: '30%' }} md={{ flex: '50%' }}>
+        <Skeleton loading={isLoading} active>
+          <div id="statistic"></div>
+        </Skeleton>
+      </Col>
+      <Col xs={{ flex: '100%' }} sm={{ flex: '60%' }} md={{ flex: '50%' }}>
+        <Flex vertical>
+          <Table
+            pagination={false}
+            columns={columns}
+            dataSource={data?.newPlace}
+            rowKey={({ placeId }) => placeId}
+          />
+        </Flex>
+      </Col>
+    </Row>
   );
 };
 
