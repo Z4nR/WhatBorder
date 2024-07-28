@@ -12,6 +12,7 @@ import { Server } from 'socket.io';
   cors: {
     origin: '*',
   },
+  transports: ['websocket'],
 })
 export class WebsocketGateway implements OnGatewayConnection {
   @WebSocketServer()
@@ -22,11 +23,10 @@ export class WebsocketGateway implements OnGatewayConnection {
   }
 
   @SubscribeMessage('message')
-  handleMessage(client: any, data: any): WsResponse<any> {
+  handleMessage(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message:', data);
-      const event = 'order';
-      return { event, data };
+      return { event: 'order', data: data };
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };

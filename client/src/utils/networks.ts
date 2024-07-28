@@ -8,7 +8,7 @@ axios.defaults.baseURL = Server_URL;
 
 const registerAcc = async (data: any) => {
   return axios
-    .post('/auth/register', data, {
+    .post('/v1/auth/register', data, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -20,7 +20,7 @@ const registerAcc = async (data: any) => {
 
 const loginAcc = async (data: any) => {
   return axios
-    .post('/auth/login', data, {
+    .post('/v1/auth/login', data, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -32,7 +32,7 @@ const loginAcc = async (data: any) => {
 
 const forgetPassword = async (data: any) => {
   return axios
-    .patch('/auth/change-pass', data, {
+    .patch('/v1/auth/change-pass', data, {
       headers: { 'Content-Type': 'application/json' },
     })
     .then((res) => {
@@ -43,7 +43,7 @@ const forgetPassword = async (data: any) => {
 
 const getLogged = async () => {
   return axios
-    .get('/user/me', {
+    .get('/v1/auth/me', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -56,7 +56,7 @@ const getLogged = async () => {
 
 const placeList = async () => {
   return axios
-    .get('place', {
+    .get('/v1/place', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -69,7 +69,7 @@ const placeList = async () => {
 
 const placeDetail = async (id: any) => {
   return axios
-    .get(`place/${id}/detail`, {
+    .get(`/v1/place/${id}/detail`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -82,7 +82,7 @@ const placeDetail = async (id: any) => {
 
 const placeStatistic = async () => {
   return axios
-    .get(`place/statistic`, {
+    .get(`/v1/place/statistic`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -95,7 +95,7 @@ const placeStatistic = async () => {
 
 const userList = async () => {
   return axios
-    .get('user', {
+    .get('/v1/user', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -108,7 +108,7 @@ const userList = async () => {
 
 const adminUserList = async () => {
   return axios
-    .get('admin', {
+    .get('/v1/admin', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },

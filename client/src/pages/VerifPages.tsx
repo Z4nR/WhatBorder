@@ -37,6 +37,9 @@ const VerifPages: React.FC = () => {
       <Tabs
         defaultActiveKey="1"
         centered
+        style={{
+          marginInline: '1rem',
+        }}
         items={menuItems.map((item) => ({
           key: item.key,
           children: item.children,

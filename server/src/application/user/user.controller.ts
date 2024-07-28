@@ -23,19 +23,6 @@ export class UserController {
     private readonly helperService: HelperService,
   ) {}
 
-  @HttpCode(HttpStatus.OK)
-  @Get('me')
-  async user(@Req() req: Request) {
-    const user = req['user'];
-    const userId = user.sub;
-
-    const data = await this.userService.me(userId);
-    return {
-      ...data,
-      exp: user.exp,
-    };
-  }
-
   @Get()
   async findAll() {
     return await this.userService.findAll();
