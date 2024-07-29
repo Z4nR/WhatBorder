@@ -1,3 +1,4 @@
+import { disconnectSocket } from '@/utils/helper';
 import useAuthState from '@/utils/state/auth/authState';
 import useUserState from '@/utils/state/user/userState';
 import {
@@ -18,6 +19,7 @@ const OptionMenu: React.FC = () => {
   const userState = useUserState();
 
   const handleSignOut = () => {
+    disconnectSocket();
     authState.deleteToken();
     userState.clearUser();
     queryClient.removeQueries({ queryKey: ['user'] });

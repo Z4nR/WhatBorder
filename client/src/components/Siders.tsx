@@ -4,8 +4,7 @@ import {
   BlockOutlined,
   FundViewOutlined,
 } from '@ant-design/icons';
-import { Avatar, Flex, Layout, Menu } from 'antd';
-import logoWeb from '../assets/react.svg';
+import { Layout, Menu } from 'antd';
 
 const { Sider } = Layout;
 
@@ -30,9 +29,7 @@ const Siders: React.FC = () => {
 
   return (
     <Sider breakpoint="lg" collapsedWidth="0">
-      <Flex justify="center" style={{ padding: 10 }}>
-        <Avatar src={logoWeb} size={30} />
-      </Flex>
+      <div className="demo-logo-vertical" />
       <Menu
         theme="dark"
         mode="inline"

@@ -22,11 +22,11 @@ export class WebsocketGateway implements OnGatewayConnection {
     console.log('Client connected:', client.id);
   }
 
-  @SubscribeMessage('message')
+  @SubscribeMessage('latlong')
   handleMessage(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message:', data);
-      return { event: 'order', data: data };
+      this.server.emit('latlong', data);
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };
