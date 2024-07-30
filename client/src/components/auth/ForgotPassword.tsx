@@ -38,13 +38,13 @@ const ForgotPassword: React.FC = () => {
       });
     },
     onError: (error: any) => {
-      error.response.data.message.map((msg:any) => {
-          message.open({
-            type: 'error',
-            content: msg,
-            duration: 5,
-          });
-      })
+      error.response.data.message.map((msg: any) => {
+        message.open({
+          type: 'error',
+          content: msg,
+          duration: 5,
+        });
+      });
     },
   });
 
@@ -67,7 +67,7 @@ const ForgotPassword: React.FC = () => {
       }}
       initialValues={{ remember: true }}
       ref={(form) => {
-        formRef.current = form;
+        formRef.current = form as FormInstance | null;
       }}
       onFinish={onFinish}
     >

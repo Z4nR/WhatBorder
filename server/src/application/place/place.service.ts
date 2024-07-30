@@ -152,7 +152,7 @@ export class PlaceService {
         },
       });
       const newestPlace = await this.prisma.placeData.findMany({
-        take: 5,
+        take: 10,
         orderBy: {
           created_at: 'desc',
         },
