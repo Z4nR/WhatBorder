@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { useMemo } from 'react';
-import { Descriptions, Flex, Skeleton, Typography } from 'antd';
+import { Descriptions, Flex, Skeleton, Tag, Typography } from 'antd';
 import type { DescriptionsProps } from 'antd';
 import { placeDetail } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
@@ -64,10 +64,15 @@ const PlaceDetail: React.FC = () => {
 
   return (
     <>
-      <Skeleton loading={isLoading} active title paragraph={{ rows: 0 }}>
+      <Skeleton loading={isLoading} active title paragraph={{ rows: 1 }}>
         <Title level={3} style={{ textAlign: 'center', marginBottom: '0' }}>
           {data?.placeName}
         </Title>
+        <Flex justify="center" align="center">
+          <Tag style={{ margin: '0' }} color={data?.type.label}>
+            {data?.type.name}
+          </Tag>
+        </Flex>
       </Skeleton>
       <Flex gap={'middle'} vertical={false} style={{ marginTop: '2rem' }}>
         <MapDetail data={data} placeMap={placeMap} position={position} />
