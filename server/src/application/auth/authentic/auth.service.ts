@@ -22,6 +22,25 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  async me(id: string) {
+    try {
+      const data = await this.prisma.user.findFirst({
+        select: {
+          user_name: true,
+          admin: true,
+        },
+        where: {
+          user_id: id,
+        },
+      });
+
+      return { username: data.user_name, role: data.admin };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async createToken(payload: any) {
     try {
       return await this.jwtService.signAsync(payload, {
