@@ -6,6 +6,8 @@ import {
   HttpStatus,
   HttpCode,
   BadRequestException,
+  Get,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
@@ -18,6 +20,19 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly helperService: HelperService,
   ) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get('me')
+  async user(@Req() req: Request) {
+    const user = req['user'];
+    const userId = user.sub;
+
+    const data = await this.authService.me(userId);
+    return {
+      ...data,
+      exp: user.exp,
+    };
+  }
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
