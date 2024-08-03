@@ -24,3 +24,15 @@ html {
   background: rgba(255, 255, 255, 0.2);
   border-radius: 6px;
 }
+
+.ant-float-btn-content {
+  width: 40px !important;
+}
+
+.ant-float-btn-icon {
+  text-align: center !important;
+  margin: auto !important;
+  width: max-content !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
