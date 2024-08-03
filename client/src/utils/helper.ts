@@ -1,3 +1,22 @@
+import { io, Socket } from 'socket.io-client';
+
+const getDeviceType = (userAgent: any) => {
+  switch (true) {
+    case /Android/.test(userAgent):
+      return { mobile: true, device: 'Android' };
+    case /iPhone/.test(userAgent):
+      return { mobile: true, device: 'iPhone' };
+    case /Macintosh/.test(userAgent):
+      return { mobile: false, device: 'Macintosh' };
+    case /Windows/.test(userAgent):
+      return { mobile: false, device: 'Windows' };
+    case /Linux/.test(userAgent) && !/Android/.test(userAgent):
+      return { mobile: false, device: 'Linux' };
+    default:
+      return { mobile: false, device: 'Unknown Device Type' };
+  }
+};
+
 const dateFormatter = (date: Date) => {
   return new Date(date).toLocaleDateString('id-ID', {
     weekday: 'long',
@@ -30,10 +49,34 @@ const getGreeting = () => {
       greeting = 'Selamat Malam';
       break;
     default:
-      greeting = 'Selamat Malam';
+      greeting = 'Pukul Berapa Ini';
   }
 
   return greeting;
 };
 
-export { dateFormatter, getGreeting };
+let socket: Socket;
+const socketConnection = () => {
+  const Server_URL = import.meta.env.VITE_BACKEND;
+  if (!socket) {
+    socket = io(Server_URL, {
+      transports: ['websocket'],
+    });
+    socket.connect();
+  }
+  return socket;
+};
+
+const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+  }
+};
+
+export {
+  dateFormatter,
+  getGreeting,
+  getDeviceType,
+  socketConnection,
+  disconnectSocket,
+};
