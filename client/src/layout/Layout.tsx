@@ -1,32 +1,54 @@
-import { useState } from 'react';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { Layout, Button, Typography, theme } from 'antd';
-import { Outlet } from 'react-router-dom';
-import useUserState from '@/utils/state/user/userState';
-import { getGreeting } from '@/utils/helper';
+import { Button, Layout, Space, Typography, theme } from 'antd';
+import { LogoutOutlined } from '@ant-design/icons';
+
+import { Outlet, useNavigate } from 'react-router-dom';
 import Siders from '@/components/Siders';
-import OptionMenu from '@/components/OptionMenu';
+import { useMediaQuery } from 'react-responsive';
+import { CSSProperties } from 'react';
+import { disconnectSocket } from '@/utils/helper';
+import { useQueryClient } from '@tanstack/react-query';
+import useAuthState from '@/utils/state/auth/authState';
+import useUserState from '@/utils/state/user/userState';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const username = useUserState((state) => state.name);
+  const isLayoutStyle = useMediaQuery({
+    query: '(min-width: 760px)',
+  });
 
-  const greeting = getGreeting();
+  const queryClient = useQueryClient();
+
+  const navigate = useNavigate();
+  const authState = useAuthState();
+  const userState = useUserState();
+
+  const handleSignOut = () => {
+    disconnectSocket();
+    authState.deleteToken();
+    userState.clearUser();
+    queryClient.removeQueries({ queryKey: ['user'] });
+
+    navigate('/auth', { replace: true });
+  };
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const layoutStyle: CSSProperties = isLayoutStyle
+    ? { height: '100dvh' }
+    : { minHeight: '100dvh' };
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Siders collapse={collapsed} />
-      <Layout>
+    <Layout style={layoutStyle}>
+      <Siders />
+      <Layout style={{ overflowY: 'scroll' }}>
         <Header
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             alignItems: 'center',
             padding: 0,
             background: colorBgContainer,
@@ -37,20 +59,12 @@ const LayoutPages: React.FC = () => {
             boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
           }}
         >
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: '16px',
-              width: 64,
-              height: 64,
-            }}
-          />
-          <Text strong style={{ margin: '0 16px' }}>
-            {greeting}, {username}
-          </Text>
-          <OptionMenu />
+          <Button style={{ marginRight: 24 }} onClick={() => handleSignOut()}>
+            <Space>
+              Keluar
+              <LogoutOutlined />
+            </Space>
+          </Button>
         </Header>
         <Content
           style={{
@@ -58,7 +72,7 @@ const LayoutPages: React.FC = () => {
             padding: 24,
             background: colorBgContainer,
             borderRadius: 8,
-            overflowY: 'scroll',
+            minHeight: '100dvh',
           }}
         >
           <Outlet />
@@ -70,7 +84,7 @@ const LayoutPages: React.FC = () => {
             textAlign: 'center',
           }}
         >
-          <Text>Create by Zulham 👋</Text>
+          <Text>Created by Ijan</Text>
         </Footer>
       </Layout>
     </Layout>
