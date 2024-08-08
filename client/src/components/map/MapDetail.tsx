@@ -2,7 +2,13 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import FlyMapTo from './FlyMapTo';
 
 interface MapDetailProps {
-  data: any;
+  data: {
+    placeMap: any;
+    placeId: string;
+    type: {
+      color: string;
+    };
+  };
   placeMap: any;
   position: any;
 }
@@ -19,7 +25,7 @@ const MapDetail: React.FC<MapDetailProps> = ({ data, placeMap, position }) => {
         <GeoJSON
           key={`detil-map-${data?.placeId}`}
           data={placeMap}
-          style={{ fillColor: '#11648e' }}
+          style={{ color: data.type.color }}
         />
       )}
     </MapContainer>
