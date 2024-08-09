@@ -5,10 +5,16 @@ import {
   FundViewOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
+import { useMediaQuery } from 'react-responsive';
+import { CSSProperties } from 'react';
 
 const { Sider } = Layout;
 
 const Siders: React.FC = () => {
+  const isSideStyle = useMediaQuery({
+    query: '(max-width: 992px)',
+  });
+
   const menuItems = [
     {
       key: '1',
@@ -27,8 +33,12 @@ const Siders: React.FC = () => {
     },
   ];
 
+  const siderStyle: CSSProperties = isSideStyle
+    ? { position: 'fixed', height: '100vh', zIndex: 100 }
+    : {};
+
   return (
-    <Sider breakpoint="lg" collapsedWidth="0">
+    <Sider style={siderStyle} breakpoint="lg" collapsedWidth="0">
       <div className="demo-logo-vertical" />
       <Menu
         theme="dark"
