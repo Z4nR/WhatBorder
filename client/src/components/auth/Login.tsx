@@ -5,6 +5,8 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Typography, message, theme } from 'antd';
 import { Navigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
+import { getDeviceType } from '@/utils/helper';
+import useDeviceState from '@/utils/state/device/deviceState';
 
 const { Title } = Typography;
 
@@ -15,15 +17,25 @@ interface LoginData {
 
 const Login: React.FC = () => {
   const authState = useAuthState();
+  const deviceState = useDeviceState();
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const userAgent = navigator.userAgent;
+  const deviceType = getDeviceType(userAgent);
 
   const { mutate } = useMutation({
     mutationFn: loginAcc,
     onSuccess: (data) => {
       authState.setToken({
         accessToken: data.accessToken,
+      });
+      deviceState.setDevice({
+        device: userAgent,
+        type: deviceType.device,
+        mobile: deviceType.mobile,
       });
       message.open({
         type: 'success',
