@@ -21,21 +21,42 @@ import { Navigate } from 'react-router-dom';
 import { useRef } from 'react';
 import useAuthState from '@/utils/state/auth/authState';
 import { registerAcc } from '@/utils/networks';
+import CryptoJS from 'crypto-js';
+import { getDeviceType } from '@/utils/helper';
+import useDeviceState from '@/utils/state/device/deviceState';
 
 const { Title } = Typography;
 
+interface RegisterData {
+  username: string;
+  fullname: string;
+  password: string;
+  verify: string;
+  code: string;
+}
+
 const Register: React.FC = () => {
   const authState = useAuthState();
+  const deviceState = useDeviceState();
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
   const formRef = useRef<FormInstance | null>(null);
+
+  const userAgent = navigator.userAgent;
+  const deviceType = getDeviceType(userAgent);
 
   const { mutate } = useMutation({
     mutationFn: registerAcc,
     onSuccess: (data) => {
       authState.setToken({
         accessToken: data.accessToken,
+      });
+      deviceState.setDevice({
+        device: userAgent,
+        type: deviceType.device,
+        mobile: deviceType.mobile,
       });
       formRef.current?.resetFields();
       message.open({
@@ -55,8 +76,19 @@ const Register: React.FC = () => {
     },
   });
 
-  const onFinish = (values: any) => {
-    mutate(values);
+  const onFinish = (values: RegisterData) => {
+    const pw = CryptoJS.AES.encrypt(
+      values.password,
+      import.meta.env.VITE_SECRET
+    ).toString();
+
+    mutate({
+      username: values.username,
+      fullname: values.fullname,
+      password: import.meta.env.VITE_USER + pw,
+      verify: values.verify,
+      code: values.code,
+    });
   };
 
   if (authState.accessToken) {
@@ -78,7 +110,7 @@ const Register: React.FC = () => {
       }}
       initialValues={{ remember: true }}
       ref={(form) => {
-        formRef.current = form;
+        formRef.current = form as FormInstance | null;
       }}
       onFinish={onFinish}
     >
