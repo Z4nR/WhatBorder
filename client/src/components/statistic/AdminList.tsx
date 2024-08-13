@@ -136,21 +136,21 @@ const AdminList: React.FC = () => {
       title: 'Nama Pengguna',
       dataIndex: 'userName',
       key: 'user-name',
-      width: '18%',
-      fixed: 'left',
       ...getColumnSearchProps('userName'),
     },
     {
       title: 'Deskripsi Pengguna',
       dataIndex: 'description',
       key: 'user-desc',
+      responsive: ['lg'],
     },
     {
       title: 'Tipe',
       dataIndex: 'userType',
       key: 'user-type',
       align: 'center',
-      width: '10%',
+      width: '150px',
+      responsive: ['sm'],
       render: (_, tag) => {
         const color: string = tag.admin === false ? 'volcano' : 'green';
         const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
@@ -162,11 +162,11 @@ const AdminList: React.FC = () => {
       dataIndex: 'createdAt',
       key: 'user-create',
       align: 'center',
-      width: '15%',
       sorter: (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
       defaultSortOrder: 'ascend',
+      responsive: ['md'],
       render: (_, time) => {
         const date = dateFormatter(time.createdAt);
         return <p>{date}</p>;
@@ -175,9 +175,8 @@ const AdminList: React.FC = () => {
     {
       title: 'Tindakan',
       key: 'user-action',
-      fixed: 'right',
+      width: '150px',
       align: 'center',
-      width: '15%',
       render: (_, detail) => (
         <Link to={`/${detail.userId}/info`}>Lihat Pengguna</Link>
       ),
@@ -187,10 +186,10 @@ const AdminList: React.FC = () => {
   return (
     <Table
       sticky
-      scroll={{ x: 1000 }}
       style={{ backgroundColor: 'transparent' }}
       columns={columns}
       dataSource={data}
+      rowKey={({ userId }) => userId}
     />
   );
 };
