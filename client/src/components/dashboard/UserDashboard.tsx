@@ -161,7 +161,7 @@ const UserDashboard: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100dvh' }}>
-      {modal && <ClientList state={modal} />}
+      {modal && <ClientList state={modal} setState={setModal} />}
       <Row gutter={[16, 16]} wrap>
         <Col xs={24} md={12}>
           <Card actions={isUserMiniTool && !mobile ? actions : undefined}>
