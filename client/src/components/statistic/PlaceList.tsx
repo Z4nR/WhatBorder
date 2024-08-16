@@ -22,7 +22,10 @@ interface DataType {
   placeId: string;
   placeName: string;
   placeAddress: string;
-  placeType: string;
+  type: {
+    name: string;
+    label: string;
+  };
   createdBy: string;
   createdAt: Date;
 }
@@ -137,39 +140,26 @@ const PlaceList: React.FC = () => {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
       key: 'place-name',
-      fixed: 'left',
       ...getColumnSearchProps('placeName'),
     },
     {
       title: 'Alamat',
       dataIndex: 'placeAddress',
       key: 'place-address',
+      responsive: ['lg'],
     },
     {
       title: 'Tipe',
       dataIndex: 'placeType',
       key: 'place-type',
-      width: '10%',
-      render: (_, { placeType }) => {
-        let color: string = '';
-        switch (true) {
-          case placeType === 'Lahan Kosong':
-            color = 'orange';
-            break;
-          case placeType === 'Bangunan':
-            color = 'volcano';
-            break;
-          case placeType === 'Pertanian':
-            color = 'lime';
-            break;
-          case placeType === 'Peternakan':
-            color = 'geekblue';
-            break;
-          default:
-            color = 'gray';
-            break;
-        }
-        return <Tag color={color}>{placeType.toUpperCase()}</Tag>;
+      width: '150px',
+      responsive: ['sm'],
+      render: (_, { type }) => {
+        return (
+          <Tag style={{ margin: '0' }} color={type.label}>
+            {type.name}
+          </Tag>
+        );
       },
     },
     {
@@ -177,14 +167,16 @@ const PlaceList: React.FC = () => {
       dataIndex: 'createdBy',
       key: 'place-creator',
       align: 'center',
-      width: '10%',
+      width: '150px',
+      responsive: ['md'],
     },
     {
       title: 'Ditambahkan Pada',
       dataIndex: 'createdAt',
       key: 'place-create',
       align: 'center',
-      width: '15%',
+      width: '150px',
+      responsive: ['md'],
       sorter: (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
@@ -197,9 +189,8 @@ const PlaceList: React.FC = () => {
     {
       title: 'Tindakan',
       key: 'place-action',
-      fixed: 'right',
       align: 'center',
-      width: '10%',
+      width: '150px',
       render: (_, { placeId }) => (
         <Link to={`/${placeId}/detil`}>Lihat Detil</Link>
       ),
@@ -209,7 +200,6 @@ const PlaceList: React.FC = () => {
   return (
     <Table
       sticky
-      scroll={{ x: 1000 }}
       style={{ backgroundColor: 'transparent' }}
       columns={columns}
       dataSource={data}
