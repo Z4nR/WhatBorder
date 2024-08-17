@@ -131,25 +131,24 @@ const UserList: React.FC = () => {
       title: 'Nama Pengguna',
       dataIndex: 'userName',
       key: 'user-name',
-      width: '18%',
-      fixed: 'left',
       ...getColumnSearchProps('userName'),
     },
     {
       title: 'Deskripsi Pengguna',
       dataIndex: 'description',
       key: 'user-desc',
+      responsive: ['md'],
     },
     {
       title: 'Ditambahkan Pada',
       dataIndex: 'createdAt',
       key: 'user-create',
       align: 'center',
-      width: '15%',
       sorter: (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
       defaultSortOrder: 'ascend',
+      responsive: ['sm'],
       render: (_, time) => {
         const date = dateFormatter(time.createdAt);
         return <p>{date}</p>;
@@ -158,9 +157,8 @@ const UserList: React.FC = () => {
     {
       title: 'Tindakan',
       key: 'user-action',
-      fixed: 'right',
+      width: '150px',
       align: 'center',
-      width: '15%',
       render: (_, detail) => (
         <Link to={`/${detail.userId}/info`}>Lihat Pengguna</Link>
       ),
@@ -172,10 +170,10 @@ const UserList: React.FC = () => {
   ) : (
     <Table
       sticky
-      scroll={{ x: 1000 }}
       style={{ backgroundColor: 'transparent' }}
       columns={columns}
       dataSource={data}
+      rowKey={({ userId }) => userId}
     />
   );
 };
