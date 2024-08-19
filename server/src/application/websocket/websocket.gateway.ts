@@ -32,6 +32,16 @@ export class WebsocketGateway implements OnGatewayConnection {
       return { event: 'exception', data: { error: 'Internal server error' } };
     }
   }
+  @SubscribeMessage('set-list')
+  handleSetClientList(client: any, @MessageBody() data: any): WsResponse<any> {
+    try {
+      console.log('Received message:', data);
+      this.server.emit('list-client', data);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      return { event: 'exception', data: { error: 'Internal server error' } };
+    }
+  }
 
   @SubscribeMessage('latlong')
   handleLatLong(client: any, @MessageBody() data: any): WsResponse<any> {
