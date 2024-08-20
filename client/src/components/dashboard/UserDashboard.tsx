@@ -131,6 +131,10 @@ const UserDashboard: React.FC = () => {
         });
       }
     });
+
+    return () => {
+      socket.close();
+    };
   }, [deviceState.device, deviceState.type, mobile, socket, userState.name]);
 
   const columns: TableProps<DataType>['columns'] = [
