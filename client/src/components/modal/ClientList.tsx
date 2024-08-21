@@ -14,8 +14,15 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
   useEffect(() => {
     socket.on('list-client', (data) => {
       console.log(data);
+      setListClient(data);
     });
-  }, []);
+
+    console.log(listClient);
+
+    return () => {
+      socket.close();
+    };
+  }, [socket, listClient]);
 
   return (
     <Modal
