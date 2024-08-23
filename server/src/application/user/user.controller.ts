@@ -4,8 +4,6 @@ import {
   Body,
   Patch,
   Delete,
-  HttpCode,
-  HttpStatus,
   NotFoundException,
   Req,
 } from '@nestjs/common';
@@ -13,8 +11,6 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { HelperService } from '../helper-service/helper.service';
 import { Request } from 'express';
-import { Roles } from '../auth/authorize/decorator/role.decorator';
-import { Role } from '../auth/authorize/enum/role.enum';
 
 @Controller('user')
 export class UserController {
@@ -50,7 +46,6 @@ export class UserController {
     return await this.userService.myProfile(userId);
   }
 
-  @Roles(Role.USER, Role.ADMIN)
   @Patch('update')
   async update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
     const user = req['user'];
@@ -62,7 +57,6 @@ export class UserController {
     return await this.userService.update(userId, updateUserDto);
   }
 
-  @Roles(Role.USER, Role.ADMIN)
   @Delete('delete')
   async remove(@Req() req: Request, @Body() data: any) {
     const user = req['user'];
