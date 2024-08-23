@@ -61,11 +61,17 @@ export class PlaceController {
     return await this.placeService.statistic(userId);
   }
 
+  @Roles(Role.USER)
   @Get('my-list')
   async findMyPlace(@Req() req: Request) {
     const user = req['user'];
     const userId = user.sub;
     return await this.placeService.findPlace(userId);
+  }
+
+  @Get('compare-list')
+  async compareList() {
+    return await this.placeService.compareList();
   }
 
   @Get(':id/detail')
