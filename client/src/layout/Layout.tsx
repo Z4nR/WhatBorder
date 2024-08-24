@@ -3,8 +3,6 @@ import { LogoutOutlined } from '@ant-design/icons';
 
 import { Outlet, useNavigate } from 'react-router-dom';
 import Siders from '@/components/Siders';
-import { useMediaQuery } from 'react-responsive';
-import { CSSProperties } from 'react';
 import { disconnectSocket } from '@/utils/helper';
 import { useQueryClient } from '@tanstack/react-query';
 import useAuthState from '@/utils/state/auth/authState';
@@ -14,10 +12,6 @@ const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
-  const isLayoutStyle = useMediaQuery({
-    query: '(min-width: 760px)',
-  });
-
   const queryClient = useQueryClient();
 
   const navigate = useNavigate();
@@ -37,12 +31,8 @@ const LayoutPages: React.FC = () => {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const layoutStyle: CSSProperties = isLayoutStyle
-    ? { height: '100dvh' }
-    : { minHeight: '100dvh' };
-
   return (
-    <Layout style={layoutStyle}>
+    <Layout style={{ minHeight: '100dvh' }}>
       <Siders />
       <Layout style={{ overflowY: 'scroll' }}>
         <Header
