@@ -3,11 +3,15 @@ import { TableTransferProps, TransferItem } from './compare.types';
 
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
 
-const TransferBox: React.FC<TableTransferProps> = (props) => {
+const TransferList: React.FC<TableTransferProps> = (props) => {
   const { leftColumns, rightColumns, ...restProps } = props;
 
   return (
-    <Transfer style={{ width: '100%' }} {...restProps}>
+    <Transfer
+      locale={{ itemsUnit: 'Daftar Tempat', itemUnit: 'Tempat Dibandingkan' }}
+      style={{ width: '100%' }}
+      {...restProps}
+    >
       {({
         direction,
         filteredItems,
@@ -37,14 +41,18 @@ const TransferBox: React.FC<TableTransferProps> = (props) => {
             dataSource={filteredItems}
             size="small"
             style={{ pointerEvents: listDisabled ? 'none' : undefined }}
-            onRow={({ key, disabled: itemDisabled }) => ({
-              onClick: () => {
-                if (itemDisabled || listDisabled) {
-                  return;
-                }
-                onItemSelect(key, !listSelectedKeys.includes(key));
-              },
-            })}
+            onRow={
+              direction === 'left'
+                ? ({ key, disabled: itemDisabled }) => ({
+                    onClick: () => {
+                      if (itemDisabled || listDisabled) {
+                        return;
+                      }
+                      onItemSelect(key, !listSelectedKeys.includes(key));
+                    },
+                  })
+                : undefined
+            }
           />
         );
       }}
@@ -52,4 +60,4 @@ const TransferBox: React.FC<TableTransferProps> = (props) => {
   );
 };
 
-export default TransferBox;
+export default TransferList;
