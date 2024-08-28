@@ -39,11 +39,11 @@ const AuthRoute = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  if (isError) {
-    authState.deleteToken();
-    userState.clearUser();
+  useEffect(() => {
+    if (isError && !notified) {
+      authState.deleteToken();
+      userState.clearUser();
 
-    if (!notified) {
       message.open({
         type: 'error',
         content: 'Sesi Anda Telah Habis, Silahkan Login Kembali',
@@ -55,7 +55,8 @@ const AuthRoute = () => {
       });
       setNotified(true);
     }
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError, notified]);
 
   if (isFetching) return <Loading />;
 
