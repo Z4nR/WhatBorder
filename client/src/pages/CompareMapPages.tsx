@@ -8,11 +8,6 @@ import type {
   TransferProps,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import {
-  DataType,
-  DataUserPlaceType,
-  TableTransferProps,
-} from '@/components/compare/compare.types';
 import UserPlaceList from '@/components/statistic/UserPlaceList';
 import { useQuery } from '@tanstack/react-query';
 import { compareList, myList } from '@/utils/networks';
@@ -22,6 +17,11 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import FlyMapTo from '@/components/map/FlyMapTo';
 import TransferList from '@/components/compare/TransferList';
+import {
+  DataType,
+  DataUserPlaceType,
+  TableTransferProps,
+} from '@/utils/state/compare/compare.types';
 
 const { Link } = Typography;
 
