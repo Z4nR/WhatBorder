@@ -1,5 +1,8 @@
 import { Table, TableProps, Transfer } from 'antd';
-import { TableTransferProps, TransferItem } from './compare.types';
+import {
+  TableTransferProps,
+  TransferItem,
+} from '@/utils/state/compare/compare.types';
 
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
 

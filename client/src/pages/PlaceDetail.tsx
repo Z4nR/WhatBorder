@@ -76,9 +76,9 @@ const PlaceDetail: React.FC = () => {
       </Skeleton>
       <Flex gap={'middle'} vertical={false} style={{ marginTop: '2rem' }}>
         <MapDetail data={data} placeMap={placeMap} position={position} />
-        <Skeleton loading={isLoading} style={{ width: '50%' }} active>
+        <Skeleton loading={isLoading} style={{ width: '100%' }} active>
           <Descriptions
-            style={{ width: '50%' }}
+            style={{ width: '100%' }}
             column={1}
             bordered
             items={items}
