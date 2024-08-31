@@ -3,10 +3,14 @@ import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
+import { HelperService } from '../helper-service/helper.service';
 
 @Injectable()
 export class PlaceService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private helperService: HelperService,
+  ) {}
 
   async create(user_id: string, name: string, createPlaceDto: CreatePlaceDto) {
     try {
@@ -52,6 +56,69 @@ export class PlaceService {
     }
   }
 
+  async compareList(id: string) {
+    try {
+      const { place_center_point } = await this.prisma.placeData.findUnique({
+        select: {
+          place_center_point: true,
+        },
+        where: {
+          place_id: id,
+        },
+      });
+
+      const compare = await this.prisma.placeData.findMany({
+        where: {
+          NOT: {
+            place_id: id,
+          },
+        },
+        select: {
+          place_id: true,
+          place_name: true,
+          place_address: true,
+          place_center_point: true,
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
+          place_map: {
+            select: {
+              place_geojson: true,
+            },
+          },
+        },
+      });
+
+      const data = compare.map((place: any) => {
+        console.log(place.place_center_point[0]);
+        const rangeCount = this.helperService.rangeCount(
+          place_center_point[0],
+          place.place_center_point[0],
+          place_center_point[1],
+          place.place_center_point[1],
+        );
+
+        console.log(rangeCount);
+
+        if (rangeCount < 5) {
+          return {
+            ...place,
+            rangePlace: `+- ${rangeCount} M`,
+          };
+        }
+      });
+      console.log(data[0] === undefined);
+
+      return data[0] !== undefined ? data : [];
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async findAll() {
     try {
       return await this.prisma.placeData.findMany({
@@ -82,6 +149,18 @@ export class PlaceService {
           place_id: true,
           place_name: true,
           place_address: true,
+          place_center_point: true,
+          place_map: {
+            select: {
+              place_geojson: true,
+            },
+          },
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
           created_at: true,
         },
         where: {
