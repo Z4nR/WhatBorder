@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from '@antv/g2';
-import { AimOutlined, ShakeOutlined, UserOutlined } from '@ant-design/icons';
+import { ShakeOutlined, UserOutlined } from '@ant-design/icons';
 import {
   Card,
   Col,
   Flex,
-  FloatButton,
+  Modal,
   Row,
   Skeleton,
   Statistic,
@@ -41,15 +41,32 @@ interface DataType {
   createdAt: Date;
 }
 
+interface DesktopData {
+  id: string;
+  desktop: string;
+}
+
+interface ChoosenClient {
+  time: number;
+  id: string;
+  desktop: string;
+  client: string;
+  type: string;
+  mobile: boolean;
+}
+
 const UserDashboard: React.FC = () => {
-  const [modal, setModal] = useState(false);
-  const userState = useUserState();
-  const deviceState = useDeviceState();
+  const [clientModal, setClientModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [mobileClient, setMobileClient] = useState<ChoosenClient>();
   const greeting = getGreeting();
   const socket = socketConnection();
 
+  const userState = useUserState();
+  const deviceState = useDeviceState();
   const username = userState.name;
   const mobile = deviceState.mobile;
+  const time = Math.floor(new Date().getTime() / 1000);
 
   const actions: React.ReactNode[] = [
     <Tooltip title="Buat Koneksi">
@@ -58,10 +75,10 @@ const UserDashboard: React.FC = () => {
         onClick={() => {
           socket.emit('search-client', {
             id: userState.name,
-            requestAgent: deviceState.device,
+            desktop: deviceState.device,
           });
 
-          setModal(true);
+          setClientModal(true);
         }}
       />
     </Tooltip>,
@@ -70,9 +87,6 @@ const UserDashboard: React.FC = () => {
     </Tooltip>,
   ];
 
-  const isFLoatingButton = useMediaQuery({
-    query: '(max-width: 430px)',
-  });
   const isUserMiniTool = useMediaQuery({
     query: '(min-width: 600px)',
   });
@@ -115,27 +129,68 @@ const UserDashboard: React.FC = () => {
   }, [data]);
 
   useEffect(() => {
-    socket.on('get-client', (data) => {
+    const handleGetClient = (data: DesktopData) => {
       console.log(data);
 
       if (
         data.id === userState.name &&
-        data.requestAgent !== deviceState.device &&
+        data.desktop !== deviceState.device &&
         mobile
       ) {
         socket.emit('set-list', {
+          time: time,
           id: data.id,
-          requestAgent: data.requestAgent,
+          desktop: data.desktop,
           client: deviceState.device,
           type: deviceState.type,
+          mobile: deviceState.mobile,
         });
       }
-    });
+    };
+
+    socket.on('get-client', handleGetClient);
 
     return () => {
-      socket.close();
+      socket.off('get-client', handleGetClient);
     };
-  }, [deviceState.device, deviceState.type, mobile, socket, userState.name]);
+  }, [
+    deviceState.device,
+    deviceState.mobile,
+    deviceState.type,
+    mobile,
+    socket,
+    time,
+    userState.name,
+  ]);
+
+  useEffect(() => {
+    const handleChooseClient = (data: ChoosenClient) => {
+      console.log(data);
+
+      if (
+        data.id === userState.name &&
+        data.client === deviceState.device &&
+        data.mobile &&
+        mobile
+      ) {
+        setMobileClient(data);
+        setConfirmModal(true);
+      }
+    };
+
+    socket.on('choosen-client', handleChooseClient);
+
+    return () => {
+      socket.off('choosen-client', handleChooseClient);
+    };
+  }, [
+    deviceState.device,
+    deviceState.type,
+    mobile,
+    mobileClient,
+    socket,
+    userState.name,
+  ]);
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -163,9 +218,36 @@ const UserDashboard: React.FC = () => {
     },
   ];
 
+  const handlerOnCancel = () => {
+    socket.emit('reject-choice', { data: mobileClient?.time });
+    setConfirmModal(false);
+  };
+
   return (
     <div style={{ minHeight: '100dvh' }}>
-      {modal && <ClientList state={modal} setState={setModal} />}
+      {clientModal && (
+        <ClientList state={clientModal} setState={setClientModal} />
+      )}
+      {confirmModal &&
+        mobile &&
+        mobileClient?.id === userState.name &&
+        mobileClient?.client === deviceState.device && (
+          <Modal
+            title="Konfirmasi Penerimaan Tugas"
+            open={confirmModal}
+            centered
+            maskClosable={false}
+            okText="Setuju"
+            cancelText="Tolak"
+            onCancel={() => handlerOnCancel()}
+          >
+            <Text>
+              Perangkat ini dipilih sebagai media untuk memasukkan titik
+              koordinat tempat. <br /> Silahkan Tekan Setujui apabila
+              menyetujuinya
+            </Text>
+          </Modal>
+        )}
       <Row gutter={[16, 16]} wrap>
         <Col xs={24} md={12}>
           <Card actions={isUserMiniTool && !mobile ? actions : undefined}>
@@ -202,15 +284,6 @@ const UserDashboard: React.FC = () => {
           </Flex>
         </Col>
       </Row>
-      {isFLoatingButton && mobile && (
-        <FloatButton
-          style={{ width: '56px', height: '56px' }}
-          icon={<AimOutlined style={{ fontSize: '28px' }} />}
-          shape="square"
-          type="primary"
-          tooltip="Tambah Tempat"
-        />
-      )}
     </div>
   );
 };
