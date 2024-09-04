@@ -22,6 +22,7 @@ import useUserState from '@/utils/state/user/userState';
 import { useMediaQuery } from 'react-responsive';
 import useDeviceState from '@/utils/state/device/deviceState';
 import ClientList from '../modal/ClientList';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
@@ -56,6 +57,7 @@ interface ChoosenClient {
 }
 
 const UserDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [clientModal, setClientModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
   const [mobileClient, setMobileClient] = useState<ChoosenClient>();
@@ -192,6 +194,26 @@ const UserDashboard: React.FC = () => {
     userState.name,
   ]);
 
+  useEffect(() => {
+    const handleNavigation = (data: ChoosenClient) => {
+      console.log(data);
+
+      if (data.client === deviceState.device) {
+        navigate('/location/new/coordinate');
+      }
+
+      if (data.desktop === deviceState.device) {
+        navigate('/location/new');
+      }
+    };
+
+    socket.on('accept-client', handleNavigation);
+
+    return () => {
+      socket.off('accept-client', handleNavigation);
+    };
+  }, [deviceState.device, navigate, socket]);
+
   const columns: TableProps<DataType>['columns'] = [
     {
       title: 'Nama Tempat',
@@ -218,8 +240,13 @@ const UserDashboard: React.FC = () => {
     },
   ];
 
-  const handlerOnCancel = () => {
-    socket.emit('reject-choice', { data: mobileClient?.time });
+  const handleOnCancel = () => {
+    socket.emit('reject-choice', { data: mobileClient?.client });
+    setConfirmModal(false);
+  };
+
+  const handleOnConfirm = () => {
+    socket.emit('accept-choice', mobileClient);
     setConfirmModal(false);
   };
 
@@ -236,10 +263,12 @@ const UserDashboard: React.FC = () => {
             title="Konfirmasi Penerimaan Tugas"
             open={confirmModal}
             centered
+            closable={false}
             maskClosable={false}
             okText="Setuju"
             cancelText="Tolak"
-            onCancel={() => handlerOnCancel()}
+            onCancel={handleOnCancel}
+            onOk={handleOnConfirm}
           >
             <Text>
               Perangkat ini dipilih sebagai media untuk memasukkan titik
