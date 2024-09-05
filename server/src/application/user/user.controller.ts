@@ -11,7 +11,10 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { HelperService } from '../helper-service/helper.service';
 import { Request } from 'express';
+import { Roles } from '../auth/authorize/decorator/role.decorator';
+import { Role } from '../auth/authorize/enum/role.enum';
 
+@Roles(Role.USER, Role.ADMIN)
 @Controller('user')
 export class UserController {
   constructor(

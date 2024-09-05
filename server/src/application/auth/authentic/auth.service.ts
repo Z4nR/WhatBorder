@@ -45,7 +45,7 @@ export class AuthService {
     try {
       return await this.jwtService.signAsync(payload, {
         secret: this.configService.get('SECRET'),
-        expiresIn: '12h',
+        expiresIn: this.configService.get('SECRETEXPIRED'),
       });
     } catch (error) {
       console.log(error);

@@ -13,6 +13,8 @@ import { AuthService } from './auth.service';
 import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
 import { Public } from './decorator/public.decorator';
 import { HelperService } from 'src/application/helper-service/helper.service';
+import { Roles } from '../authorize/decorator/role.decorator';
+import { Role } from '../authorize/enum/role.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -21,6 +23,7 @@ export class AuthController {
     private readonly helperService: HelperService,
   ) {}
 
+  @Roles(Role.USER, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
   @Get('me')
   async user(@Req() req: Request) {
