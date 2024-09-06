@@ -24,7 +24,7 @@ const Siders: React.FC = () => {
     {
       key: '2',
       icon: <FundViewOutlined />,
-      label: <Link to={'/place-list'}>Statistik Data</Link>,
+      label: <Link to={'/statistic'}>Statistik Data</Link>,
     },
     {
       key: '3',
