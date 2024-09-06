@@ -14,6 +14,8 @@ import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
 import PlaceDetail from './pages/PlaceDetail';
 import { message } from 'antd';
+import DesktopCreateLocation from './components/create-location/DesktopCreateLocation';
+import ClientAddCoordinate from './components/create-location/ClientAddCoordinate';
 
 const queryClient = new QueryClient();
 
@@ -71,10 +73,15 @@ const App: React.FC = () => {
           <Route path="/" element={<AuthRoute />}>
             <Route element={<LayoutPages />}>
               <Route index element={<DashboardPages />} />
-              <Route path="/place-list" element={<StatisticPages />} />
+              <Route path="/statistic" element={<StatisticPages />} />
               <Route path="/compare-map" element={<CompareMapPages />} />
               <Route path="/me" element={<ProfilePages />} />
               <Route path="/:id/detil" element={<PlaceDetail />} />
+              <Route path="/location/new" element={<DesktopCreateLocation />} />
+              <Route
+                path="/location/new/coordinate"
+                element={<ClientAddCoordinate />}
+              />
             </Route>
           </Route>
           <Route path="/auth" element={<VerifPages />} />
