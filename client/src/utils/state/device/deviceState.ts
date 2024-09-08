@@ -13,7 +13,7 @@ const useDeviceState = create<DeviceState>()(
     }),
     {
       name: 'device',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
