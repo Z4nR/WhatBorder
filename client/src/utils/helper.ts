@@ -73,10 +73,45 @@ const disconnectSocket = () => {
   }
 };
 
+const originalStyle = {
+  weight: 2,
+  color: 'black',
+  dashArray: '3',
+  fillColor: 'transparent',
+};
+
+const highlightFeature = (e: any) => {
+  const layer = e.target;
+  layer.setStyle({
+    weight: 4,
+    color: '#f9844d',
+  });
+  layer.bringToFront();
+};
+
+const resetHighlight = (e: any) => {
+  const layer = e.target;
+  layer.setStyle(originalStyle);
+};
+
+const onEachFeature = (feature: any, layer: any, zoomToFeature: any) => {
+  layer.on({
+    mouseover: highlightFeature,
+    mouseout: resetHighlight,
+    click: (e: any) => {
+      zoomToFeature(e, feature);
+    },
+  });
+};
+
 export {
   dateFormatter,
   getGreeting,
   getDeviceType,
   socketConnection,
   disconnectSocket,
+  originalStyle,
+  highlightFeature,
+  resetHighlight,
+  onEachFeature,
 };
