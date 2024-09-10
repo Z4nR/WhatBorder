@@ -75,4 +75,25 @@ export class HelperService {
       },
     });
   }
+
+  rangeCount(lat1: number, lat2: number, long1: number, long2: number): number {
+    const dLat = ((lat2 - lat1) * Math.PI) / 180.0;
+    const dLon = ((long2 - long1) * Math.PI) / 180.0;
+
+    const radLat1 = (lat1 * Math.PI) / 180.0;
+    const radLat2 = (lat2 * Math.PI) / 180.0;
+
+    const a =
+      Math.pow(Math.sin(dLat / 2), 2) +
+      Math.pow(Math.sin(dLon / 2), 2) * Math.cos(radLat1) * Math.cos(radLat2);
+
+    const rad = 6371;
+    const c = 2 * Math.asin(Math.sqrt(a));
+    const rangeInKilometers = rad * c;
+    console.log(rangeInKilometers);
+
+    const rangeInMeters = rangeInKilometers * 1000;
+
+    return Math.round(rangeInMeters);
+  }
 }
