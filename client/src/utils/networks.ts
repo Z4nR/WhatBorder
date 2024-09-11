@@ -119,6 +119,45 @@ const adminUserList = async () => {
     });
 };
 
+const compareList = async (id: any) => {
+  return axios
+    .get(`/v1/place/${id}/compare-list`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const buildingFilter = async () => {
+  return axios
+    .get(`/v1/place/building-filter`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const myList = async () => {
+  return axios
+    .get(`/v1/place/my-list`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 export {
   registerAcc,
   loginAcc,
@@ -129,4 +168,7 @@ export {
   placeStatistic,
   userList,
   adminUserList,
+  compareList,
+  buildingFilter,
+  myList,
 };
