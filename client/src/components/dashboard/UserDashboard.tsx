@@ -21,8 +21,10 @@ import { dateFormatter, getGreeting, socketConnection } from '@/utils/helper';
 import useUserState from '@/utils/state/user/userState';
 import { useMediaQuery } from 'react-responsive';
 import useDeviceState from '@/utils/state/device/deviceState';
+import useSocketState from '@/utils/state/client/clientState';
 import ClientList from '../modal/ClientList';
 import { useNavigate } from 'react-router-dom';
+import { SocketData } from '@/utils/state/client/client.types';
 
 const { Title, Text } = Typography;
 
@@ -47,25 +49,19 @@ interface DesktopData {
   desktop: string;
 }
 
-interface ChoosenClient {
-  time: number;
-  id: string;
-  desktop: string;
-  client: string;
-  type: string;
-  mobile: boolean;
-}
-
 const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [clientModal, setClientModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
-  const [mobileClient, setMobileClient] = useState<ChoosenClient>();
+  const [mobileClient, setMobileClient] = useState<SocketData>();
   const greeting = getGreeting();
   const socket = socketConnection();
 
   const userState = useUserState();
   const deviceState = useDeviceState();
+  const socketAdminState = useSocketState.useSocketAdminState();
+  const socketClientState = useSocketState.useSocketClientState();
+
   const username = userState.name;
   const mobile = deviceState.mobile;
   const time = Math.floor(new Date().getTime() / 1000);
@@ -151,10 +147,6 @@ const UserDashboard: React.FC = () => {
     };
 
     socket.on('get-client', handleGetClient);
-
-    return () => {
-      socket.off('get-client', handleGetClient);
-    };
   }, [
     deviceState.device,
     deviceState.mobile,
@@ -166,7 +158,7 @@ const UserDashboard: React.FC = () => {
   ]);
 
   useEffect(() => {
-    const handleChooseClient = (data: ChoosenClient) => {
+    const handleChooseClient = (data: SocketData) => {
       console.log(data);
 
       if (
@@ -195,14 +187,16 @@ const UserDashboard: React.FC = () => {
   ]);
 
   useEffect(() => {
-    const handleNavigation = (data: ChoosenClient) => {
+    const handleNavigation = (data: SocketData) => {
       console.log(data);
 
       if (data.client === deviceState.device) {
+        socketClientState.setSocket(data);
         navigate('/location/new/coordinate');
       }
 
       if (data.desktop === deviceState.device) {
+        socketAdminState.setSocket(data);
         navigate('/location/new');
       }
     };
@@ -212,7 +206,13 @@ const UserDashboard: React.FC = () => {
     return () => {
       socket.off('accept-client', handleNavigation);
     };
-  }, [deviceState.device, navigate, socket]);
+  }, [
+    deviceState.device,
+    navigate,
+    socket,
+    socketAdminState,
+    socketClientState,
+  ]);
 
   const columns: TableProps<DataType>['columns'] = [
     {
