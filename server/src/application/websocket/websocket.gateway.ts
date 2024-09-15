@@ -43,11 +43,44 @@ export class WebsocketGateway implements OnGatewayConnection {
     }
   }
 
-  @SubscribeMessage('latlong')
-  handleLatLong(client: any, @MessageBody() data: any): WsResponse<any> {
+  @SubscribeMessage('client')
+  handleChoosenClient(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message:', data);
-      this.server.emit('latlong', data);
+      this.server.emit('choosen-client', data);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      return { event: 'exception', data: { error: 'Internal server error' } };
+    }
+  }
+
+  @SubscribeMessage('reject-choice')
+  handleRejectClient(client: any, @MessageBody() data: any): WsResponse<any> {
+    try {
+      console.log('Received message:', data);
+      this.server.emit('reject-client', data);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      return { event: 'exception', data: { error: 'Internal server error' } };
+    }
+  }
+
+  @SubscribeMessage('accept-choice')
+  handleAcceptClient(client: any, @MessageBody() data: any): WsResponse<any> {
+    try {
+      console.log('Received message:', data);
+      this.server.emit('accept-client', data);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      return { event: 'exception', data: { error: 'Internal server error' } };
+    }
+  }
+
+  @SubscribeMessage('set-centerpoint')
+  handleCenterPoint(client: any, @MessageBody() data: any): WsResponse<any> {
+    try {
+      console.log('Received message:', data);
+      this.server.emit('centerpoint', data);
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };
