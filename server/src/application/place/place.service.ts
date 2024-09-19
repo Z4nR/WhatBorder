@@ -119,6 +119,25 @@ export class PlaceService {
     }
   }
 
+  async findBuilding() {
+    try {
+      const buildings = await this.prisma.buildingType.findMany({
+        select: {
+          building_id: true,
+          name: true,
+        },
+      });
+
+      return buildings.map((building) => ({
+        ...building,
+        building_id: building.building_id.toString(),
+      }));
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async findAll() {
     try {
       return await this.prisma.placeData.findMany({
