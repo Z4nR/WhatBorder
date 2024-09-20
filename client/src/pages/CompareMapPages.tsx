@@ -45,6 +45,7 @@ const CompareList: React.FC = () => {
   const [userId, setUserId] = useState<string>();
   const [pcc, setPcc] = useState(null);
   const [geoJsonData, setGeoJsonData] = useState<DataPlaceMap[]>([]);
+  const [userPlace, setUserPlace] = useState<string | null>();
 
   const onChange: TableTransferProps['onChange'] = (nextTargetKeys) => {
     setTargetKeys(nextTargetKeys);
@@ -215,18 +216,37 @@ const CompareList: React.FC = () => {
       key: 'place-action',
       align: 'center',
       width: '150px',
-      render: (_, { placeId, placeMap, placeCenterPoint }) => (
-        <Link
-          onClick={() => {
-            setUserId(placeId);
-            setPcc(placeCenterPoint);
-            const placeGeo = placeMap.place_geojson;
-            addNewPlaceMap({ placeId, placeGeo });
-          }}
-        >
-          Pilih Tempat
-        </Link>
-      ),
+      render: (_, { placeId, placeMap, placeCenterPoint }) => {
+        const userPlaceSelected = userPlace === placeId ? true : false;
+
+        return (
+          <Space>
+            <Link
+              disabled={userPlaceSelected || geoJsonData.length !== 0}
+              onClick={() => {
+                setUserId(placeId);
+                setPcc(placeCenterPoint);
+                const placeGeo = placeMap.place_geojson;
+                addNewPlaceMap({ placeId, placeGeo });
+                setUserPlace(placeId);
+              }}
+            >
+              Pilih Tempat
+            </Link>
+            <Link
+              disabled={!userPlaceSelected}
+              onClick={() => {
+                setGeoJsonData([]);
+                setUserId('');
+                setPcc(null);
+                setUserPlace(null);
+              }}
+            >
+              Reset Tempat
+            </Link>
+          </Space>
+        );
+      },
     },
   ];
 
@@ -341,8 +361,8 @@ const CompareList: React.FC = () => {
         rightColumns={columnsTarget}
       />
       <Switch
-        unCheckedChildren="Buka Pilihan"
-        checkedChildren="Kunci Pilihan"
+        unCheckedChildren="Kunci Pilihan"
+        checkedChildren="Buka Pilihan"
         checked={disabled}
         onChange={toggleDisabled}
       />
