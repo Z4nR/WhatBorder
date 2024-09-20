@@ -48,9 +48,16 @@ export class PlaceController {
     return await this.placeService.create(userId, name, createPlaceDto);
   }
 
+  @Roles(Role.USER, Role.ADMIN)
   @Get()
   async findAll() {
     return await this.placeService.findAll();
+  }
+
+  @Roles(Role.USER, Role.ADMIN)
+  @Get('building-filter')
+  async findAllBuilding() {
+    return await this.placeService.findBuilding();
   }
 
   @Roles(Role.USER)
@@ -69,11 +76,13 @@ export class PlaceController {
     return await this.placeService.findPlace(userId);
   }
 
-  @Get('compare-list')
-  async compareList() {
-    return await this.placeService.compareList();
+  @Roles(Role.USER)
+  @Get(':id/compare-list')
+  async compareList(@Param('id') id: string) {
+    return await this.placeService.compareList(id);
   }
 
+  @Roles(Role.USER, Role.ADMIN)
   @Get(':id/detail')
   async findOne(@Param('id') id: string) {
     return await this.placeService.findOne(id);
