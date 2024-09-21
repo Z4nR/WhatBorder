@@ -7,6 +7,7 @@ import { Navigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { getDeviceType } from '@/utils/helper';
 import useDeviceState from '@/utils/state/device/deviceState';
+import { customAlphabet } from 'nanoid';
 
 const { Title } = Typography;
 
@@ -26,6 +27,8 @@ const Login: React.FC = () => {
   const userAgent = navigator.userAgent;
   const deviceType = getDeviceType(userAgent);
 
+  const nanoid = customAlphabet('1234567890ABCDEFGHIJ', 10);
+
   const { mutate } = useMutation({
     mutationFn: loginAcc,
     onSuccess: (data) => {
@@ -33,6 +36,7 @@ const Login: React.FC = () => {
         accessToken: data.accessToken,
       });
       deviceState.setDevice({
+        uniqueCode: nanoid(5),
         device: userAgent,
         type: deviceType.device,
         mobile: deviceType.mobile,
