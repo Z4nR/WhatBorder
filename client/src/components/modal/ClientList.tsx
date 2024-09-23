@@ -28,7 +28,8 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
         setListClient((prevData) => {
           const exists = prevData.some(
             (client) =>
-              client.time === data.time && client.client === data.client
+              client.uniqueCode === data.uniqueCode &&
+              client.client === data.client
           );
 
           if (!exists) {
@@ -84,11 +85,11 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
       key: 'desktop-action',
       align: 'center',
       width: '150px',
-      render: (_, { time, id, desktop, client, mobile, type }) => (
+      render: (_, { uniqueCode, id, desktop, client, mobile, type }) => (
         <Link
           disabled={disableChoice}
           onClick={() => {
-            const data = { time, id, desktop, client, mobile, type };
+            const data = { uniqueCode, id, desktop, client, mobile, type };
             console.log(data);
 
             socket.emit('client', data);
@@ -103,7 +104,7 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
 
   return (
     <Modal
-      title="Daftar Perangkat Tertaut"
+      title="Daftar Perangkat Seluler Tertaut"
       open={state}
       maskClosable={false}
       footer={null}
@@ -115,7 +116,7 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
       <Table
         columns={columnsClient}
         dataSource={listClient}
-        rowKey={({ time }) => time.toString()}
+        rowKey={({ uniqueCode }) => uniqueCode}
       />
     </Modal>
   );
