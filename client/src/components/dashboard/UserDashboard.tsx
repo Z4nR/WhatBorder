@@ -63,8 +63,8 @@ const UserDashboard: React.FC = () => {
   const socketClientState = useSocketState.useSocketClientState();
 
   const username = userState.name;
+  const uniqueCode = deviceState.uniqueCode;
   const mobile = deviceState.mobile;
-  const time = Math.floor(new Date().getTime() / 1000);
 
   const actions: React.ReactNode[] = [
     <Tooltip title="Buat Koneksi">
@@ -136,9 +136,9 @@ const UserDashboard: React.FC = () => {
         mobile
       ) {
         socket.emit('set-list', {
-          time: time,
           id: data.id,
           desktop: data.desktop,
+          uniqueCode: uniqueCode,
           client: deviceState.device,
           type: deviceState.type,
           mobile: deviceState.mobile,
@@ -153,7 +153,7 @@ const UserDashboard: React.FC = () => {
     deviceState.type,
     mobile,
     socket,
-    time,
+    uniqueCode,
     userState.name,
   ]);
 
@@ -283,7 +283,10 @@ const UserDashboard: React.FC = () => {
             <Title level={3}>
               {greeting}, {username}
             </Title>
-            <Flex gap={30} wrap>
+            <Text>
+              Kode Perangkat Tertaut: <b>{uniqueCode}</b>
+            </Text>
+            <Flex gap={30} style={{ marginTop: '8px' }} wrap>
               <Statistic title={'Total Tempat'} value={2} />
               <Statistic title={'Baru Ditambahkan'} value={2} />
             </Flex>
