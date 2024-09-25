@@ -86,7 +86,7 @@ const UserDashboard: React.FC = () => {
   ];
 
   const isUserMiniTool = useMediaQuery({
-    query: '(min-width: 600px)',
+    query: '(min-width: 640px)',
   });
 
   const { data, isLoading } = useQuery({
