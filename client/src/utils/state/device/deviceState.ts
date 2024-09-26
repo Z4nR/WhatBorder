@@ -5,11 +5,13 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 const useDeviceState = create<DeviceState>()(
   persist(
     (set) => ({
+      uniqueCode: '',
       mobile: false,
       device: '',
       type: '',
       setDevice: (state: DeviceData) => set(() => ({ ...state })),
-      clearDevice: () => set(() => ({ mobile: false, device: '', type: '' })),
+      clearDevice: () =>
+        set(() => ({ uniqueCode: '', mobile: false, device: '', type: '' })),
     }),
     {
       name: 'device',
