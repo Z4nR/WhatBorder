@@ -1,16 +1,16 @@
 export interface SocketData {
-  time: number;
   id: string;
   desktop: string;
+  uniqueCode: string;
   client: string;
   type: string;
   mobile: boolean;
 }
 
 export interface SocketState {
-  time: number;
   id: string;
   desktop: string;
+  uniqueCode: string;
   client: string;
   type: string;
   mobile: boolean;
