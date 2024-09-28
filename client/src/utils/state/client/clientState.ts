@@ -2,21 +2,21 @@ import { create } from 'zustand';
 import { SocketData, SocketState } from './client.types';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
-const useSocketState = create<SocketState>()(
+const useSocketAdminState = create<SocketState>()(
   persist(
     (set) => ({
-      time: 0,
       id: '',
       desktop: '',
+      uniqueCode: '',
       client: '',
       type: '',
       mobile: false,
       setSocket: (state: SocketData) => set(() => ({ ...state })),
       clearSocket: () =>
         set(() => ({
-          time: 0,
           id: '',
           desktop: '',
+          uniqueCode: '',
           client: '',
           type: '',
           mobile: false,
@@ -24,9 +24,36 @@ const useSocketState = create<SocketState>()(
     }),
     {
       name: 'socketData',
-      storage: createJSONStorage(() => sessionStorage),
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
 
-export default useSocketState;
+const useSocketClientState = create<SocketState>()(
+  persist(
+    (set) => ({
+      id: '',
+      desktop: '',
+      uniqueCode: '',
+      client: '',
+      type: '',
+      mobile: false,
+      setSocket: (state: SocketData) => set(() => ({ ...state })),
+      clearSocket: () =>
+        set(() => ({
+          id: '',
+          desktop: '',
+          uniqueCode: '',
+          client: '',
+          type: '',
+          mobile: false,
+        })),
+    }),
+    {
+      name: 'socketData',
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
+
+export default { useSocketAdminState, useSocketClientState };
