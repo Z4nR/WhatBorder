@@ -1,9 +1,12 @@
-import { dateFormatter, timeFormatter } from '@/utils/helper';
+import { dateFormatter } from '@/utils/helper';
 import { profileUser } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
 import {
   Avatar,
   Button,
+  Descriptions,
+  DescriptionsProps,
+  Dropdown,
   Flex,
   GetRef,
   Input,
@@ -16,20 +19,27 @@ import {
   Typography,
 } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, MoreOutlined } from '@ant-design/icons';
 import { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { id } from 'date-fns/locale';
+import MapInProfile from '@/components/map/MapInProfile';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 type InputRef = GetRef<typeof Input>;
+
 interface DataType {
   place_id: string;
   place_name: string;
   place_address: string;
+  place_center_point: any;
+  place_map: any;
   type: {
     name: string;
     label: string;
+    color: string;
   };
   created_at: Date;
 }
@@ -40,7 +50,6 @@ const ProfilePages: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['user-profile'],
     queryFn: async () => await profileUser(),
-    refetchOnWindowFocus: false,
   });
 
   const [searchText, setSearchText] = useState('');
@@ -140,6 +149,29 @@ const ProfilePages: React.FC = () => {
       ),
   });
 
+  const items = [
+    { key: '1', label: 'Action 1' },
+    { key: '2', label: 'Action 2' },
+  ];
+
+  const itemsDescription: DescriptionsProps['items'] = [
+    {
+      key: '1',
+      label: 'Dibuat Pada',
+      children: dateFormatter(data?.createdAt),
+    },
+    {
+      key: '2',
+      label: 'Status Akun',
+      children: data?.admin ? 'Pengelola' : 'Pengguna',
+    },
+    {
+      key: '3',
+      label: 'Deskripsi Akun',
+      children: data?.description === null ? '-' : data?.description,
+    },
+  ];
+
   const columns: TableProps<DataType>['columns'] = [
     {
       title: 'Nama Tempat',
@@ -183,6 +215,21 @@ const ProfilePages: React.FC = () => {
         return <p>{date}</p>;
       },
     },
+    {
+      title: 'Tindakan',
+      key: 'place-action',
+      align: 'center',
+      width: '80px',
+      render: () => (
+        <Space size="middle">
+          <Dropdown menu={{ items }}>
+            <span style={{ cursor: 'pointer' }}>
+              <MoreOutlined />
+            </span>
+          </Dropdown>
+        </Space>
+      ),
+    },
   ];
 
   return (
@@ -199,20 +246,51 @@ const ProfilePages: React.FC = () => {
             <Text
               style={{ fontSize: '1rem' }}
               strong
-              copyable={{ text: `${data?.userName}` }}
+              copyable={{
+                text: `${data?.userName}`,
+                tooltips: ['Salin Username', 'Username Berhasil Disalin'],
+              }}
             >
               {data?.fullName}
             </Text>
-            <Text>Terakhir Diperbarui {timeFormatter(data?.updateAt)}</Text>
+            {data && (
+              <Text>
+                Terakhir Diperbarui{' '}
+                {formatDistanceToNow(parseISO(data?.updateAt), {
+                  addSuffix: true,
+                  locale: id,
+                })}
+              </Text>
+            )}
+            <Descriptions items={itemsDescription} />
           </Flex>
         </Space>
       </Skeleton>
       <Table
+        size="small"
         sticky
         style={{ backgroundColor: 'transparent' }}
         columns={columns}
         dataSource={data?.place}
         rowKey={({ place_id }) => place_id}
+        expandable={{
+          expandedRowRender: ({
+            place_id,
+            place_map,
+            place_center_point,
+            type,
+          }) => (
+            <div>
+              <MapInProfile
+                place_center_point={place_center_point}
+                place_id={place_id}
+                color={type.color}
+                place_map={place_map}
+              />
+              <Paragraph>Lorem Ipsum</Paragraph>
+            </div>
+          ),
+        }}
       />
     </Flex>
   );
