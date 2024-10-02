@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useMemo } from 'react';
 import {
   Breadcrumb,
+  Button,
   Descriptions,
   Flex,
   Skeleton,
@@ -14,9 +15,9 @@ import { placeDetail } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
 import MapDetail from '@/components/map/MapDetail';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
-const PlaceDetail: React.FC = () => {
+const PlaceDetailPages: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -77,9 +78,9 @@ const PlaceDetail: React.FC = () => {
           {
             onClick: () => navigate('/statistic'),
             title: (
-              <Text className="home-breadcrumb" style={{ cursor: 'pointer' }}>
+              <Button type="link" className="home-breadcrumb">
                 Kembali
-              </Text>
+              </Button>
             ),
           },
           {
@@ -112,4 +113,4 @@ const PlaceDetail: React.FC = () => {
   );
 };
 
-export default PlaceDetail;
+export default PlaceDetailPages;

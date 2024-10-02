@@ -2,7 +2,7 @@ import { Button, Layout, Space, Typography, theme } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 
 import { Outlet, useNavigate } from 'react-router-dom';
-import Siders from '@/components/Siders';
+import Siders from '@/layout/Siders';
 import { disconnectSocket } from '@/utils/helper';
 import { useQueryClient } from '@tanstack/react-query';
 import useAuthState from '@/utils/state/auth/authState';

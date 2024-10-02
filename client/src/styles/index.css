@@ -25,14 +25,21 @@ html {
   border-radius: 6px;
 }
 
-.ant-float-btn-content {
-  width: 40px !important;
+.home-breadcrumb {
+  height: 0;
+  padding: 0;
 }
 
-.ant-float-btn-icon {
-  text-align: center !important;
-  margin: auto !important;
-  width: max-content !important;
-  font-size: 18px !important;
-  line-height: 1 !important;
+.ant-typography-copy svg {
+  width: 14px;
+  height: 14px;
+}
+
+.icon-process svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.ant-descriptions-header {
+  margin-bottom: 8px !important;
 }
