@@ -24,6 +24,7 @@ import { registerAcc } from '@/utils/networks';
 import CryptoJS from 'crypto-js';
 import { getDeviceType } from '@/utils/helper';
 import useDeviceState from '@/utils/state/device/deviceState';
+import { customAlphabet } from 'nanoid';
 
 const { Title } = Typography;
 
@@ -47,6 +48,8 @@ const Register: React.FC = () => {
   const userAgent = navigator.userAgent;
   const deviceType = getDeviceType(userAgent);
 
+  const nanoid = customAlphabet('1234567890ABCDEFGHIJ', 10);
+
   const { mutate } = useMutation({
     mutationFn: registerAcc,
     onSuccess: (data) => {
@@ -54,6 +57,7 @@ const Register: React.FC = () => {
         accessToken: data.accessToken,
       });
       deviceState.setDevice({
+        uniqueCode: nanoid(5),
         device: userAgent,
         type: deviceType.device,
         mobile: deviceType.mobile,

@@ -81,7 +81,7 @@ const UserDashboard: React.FC = () => {
       />
     </Tooltip>,
     <Tooltip title="Profil">
-      <UserOutlined key="profile" onClick={() => navigate('/me')} />
+      <UserOutlined key="profile" onClick={() => navigate('/profile')} />
     </Tooltip>,
   ];
 

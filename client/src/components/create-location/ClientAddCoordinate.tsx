@@ -37,7 +37,11 @@ const ClientAddCoordinate: React.FC = () => {
         items={[
           {
             onClick: () => navigate('/'),
-            title: <Text className="home-breadcrumb">Kembali</Text>,
+            title: (
+              <Text className="home-breadcrumb" style={{ cursor: 'pointer' }}>
+                Kembali
+              </Text>
+            ),
           },
           {
             title: 'Tambahkan Koordinat',

@@ -76,7 +76,11 @@ const PlaceDetail: React.FC = () => {
         items={[
           {
             onClick: () => navigate('/statistic'),
-            title: <Text className="home-breadcrumb">Kembali</Text>,
+            title: (
+              <Text className="home-breadcrumb" style={{ cursor: 'pointer' }}>
+                Kembali
+              </Text>
+            ),
           },
           {
             title: 'Rincian Tempat',

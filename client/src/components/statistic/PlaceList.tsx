@@ -146,7 +146,7 @@ const PlaceList: React.FC = () => {
       title: 'Alamat',
       dataIndex: 'placeAddress',
       key: 'place-address',
-      responsive: ['lg'],
+      responsive: ['xl'],
     },
     {
       title: 'Tipe',
@@ -192,7 +192,7 @@ const PlaceList: React.FC = () => {
       align: 'center',
       width: '150px',
       render: (_, { placeId }) => (
-        <Link to={`/${placeId}/detil`}>Lihat Detil</Link>
+        <Link to={`/${placeId}/detail`}>Rincian</Link>
       ),
     },
   ];

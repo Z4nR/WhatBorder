@@ -25,7 +25,7 @@ const AuthRoute = () => {
   const [notified, setNotified] = useState(false);
 
   const { data, error, isError, isFetching } = useQuery({
-    queryKey: ['user'],
+    queryKey: ['login', authState.accessToken],
     queryFn: async () => await getLogged(),
     enabled: !!authState.accessToken,
     staleTime: 60 * 60 * 1000,
@@ -75,8 +75,8 @@ const App: React.FC = () => {
               <Route index element={<DashboardPages />} />
               <Route path="/statistic" element={<StatisticPages />} />
               <Route path="/compare-map" element={<CompareMapPages />} />
-              <Route path="/me" element={<ProfilePages />} />
-              <Route path="/:id/detil" element={<PlaceDetail />} />
+              <Route path="/profile" element={<ProfilePages />} />
+              <Route path="/:id/detail" element={<PlaceDetail />} />
               <Route path="/location/new" element={<DesktopCreateLocation />} />
               <Route
                 path="/location/new/coordinate"
