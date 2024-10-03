@@ -3,35 +3,47 @@ import { profileUser } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
 import {
   Avatar,
+  Breadcrumb,
   Button,
   Descriptions,
   DescriptionsProps,
-  Dropdown,
   Flex,
   GetRef,
   Input,
+  message,
+  Popconfirm,
+  PopconfirmProps,
   Skeleton,
   Space,
   Table,
   TableColumnType,
   TableProps,
   Tag,
+  Tooltip,
   Typography,
 } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { SearchOutlined, MoreOutlined } from '@ant-design/icons';
+import {
+  SearchOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
 import { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 import MapInProfile from '@/components/map/MapInProfile';
+import { useNavigate } from 'react-router-dom';
+import EmptyData from '@/components/utils/EmptyData';
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 type InputRef = GetRef<typeof Input>;
 
 interface DataType {
   place_id: string;
+  place_owner: string;
+  place_description: string;
   place_name: string;
   place_address: string;
   place_center_point: any;
@@ -47,7 +59,9 @@ interface DataType {
 type DataIndex = keyof DataType;
 
 const ProfilePages: React.FC = () => {
-  const { data, isLoading } = useQuery({
+  const navigate = useNavigate();
+
+  const userProfile = useQuery({
     queryKey: ['user-profile'],
     queryFn: async () => await profileUser(),
   });
@@ -149,28 +163,30 @@ const ProfilePages: React.FC = () => {
       ),
   });
 
-  const items = [
-    { key: '1', label: 'Action 1' },
-    { key: '2', label: 'Action 2' },
-  ];
-
-  const itemsDescription: DescriptionsProps['items'] = [
+  const itemsDescUser: DescriptionsProps['items'] = [
     {
       key: '1',
       label: 'Dibuat Pada',
-      children: dateFormatter(data?.createdAt),
+      children: dateFormatter(userProfile.data?.createdAt),
     },
     {
       key: '2',
       label: 'Status Akun',
-      children: data?.admin ? 'Pengelola' : 'Pengguna',
+      children: userProfile.data?.admin ? 'Pengelola' : 'Pengguna',
     },
     {
       key: '3',
       label: 'Deskripsi Akun',
-      children: data?.description === null ? '-' : data?.description,
+      children: userProfile.data?.description
+        ? userProfile.data?.description
+        : '-',
     },
   ];
+
+  const confirm: PopconfirmProps['onConfirm'] = (e) => {
+    console.log(e);
+    message.success('Click on Yes');
+  };
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -178,12 +194,6 @@ const ProfilePages: React.FC = () => {
       dataIndex: 'place_name',
       key: 'place-name',
       ...getColumnSearchProps('place_name'),
-    },
-    {
-      title: 'Alamat',
-      dataIndex: 'place_address',
-      key: 'place-address',
-      responsive: ['xl'],
     },
     {
       title: 'Tipe',
@@ -200,99 +210,156 @@ const ProfilePages: React.FC = () => {
       },
     },
     {
-      title: 'Ditambahkan Pada',
-      dataIndex: 'created_at',
-      key: 'place-create',
-      align: 'center',
-      width: '150px',
-      responsive: ['md'],
-      sorter: (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-      sortDirections: ['descend', 'ascend'],
-      defaultSortOrder: 'ascend',
-      render: (_, { created_at }) => {
-        const date = dateFormatter(created_at);
-        return <p>{date}</p>;
-      },
-    },
-    {
       title: 'Tindakan',
       key: 'place-action',
       align: 'center',
-      width: '80px',
+      width: '150px',
       render: () => (
         <Space size="middle">
-          <Dropdown menu={{ items }}>
-            <span style={{ cursor: 'pointer' }}>
-              <MoreOutlined />
-            </span>
-          </Dropdown>
+          <Tooltip title="Ubah Data Tempat" placement="bottom">
+            <Button type="primary">
+              <EditOutlined />
+            </Button>
+          </Tooltip>
+          <Popconfirm
+            title="Delete the task"
+            description="Are you sure to delete this task?"
+            onConfirm={confirm}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tooltip title="Hapus Data Tempat" placement="bottom">
+              <Button danger>
+                <DeleteOutlined />
+              </Button>
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },
   ];
 
   return (
-    <Flex gap={'middle'} vertical>
-      <Skeleton loading={isLoading} active title paragraph={{ rows: 2 }}>
-        <Space>
-          <Avatar
-            size={{ md: 48, lg: 48, xl: 48 }}
-            style={{ backgroundColor: '#1677ff' }}
-          >
-            {data?.avatar}
-          </Avatar>
-          <Flex vertical>
-            <Text
-              style={{ fontSize: '1rem' }}
-              strong
-              copyable={{
-                text: `${data?.userName}`,
-                tooltips: ['Salin Username', 'Username Berhasil Disalin'],
+    <>
+      <Breadcrumb
+        items={[
+          {
+            onClick: () => navigate('/'),
+            title: (
+              <Button type="link" className="home-breadcrumb">
+                Kembali
+              </Button>
+            ),
+          },
+          {
+            title: `Profil Pengguna`,
+          },
+        ]}
+        style={{ marginBottom: '1rem' }}
+      />
+      <Flex gap={'middle'} vertical>
+        <Skeleton
+          loading={userProfile.isLoading}
+          active
+          avatar
+          paragraph={{ rows: 2 }}
+        >
+          <Space>
+            <Avatar
+              size={{ md: 48, lg: 48, xl: 48 }}
+              style={{
+                backgroundColor: '#1677ff',
               }}
             >
-              {data?.fullName}
-            </Text>
-            {data && (
-              <Text>
-                Terakhir Diperbarui{' '}
-                {formatDistanceToNow(parseISO(data?.updateAt), {
-                  addSuffix: true,
-                  locale: id,
-                })}
+              {userProfile.data?.avatar}
+            </Avatar>
+            <Flex vertical>
+              <Text
+                style={{ fontSize: '1rem' }}
+                strong
+                copyable={{
+                  text: `${userProfile.data?.userName}`,
+                  tooltips: ['Salin Username', 'Username Berhasil Disalin'],
+                }}
+              >
+                {userProfile.data?.fullName}
               </Text>
-            )}
-            <Descriptions items={itemsDescription} />
-          </Flex>
-        </Space>
-      </Skeleton>
-      <Table
-        size="small"
-        sticky
-        style={{ backgroundColor: 'transparent' }}
-        columns={columns}
-        dataSource={data?.place}
-        rowKey={({ place_id }) => place_id}
-        expandable={{
-          expandedRowRender: ({
-            place_id,
-            place_map,
-            place_center_point,
-            type,
-          }) => (
-            <div>
-              <MapInProfile
-                place_center_point={place_center_point}
-                place_id={place_id}
-                color={type.color}
-                place_map={place_map}
-              />
-              <Paragraph>Lorem Ipsum</Paragraph>
-            </div>
-          ),
-        }}
-      />
-    </Flex>
+              {userProfile.data && (
+                <Text>
+                  Terakhir Diperbarui{' '}
+                  {formatDistanceToNow(parseISO(userProfile.data?.updateAt), {
+                    addSuffix: true,
+                    locale: id,
+                  })}
+                </Text>
+              )}
+              <Descriptions size="small" items={itemsDescUser} />
+            </Flex>
+          </Space>
+        </Skeleton>
+        <Table
+          size="small"
+          sticky
+          style={{ backgroundColor: 'transparent' }}
+          columns={columns}
+          dataSource={userProfile.data?.place}
+          rowKey={({ place_id }) => place_id}
+          locale={{
+            emptyText: (
+              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+            ),
+          }}
+          expandable={{
+            expandedRowRender: ({
+              place_id,
+              place_owner,
+              place_description,
+              place_map,
+              place_center_point,
+              place_address,
+              type,
+              created_at,
+            }) => (
+              <div style={{ paddingInline: '8px', paddingBottom: '8px' }}>
+                <Descriptions
+                  size="small"
+                  style={{ marginBottom: '1em' }}
+                  title="Info Tempat"
+                  items={[
+                    {
+                      key: '1',
+                      label: 'Ditambahkan Pada',
+                      children: dateFormatter(created_at),
+                    },
+                    {
+                      key: '2',
+                      label: 'Alamat Tempat',
+                      children: place_address,
+                    },
+                    {
+                      key: '3',
+                      label: 'Pemilik Tempat',
+                      children: place_owner ? place_owner : '-',
+                    },
+                    {
+                      key: '4',
+                      label: 'Penjelasan Tempat',
+                      children: place_description ? place_description : '-',
+                    },
+                  ]}
+                />
+                <MapInProfile
+                  place_center_point={place_center_point}
+                  place_id={place_id}
+                  color={type.color}
+                  place_map={place_map}
+                />
+              </div>
+            ),
+          }}
+        />
+      </Flex>
+    </>
   );
 };
 
