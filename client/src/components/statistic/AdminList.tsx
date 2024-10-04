@@ -16,6 +16,7 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
 import { adminUserList } from '@/utils/networks';
+import EmptyData from '../utils/EmptyData';
 
 type InputRef = GetRef<typeof Input>;
 interface DataType {
@@ -190,6 +191,9 @@ const AdminList: React.FC = () => {
       columns={columns}
       dataSource={data}
       rowKey={({ userId }) => userId}
+      locale={{
+        emptyText: <EmptyData description="Data Pengguna Kosong" />,
+      }}
     />
   );
 };

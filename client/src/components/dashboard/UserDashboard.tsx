@@ -25,6 +25,7 @@ import useSocketState from '@/utils/state/client/clientState';
 import ClientList from '../modal/ClientList';
 import { useNavigate } from 'react-router-dom';
 import { SocketData } from '@/utils/state/client/client.types';
+import EmptyData from '../utils/EmptyData';
 
 const { Title, Text } = Typography;
 
@@ -287,8 +288,8 @@ const UserDashboard: React.FC = () => {
               Kode Perangkat Tertaut: <b>{uniqueCode}</b>
             </Text>
             <Flex gap={30} style={{ marginTop: '8px' }} wrap>
-              <Statistic title={'Total Tempat'} value={2} />
-              <Statistic title={'Baru Ditambahkan'} value={2} />
+              <Statistic title={'Total Tempat'} value={data?.totalPlace} />
+              <Statistic title={'Baru Ditambahkan Bulan Ini'} value={2} />
             </Flex>
           </Card>
           <Skeleton loading={isLoading} active>
@@ -311,6 +312,11 @@ const UserDashboard: React.FC = () => {
                 columns={columns}
                 dataSource={data?.newPlace}
                 rowKey={({ placeId }) => placeId}
+                locale={{
+                  emptyText: (
+                    <EmptyData description="Belum Ada Tempat Baru Yang Ditambahkan" />
+                  ),
+                }}
               />
             </div>
           </Flex>

@@ -93,9 +93,9 @@ const DesktopCreateLocation: React.FC = () => {
           {
             onClick: () => navigate('/'),
             title: (
-              <Text className="home-breadcrumb" style={{ cursor: 'pointer' }}>
+              <Button type="link" className="home-breadcrumb">
                 Kembali
-              </Text>
+              </Button>
             ),
           },
           {
@@ -186,7 +186,7 @@ const DesktopCreateLocation: React.FC = () => {
                     >
                       <Select placeholder="Pilih Jenis Tempat" allowClear>
                         {building.data?.map((item: any) => (
-                          <Option key={item.buildingId} value={item.buildingId}>
+                          <Option key={item.buildingId} value={item.name}>
                             {item.name}
                           </Option>
                         ))}

@@ -2,7 +2,6 @@ import { Button, GetRef, Input, Space, Table, TableColumnType } from 'antd';
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
@@ -10,6 +9,8 @@ import { dateFormatter } from '@/utils/helper';
 import { userList } from '@/utils/networks';
 import useUserState from '@/utils/state/user/userState';
 import AdminList from './AdminList';
+import StatisticProfile from '../modal/StatisticProfile';
+import EmptyData from '../utils/EmptyData';
 
 type InputRef = GetRef<typeof Input>;
 interface DataType {
@@ -22,6 +23,9 @@ interface DataType {
 type DataIndex = keyof DataType;
 
 const UserList: React.FC = () => {
+  const [profileModal, setProfileModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState('');
+
   const user = useUserState().role;
 
   const { data } = useQuery({
@@ -159,8 +163,16 @@ const UserList: React.FC = () => {
       key: 'user-action',
       width: '150px',
       align: 'center',
-      render: (_, detail) => (
-        <Link to={`/${detail.userId}/info`}>Lihat Pengguna</Link>
+      render: (_, { userId }) => (
+        <Button
+          type="link"
+          onClick={() => {
+            setSelectedUserId(userId);
+            setProfileModal(true);
+          }}
+        >
+          Rincian
+        </Button>
       ),
     },
   ];
@@ -168,13 +180,25 @@ const UserList: React.FC = () => {
   return user ? (
     <AdminList />
   ) : (
-    <Table
-      sticky
-      style={{ backgroundColor: 'transparent' }}
-      columns={columns}
-      dataSource={data}
-      rowKey={({ userId }) => userId}
-    />
+    <>
+      {profileModal && (
+        <StatisticProfile
+          id={selectedUserId}
+          state={profileModal}
+          setState={setProfileModal}
+        />
+      )}
+      <Table
+        sticky
+        style={{ backgroundColor: 'transparent' }}
+        columns={columns}
+        dataSource={data}
+        rowKey={({ userId }) => userId}
+        locale={{
+          emptyText: <EmptyData description="Data Pengguna Kosong" />,
+        }}
+      />
+    </>
   );
 };
 

@@ -40,6 +40,18 @@ html {
   height: 1rem;
 }
 
-.ant-descriptions-header {
-  margin-bottom: 8px !important;
+.icon-profile,
+.icon-profile-danger {
+  height: max-content !important;
+}
+
+.icon-profile svg,
+.icon-profile-danger svg {
+  width: 15px;
+  height: 15px;
+}
+
+.icon-profile-danger:hover {
+  border-color: #ff4d4f !important;
+  color: #ff4d4f !important;
 }

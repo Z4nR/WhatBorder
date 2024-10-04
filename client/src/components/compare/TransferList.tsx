@@ -3,6 +3,7 @@ import {
   TableTransferProps,
   TransferItem,
 } from '@/utils/state/compare/compare.types';
+import EmptyData from '../utils/EmptyData';
 
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
 
@@ -44,6 +45,14 @@ const TransferList: React.FC<TableTransferProps> = (props) => {
             dataSource={filteredItems}
             size="small"
             style={{ pointerEvents: listDisabled ? 'none' : undefined }}
+            locale={{
+              emptyText:
+                direction === 'left' ? (
+                  <EmptyData description="Tidak Ada Tempat Lain Yang Bersinggungan" />
+                ) : (
+                  <EmptyData description="Tidak Ada Tempat Lain Sebagai Pembanding" />
+                ),
+            }}
             onRow={
               direction === 'left'
                 ? ({ key, disabled: itemDisabled }) => ({

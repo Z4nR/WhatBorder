@@ -15,7 +15,7 @@ model User {
   admin        Boolean     @default(false)
   description  String?
   created_at   DateTime    @default(now())
-  update_at    DateTime    @updatedAt
+  updated_at   DateTime    @updatedAt
   special_code String
   login_at     DateTime    @default(now())
   place        PlaceData[]
@@ -29,7 +29,7 @@ model BuildingType {
   created_by  String?
   created_at  DateTime    @default(now())
   updated_by  String?
-  update_at   DateTime    @updatedAt
+  updated_at  DateTime    @updatedAt
   label       String      @default("")
   PlaceData   PlaceData[]
 }
@@ -46,7 +46,7 @@ model PlaceData {
   created_by         String?
   created_at         DateTime      @default(now())
   updated_by         String?
-  update_at          DateTime      @updatedAt
+  updated_at         DateTime      @updatedAt
   type_id            BigInt?
   place_map          PlaceMap?     @relation(fields: [map_id], references: [map_id], map: "FK_place_data_place_map")
   type               BuildingType? @relation(fields: [type_id], references: [building_id], map: "FK_place_data_type")
@@ -59,6 +59,6 @@ model PlaceMap {
   created_by    String?
   created_at    DateTime   @default(now())
   updated_by    String?
-  update_at     DateTime   @updatedAt
+  updated_at    DateTime   @updatedAt
   place_data    PlaceData?
 }

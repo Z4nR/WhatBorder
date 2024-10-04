@@ -339,8 +339,6 @@ const CompareList: React.FC = () => {
     map.fitBounds(e.target.getBounds());
   };
 
-  console.log(geoJsonData);
-
   return (
     <Flex align="end" gap="middle" vertical>
       <UserPlaceList

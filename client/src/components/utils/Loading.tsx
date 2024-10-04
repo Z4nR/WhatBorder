@@ -8,7 +8,7 @@ const Loading: React.FC = () => {
         justifyContent: 'center',
       }}
     >
-      <Spin style={{ margin: '0 auto' }} tip="Loading..." size="large">
+      <Spin style={{ margin: '0 auto' }} tip="Memuat..." size="large">
         <div className="content" />
       </Spin>
     </Layout>
