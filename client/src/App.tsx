@@ -16,7 +16,6 @@ import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
 import DesktopCreateLocation from './components/create-location/DesktopCreateLocation';
 import ClientAddCoordinate from './components/create-location/ClientAddCoordinate';
-import SettingPages from './pages/SettingPages';
 
 const queryClient = new QueryClient();
 
@@ -83,7 +82,6 @@ const App: React.FC = () => {
                 path="/location/new/coordinate"
                 element={<ClientAddCoordinate />}
               />
-              <Route path="/setting" element={<SettingPages />} />
             </Route>
           </Route>
           <Route path="/auth" element={<VerifPages />} />

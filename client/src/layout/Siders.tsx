@@ -5,7 +5,6 @@ import {
   FundViewOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
-  SettingOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { useMediaQuery } from 'react-responsive';
@@ -34,11 +33,6 @@ const Siders: React.FC = () => {
       key: '3',
       icon: <BlockOutlined />,
       label: <Link to={'/compare-map'}>Bandingkan Tempat</Link>,
-    },
-    {
-      key: '4',
-      icon: <SettingOutlined />,
-      label: <Link to={'/setting'}>Pengaturan</Link>,
     },
   ];
 
