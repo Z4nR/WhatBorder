@@ -11,7 +11,7 @@ const ClientAddCoordinate: React.FC = () => {
   const navigate = useNavigate();
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
-  const [usingCoordinate, setUsingCoordinate] = useState(false);
+  const [usingCoordinate, setUsingCoordinate] = useState(true);
 
   const socket = socketConnection();
   const socketState = useSocketState.useSocketClientState();
@@ -22,7 +22,7 @@ const ClientAddCoordinate: React.FC = () => {
         const { latitude, longitude } = position.coords;
         setLat(latitude);
         setLong(longitude);
-        setUsingCoordinate(true);
+        setUsingCoordinate(false);
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
       },
       (error) => {
@@ -38,9 +38,9 @@ const ClientAddCoordinate: React.FC = () => {
           {
             onClick: () => navigate('/'),
             title: (
-              <Text className="home-breadcrumb" style={{ cursor: 'pointer' }}>
+              <Button type="link" className="home-breadcrumb">
                 Kembali
-              </Text>
+              </Button>
             ),
           },
           {
@@ -78,7 +78,7 @@ const ClientAddCoordinate: React.FC = () => {
                   desktop: socketState.desktop,
                 });
 
-                setUsingCoordinate(false);
+                setUsingCoordinate(true);
               }}
             >
               Pakai Koordinat
