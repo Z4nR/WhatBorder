@@ -54,6 +54,19 @@ const getLogged = async () => {
     });
 };
 
+const profileUser = async () => {
+  return axios
+    .get('/v1/user/profile', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 const placeList = async () => {
   return axios
     .get('/v1/place', {
@@ -96,6 +109,19 @@ const placeStatistic = async () => {
 const userList = async () => {
   return axios
     .get('/v1/user', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const userDetail = async (id: any) => {
+  return axios
+    .get(`/v1/user/${id}/detail`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -163,10 +189,12 @@ export {
   loginAcc,
   forgetPassword,
   getLogged,
+  profileUser,
   placeList,
   placeDetail,
   placeStatistic,
   userList,
+  userDetail,
   adminUserList,
   compareList,
   buildingFilter,
