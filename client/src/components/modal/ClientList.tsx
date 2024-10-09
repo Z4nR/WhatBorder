@@ -2,8 +2,10 @@ import { socketConnection } from '@/utils/helper';
 import { SocketData } from '@/utils/state/client/client.types';
 import useDeviceState from '@/utils/state/device/deviceState';
 import useUserState from '@/utils/state/user/userState';
-import { Modal, Table, TableProps, Typography } from 'antd';
+import { Button, Modal, Table, TableProps, Typography } from 'antd';
 import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'react-responsive';
+import EmptyData from '../utils/EmptyData';
 
 const { Link } = Typography;
 
@@ -20,6 +22,9 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
   const userState = useUserState();
   const deviceState = useDeviceState();
 
+  const isDesktop = useMediaQuery({ query: '(min-width: 640px)' });
+
+  // When push client to list
   useEffect(() => {
     const handleClientList = (data: SocketData) => {
       console.log(data);
@@ -44,10 +49,24 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
     socket.on('list-client', handleClientList);
 
     return () => {
-      socket.off('list-client');
+      socket.off('list-client', handleClientList);
     };
-  }, [socket, userState.name, deviceState.device]);
+  }, [deviceState.device, socket, userState.name]);
 
+  // When client logout
+  useEffect(() => {
+    const handleClientListUpdate = (data: { uniqueCode: string }) => {
+      console.log(data);
+
+      setListClient((prevData) =>
+        prevData.filter((item) => item.uniqueCode !== data.uniqueCode)
+      );
+    };
+
+    socket.on('delete-client', handleClientListUpdate);
+  }, [socket]);
+
+  // When client reject the permission and enable 'pilih perangkat' button
   useEffect(() => {
     const handleRejectClient = (data: { data: string }) => {
       console.log(data.data);
@@ -57,19 +76,21 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
 
         return client.client === data.data;
       });
-      console.log(exists);
 
       if (exists) setDisableChoice(false);
     };
 
     socket.on('reject-client', handleRejectClient);
-
-    return () => {
-      socket.off('reject-client');
-    };
   }, [listClient, socket]);
 
+  console.log(listClient);
+
   const columnsClient: TableProps<SocketData>['columns'] = [
+    {
+      title: 'Kode Perangkat',
+      dataIndex: 'uniqueCode',
+      key: 'client-code',
+    },
     {
       title: 'User Agent',
       dataIndex: 'client',
@@ -102,24 +123,47 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
     },
   ];
 
-  return (
-    <Modal
-      title="Daftar Perangkat Seluler Tertaut"
-      open={state}
-      maskClosable={false}
-      footer={null}
-      onCancel={() => {
-        setListClient([]);
-        setState(false);
-      }}
-    >
-      <Table
-        columns={columnsClient}
-        dataSource={listClient}
-        rowKey={({ uniqueCode }) => uniqueCode}
-      />
-    </Modal>
-  );
+  if (isDesktop) {
+    return (
+      <Modal
+        title="Daftar Perangkat Seluler Tertaut"
+        open={state}
+        centered
+        maskClosable={false}
+        footer={[
+          <Button
+            key="refresh"
+            onClick={() => {
+              socket.emit('search-client', {
+                id: userState.name,
+                desktop: deviceState.device,
+              });
+            }}
+          >
+            Cari Perangkat Lain
+          </Button>,
+        ]}
+        onCancel={() => {
+          setListClient([]);
+          setState(false);
+        }}
+        width={700}
+      >
+        <Table
+          style={{ height: listClient.length === 0 ? 'auto' : '380px' }}
+          columns={columnsClient}
+          dataSource={listClient}
+          pagination={{ defaultPageSize: 2, position: ['topRight'] }}
+          rowKey={({ uniqueCode }) => uniqueCode}
+          locale={{
+            emptyText: (
+              <EmptyData description="Perangkat Client Tidak Ditemukan" />
+            ),
+          }}
+        />
+      </Modal>
+    );
+  }
 };
 
 export default ClientList;
