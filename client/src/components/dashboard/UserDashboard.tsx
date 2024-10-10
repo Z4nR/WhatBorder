@@ -127,6 +127,7 @@ const UserDashboard: React.FC = () => {
     };
   }, [data]);
 
+  // When get client device
   useEffect(() => {
     const handleGetClient = (data: DesktopData) => {
       console.log(data);
@@ -136,6 +137,8 @@ const UserDashboard: React.FC = () => {
         data.desktop !== deviceState.device &&
         mobile
       ) {
+        console.log(deviceState);
+
         socket.emit('set-list', {
           id: data.id,
           desktop: data.desktop,
@@ -148,16 +151,13 @@ const UserDashboard: React.FC = () => {
     };
 
     socket.on('get-client', handleGetClient);
-  }, [
-    deviceState.device,
-    deviceState.mobile,
-    deviceState.type,
-    mobile,
-    socket,
-    uniqueCode,
-    userState.name,
-  ]);
 
+    return () => {
+      socket.off('get-client', handleGetClient);
+    };
+  }, [deviceState, mobile, socket, uniqueCode, userState.name]);
+
+  // When device choose as client
   useEffect(() => {
     const handleChooseClient = (data: SocketData) => {
       console.log(data);
@@ -187,6 +187,7 @@ const UserDashboard: React.FC = () => {
     userState.name,
   ]);
 
+  // When client accept the process
   useEffect(() => {
     const handleNavigation = (data: SocketData) => {
       console.log(data);

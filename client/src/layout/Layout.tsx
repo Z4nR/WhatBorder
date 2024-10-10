@@ -3,28 +3,39 @@ import { LogoutOutlined } from '@ant-design/icons';
 
 import { Outlet, useNavigate } from 'react-router-dom';
 import Siders from '@/layout/Siders';
-import { disconnectSocket } from '@/utils/helper';
+import { socketConnection } from '@/utils/helper';
 import { useQueryClient } from '@tanstack/react-query';
 import useAuthState from '@/utils/state/auth/authState';
 import useUserState from '@/utils/state/user/userState';
+import useDeviceState from '@/utils/state/device/deviceState';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 
 const LayoutPages: React.FC = () => {
   const queryClient = useQueryClient();
+  const socket = socketConnection();
 
   const navigate = useNavigate();
   const authState = useAuthState();
   const userState = useUserState();
+  const deviceState = useDeviceState();
 
   const handleSignOut = () => {
-    disconnectSocket();
+    socket.emit('logout-device', {
+      uniqueCode: deviceState.uniqueCode,
+    });
+
     authState.deleteToken();
     userState.clearUser();
-    queryClient.removeQueries({ queryKey: ['user'] });
+    deviceState.clearDevice();
+    localStorage.clear();
+    queryClient.clear();
 
-    navigate('/auth', { replace: true });
+    setTimeout(() => {
+      socket.removeAllListeners();
+      navigate('/auth', { replace: true });
+    }, 1000);
   };
 
   const {
