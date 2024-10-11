@@ -4,6 +4,7 @@ import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
 import { HelperService } from '../helper-service/helper.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PlaceService {
@@ -202,7 +203,7 @@ export class PlaceService {
           place_description: true,
           place_center_point: true,
           created_by: true,
-          update_at: true,
+          updated_at: true,
           type: {
             select: {
               color: true,
@@ -234,6 +235,7 @@ export class PlaceService {
   async statistic(user_id: string) {
     try {
       const totalPlaceCount = await this.prisma.placeData.count();
+
       const buildingCount = await this.prisma.buildingType.findMany({
         select: {
           name: true,
@@ -249,6 +251,7 @@ export class PlaceService {
           },
         },
       });
+
       const newestPlace = await this.prisma.placeData.findMany({
         take: 10,
         orderBy: {
