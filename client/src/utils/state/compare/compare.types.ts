@@ -1,4 +1,5 @@
 import { GetProp, TableColumnsType, TableProps, TransferProps } from 'antd';
+import { ColumnsType } from 'antd/es/table';
 
 export type TransferItem = GetProp<TransferProps, 'dataSource'>[number];
 
@@ -37,7 +38,7 @@ export interface DataUserPlaceType {
   createdAt: Date;
 }
 
-export interface TableUserProps extends TableProps {
+export interface TableUserProps extends TableProps<DataUserPlaceType> {
   dataSource: DataUserPlaceType[];
-  columns: TableColumnsType<DataUserPlaceType>;
+  columns: ColumnsType<DataUserPlaceType>;
 }
