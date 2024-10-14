@@ -24,6 +24,12 @@ export class PlaceController {
     private readonly helperService: HelperService,
   ) {}
 
+  @Roles(Role.USER, Role.ADMIN)
+  @Get('building-filter')
+  async findAllBuilding() {
+    return await this.placeService.findBuilding();
+  }
+
   @Roles(Role.USER)
   @Post()
   async create(@Req() req: Request, @Body() createPlaceDto: CreatePlaceDto) {
@@ -52,12 +58,6 @@ export class PlaceController {
   @Get()
   async findAll() {
     return await this.placeService.findAll();
-  }
-
-  @Roles(Role.USER, Role.ADMIN)
-  @Get('building-filter')
-  async findAllBuilding() {
-    return await this.placeService.findBuilding();
   }
 
   @Roles(Role.USER)

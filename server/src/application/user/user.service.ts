@@ -7,7 +7,7 @@ import { compare } from 'bcrypt';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll() {
+  async findAll(id: string) {
     try {
       return await this.prisma.user.findMany({
         select: {
@@ -18,6 +18,9 @@ export class UserService {
         },
         where: {
           admin: false,
+          // NOT: {
+          //   user_id: id,
+          // },
         },
       });
     } catch (error) {
@@ -27,27 +30,53 @@ export class UserService {
   }
 
   async myProfile(id: string) {
-    return await this.prisma.user.findUnique({
-      select: {
-        full_name: true,
-        user_name: true,
-        admin: true,
-        description: true,
-        created_at: true,
-        update_at: true,
-        place: {
-          select: {
-            place_id: true,
-            place_name: true,
-            place_address: true,
-            created_at: true,
+    try {
+      const data = await this.prisma.user.findUnique({
+        select: {
+          full_name: true,
+          user_name: true,
+          admin: true,
+          description: true,
+          created_at: true,
+          updated_at: true,
+          place: {
+            select: {
+              place_id: true,
+              place_owner: true,
+              place_description: true,
+              place_name: true,
+              place_address: true,
+              place_center_point: true,
+              created_at: true,
+              updated_at: true,
+              type: {
+                select: {
+                  name: true,
+                  label: true,
+                  color: true,
+                },
+              },
+              place_map: {
+                select: {
+                  place_geojson: true,
+                },
+              },
+            },
           },
         },
-      },
-      where: {
-        user_id: id,
-      },
-    });
+        where: {
+          user_id: id,
+        },
+      });
+
+      const inisialAvatar = data.user_name.split('');
+      const avatar = inisialAvatar[0] + inisialAvatar[1];
+
+      return { ...data, avatar: avatar };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async findOne(id: string) {
