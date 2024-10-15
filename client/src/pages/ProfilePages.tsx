@@ -5,6 +5,7 @@ import {
   Avatar,
   Breadcrumb,
   Button,
+  Col,
   Descriptions,
   DescriptionsProps,
   Flex,
@@ -13,6 +14,7 @@ import {
   message,
   Popconfirm,
   PopconfirmProps,
+  Row,
   Skeleton,
   Space,
   Table,
@@ -27,14 +29,16 @@ import {
   SearchOutlined,
   EditOutlined,
   DeleteOutlined,
+  ShareAltOutlined,
 } from '@ant-design/icons';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 import MapInProfile from '@/components/map/MapInProfile';
 import { useNavigate } from 'react-router-dom';
 import EmptyData from '@/components/utils/EmptyData';
+import { useMediaQuery } from 'react-responsive';
 
 const { Text } = Typography;
 
@@ -54,12 +58,17 @@ interface DataType {
     color: string;
   };
   created_at: Date;
+  updated_at: Date;
 }
 
 type DataIndex = keyof DataType;
 
 const ProfilePages: React.FC = () => {
   const navigate = useNavigate();
+
+  const isMobile = useMediaQuery({
+    query: '(max-width: 600px)',
+  });
 
   const userProfile = useQuery({
     queryKey: ['user-profile'],
@@ -264,9 +273,9 @@ const ProfilePages: React.FC = () => {
           avatar
           paragraph={{ rows: 2 }}
         >
-          <Space>
+          <Space direction={isMobile ? 'vertical' : 'horizontal'}>
             <Avatar
-              size={{ md: 48, lg: 48, xl: 48 }}
+              size={48}
               style={{
                 backgroundColor: '#1677ff',
               }}
@@ -274,20 +283,46 @@ const ProfilePages: React.FC = () => {
               {userProfile.data?.avatar}
             </Avatar>
             <Flex vertical>
-              <Text
-                style={{ fontSize: '1rem' }}
-                strong
-                copyable={{
-                  text: `${userProfile.data?.userName}`,
-                  tooltips: ['Salin Username', 'Username Berhasil Disalin'],
-                }}
-              >
-                {userProfile.data?.fullName}
-              </Text>
+              <Row>
+                <Col flex="auto">
+                  <Text
+                    style={{ fontSize: '1rem' }}
+                    strong
+                    copyable={{
+                      text: `${userProfile.data?.userName}`,
+                      tooltips: ['Salin Username', 'Username Berhasil Disalin'],
+                    }}
+                  >
+                    {userProfile.data?.fullName}
+                  </Text>
+                </Col>
+                <Col flex="none">
+                  <Space.Compact block>
+                    <Tooltip title="Perbarui Profil">
+                      <Button
+                        className="icon-profile"
+                        icon={<EditOutlined />}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Bagikan Profil">
+                      <Button
+                        className="icon-profile"
+                        icon={<ShareAltOutlined />}
+                      />
+                    </Tooltip>
+                    <Tooltip title="Hapus Profil">
+                      <Button
+                        className="icon-profile-danger"
+                        icon={<DeleteOutlined />}
+                      />
+                    </Tooltip>
+                  </Space.Compact>
+                </Col>
+              </Row>
               {userProfile.data && (
                 <Text>
                   Terakhir Diperbarui{' '}
-                  {formatDistanceToNow(parseISO(userProfile.data?.updateAt), {
+                  {formatDistanceToNow(parseISO(userProfile.data?.updatedAt), {
                     addSuffix: true,
                     locale: id,
                   })}
@@ -301,6 +336,7 @@ const ProfilePages: React.FC = () => {
           size="small"
           sticky
           style={{ backgroundColor: 'transparent' }}
+          loading={userProfile.isLoading}
           columns={columns}
           dataSource={userProfile.data?.place}
           rowKey={({ place_id }) => place_id}
@@ -319,6 +355,7 @@ const ProfilePages: React.FC = () => {
               place_address,
               type,
               created_at,
+              updated_at,
             }) => (
               <div style={{ paddingInline: '8px', paddingBottom: '8px' }}>
                 <Descriptions
@@ -333,8 +370,8 @@ const ProfilePages: React.FC = () => {
                     },
                     {
                       key: '2',
-                      label: 'Alamat Tempat',
-                      children: place_address,
+                      label: 'Diperbarui Pada',
+                      children: dateFormatter(updated_at),
                     },
                     {
                       key: '3',
@@ -343,6 +380,11 @@ const ProfilePages: React.FC = () => {
                     },
                     {
                       key: '4',
+                      label: 'Alamat Tempat',
+                      children: place_address,
+                    },
+                    {
+                      key: '5',
                       label: 'Penjelasan Tempat',
                       children: place_description ? place_description : '-',
                     },

@@ -165,6 +165,7 @@ const UserDashboard: React.FC = () => {
       if (
         data.id === userState.name &&
         data.client === deviceState.device &&
+        data.uniqueCode === deviceState.uniqueCode &&
         data.mobile &&
         mobile
       ) {
@@ -181,6 +182,7 @@ const UserDashboard: React.FC = () => {
   }, [
     deviceState.device,
     deviceState.type,
+    deviceState.uniqueCode,
     mobile,
     mobileClient,
     socket,
@@ -192,7 +194,10 @@ const UserDashboard: React.FC = () => {
     const handleNavigation = (data: SocketData) => {
       console.log(data);
 
-      if (data.client === deviceState.device) {
+      if (
+        data.client === deviceState.device &&
+        data.uniqueCode === deviceState.uniqueCode
+      ) {
         socketClientState.setSocket(data);
         navigate('/location/new/coordinate');
       }
@@ -210,6 +215,7 @@ const UserDashboard: React.FC = () => {
     };
   }, [
     deviceState.device,
+    deviceState.uniqueCode,
     navigate,
     socket,
     socketAdminState,
@@ -293,7 +299,7 @@ const UserDashboard: React.FC = () => {
               <Statistic title={'Baru Ditambahkan Bulan Ini'} value={2} />
             </Flex>
           </Card>
-          <Skeleton loading={isLoading} active>
+          <Skeleton style={{ marginTop: '1rem' }} loading={isLoading} active>
             <div id="statistic"></div>
           </Skeleton>
         </Col>
@@ -310,6 +316,7 @@ const UserDashboard: React.FC = () => {
                   marginTop: '0.7rem',
                 }}
                 pagination={false}
+                loading={isLoading}
                 columns={columns}
                 dataSource={data?.newPlace}
                 rowKey={({ placeId }) => placeId}

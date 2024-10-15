@@ -11,7 +11,7 @@ import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { placeList } from '@/utils/networks';
@@ -34,7 +34,7 @@ interface DataType {
 type DataIndex = keyof DataType;
 
 const PlaceList: React.FC = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['place-all'],
     queryFn: async () => await placeList(),
   });
@@ -158,7 +158,7 @@ const PlaceList: React.FC = () => {
       render: (_, { type }) => {
         return (
           <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name}
+            {type.name.toUpperCase()}
           </Tag>
         );
       },
@@ -202,6 +202,7 @@ const PlaceList: React.FC = () => {
     <Table
       sticky
       style={{ backgroundColor: 'transparent' }}
+      loading={isLoading}
       columns={columns}
       dataSource={data}
       rowKey={({ placeId }) => placeId}

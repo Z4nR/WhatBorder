@@ -2,7 +2,7 @@ import { Button, GetRef, Input, Space, Table, TableColumnType } from 'antd';
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
@@ -28,7 +28,7 @@ const UserList: React.FC = () => {
 
   const user = useUserState().role;
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['user-all'],
     queryFn: async () => await userList(),
   });
@@ -191,6 +191,7 @@ const UserList: React.FC = () => {
       <Table
         sticky
         style={{ backgroundColor: 'transparent' }}
+        loading={isLoading}
         columns={columns}
         dataSource={data}
         rowKey={({ userId }) => userId}

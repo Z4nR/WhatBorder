@@ -3,7 +3,7 @@ import { SocketData } from '@/utils/state/client/client.types';
 import useDeviceState from '@/utils/state/device/deviceState';
 import useUserState from '@/utils/state/user/userState';
 import { Button, Modal, Table, TableProps, Typography } from 'antd';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import EmptyData from '../utils/EmptyData';
 

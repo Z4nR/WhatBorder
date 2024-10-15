@@ -17,7 +17,7 @@ import {
   Typography,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
@@ -27,10 +27,6 @@ const { Option } = Select;
 
 const layout = {
   labelCol: { span: 8 },
-};
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
 };
 
 interface UpdateCoordinate {
@@ -79,7 +75,15 @@ const DesktopCreateLocation: React.FC = () => {
   });
 
   const onCreate = (values: any) => {
-    console.log(values);
+    const data = {
+      placeName: values.placename,
+      placeOwner: values.placeowner,
+      placeDescription: values.placedesc,
+      placeAddress: values.placeaddress,
+      placeType: values.placetype,
+      placePoints: [values.placelat, values.placelong],
+    };
+    console.log(data);
   };
 
   const onReset = () => {
@@ -91,7 +95,11 @@ const DesktopCreateLocation: React.FC = () => {
       <Breadcrumb
         items={[
           {
-            onClick: () => navigate('/'),
+            onClick: () => {
+              navigate('/');
+              socketState.clearSocket();
+              socket.emit('backto-dashboard', '/');
+            },
             title: (
               <Button type="link" className="home-breadcrumb">
                 Kembali
@@ -108,18 +116,18 @@ const DesktopCreateLocation: React.FC = () => {
           <Title level={5} style={{ marginTop: '8px' }}>
             Pengaturan Penambahan Tempat
           </Title>
-          <Row gutter={[16, 16]} wrap>
-            <Col xs={24} md={12}>
-              <Card>
-                <Form
-                  {...layout}
-                  form={form}
-                  layout="vertical"
-                  name="create_place"
-                  className="create-place"
-                  initialValues={{ remember: true }}
-                  onFinish={onCreate}
-                >
+          <Form
+            {...layout}
+            form={form}
+            layout="vertical"
+            name="create_place"
+            className="create-place"
+            initialValues={{ remember: true }}
+            onFinish={onCreate}
+          >
+            <Row gutter={[16, 16]} wrap>
+              <Col xs={24} md={12}>
+                <Card>
                   <Flex gap={'middle'} wrap>
                     <Form.Item
                       label="Nama"
@@ -231,34 +239,37 @@ const DesktopCreateLocation: React.FC = () => {
                       <Input placeholder="Longitude" disabled />
                     </Form.Item>
                   </Flex>
-                  <Form.Item {...tailLayout}>
-                    <Space>
-                      <Button type="primary" htmlType="submit">
-                        Submit
-                      </Button>
-                      <Button htmlType="button" onClick={onReset}>
-                        Reset
-                      </Button>
-                    </Space>
-                  </Form.Item>
-                </Form>
-              </Card>
-            </Col>
-            <Col xs={24} md={12}>
-              <Card>
-                <MapContainer
-                  center={[-1.2480891, 118]}
-                  zoom={4}
-                  scrollWheelZoom={true}
-                >
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-                </MapContainer>
-              </Card>
-            </Col>
-          </Row>
+                </Card>
+              </Col>
+              <Col xs={24} md={12}>
+                <Card>
+                  <MapContainer
+                    center={[-1.2480891, 118]}
+                    zoom={4}
+                    scrollWheelZoom={true}
+                  >
+                    <TileLayer
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    />
+                  </MapContainer>
+                </Card>
+              </Col>
+            </Row>
+            <Form.Item style={{ marginTop: '1.5rem' }}>
+              <Space
+                align="end"
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+                <Button htmlType="button" onClick={onReset}>
+                  Reset
+                </Button>
+              </Space>
+            </Form.Item>
+          </Form>
         </div>
       ) : (
         <Empty

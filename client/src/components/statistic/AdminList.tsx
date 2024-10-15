@@ -11,7 +11,7 @@ import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
@@ -30,7 +30,7 @@ interface DataType {
 type DataIndex = keyof DataType;
 
 const AdminList: React.FC = () => {
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['user-all-admin'],
     queryFn: async () => await adminUserList(),
   });
@@ -188,6 +188,7 @@ const AdminList: React.FC = () => {
     <Table
       sticky
       style={{ backgroundColor: 'transparent' }}
+      loading={isLoading}
       columns={columns}
       dataSource={data}
       rowKey={({ userId }) => userId}
