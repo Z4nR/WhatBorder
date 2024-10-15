@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Breadcrumb,
   Button,
@@ -43,7 +43,7 @@ const PlaceDetailPages: React.FC = () => {
     {
       key: '1',
       label: 'Terakhir Diperbarui',
-      children: `${dateFormatter(data?.updateAt)}`,
+      children: dateFormatter(data?.updatedAt),
     },
     {
       key: '2',
@@ -53,21 +53,19 @@ const PlaceDetailPages: React.FC = () => {
     {
       key: '3',
       label: 'Alamat Tempat',
-      children: `${data?.placeAddress}`,
+      children: data?.placeAddress,
     },
     {
       key: '4',
       label: 'Pemilik Tempat',
-      children: `${
-        data?.placeOwner ? data?.placeOwner : 'Pemilik Tidak Diketahui'
-      }`,
+      children: data?.placeOwner ? data?.placeOwner : 'Pemilik Tidak Diketahui',
     },
     {
       key: '5',
       label: 'Keterangan',
-      children: `${
-        data?.placeDescription ? data?.placeDescription : 'Belum Ada Keterangan'
-      }`,
+      children: data?.placeDescription
+        ? data?.placeDescription
+        : 'Belum Ada Keterangan',
     },
   ];
 
@@ -94,7 +92,7 @@ const PlaceDetailPages: React.FC = () => {
         </Title>
         <Flex justify="center" align="center">
           <Tag style={{ margin: '0' }} color={data?.type.label}>
-            {data?.type.name}
+            {data?.type.name.toUpperCase()}
           </Tag>
         </Flex>
       </Skeleton>

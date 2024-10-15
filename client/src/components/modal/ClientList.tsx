@@ -150,7 +150,7 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
         width={700}
       >
         <Table
-          style={{ height: listClient.length === 0 ? 'auto' : '380px' }}
+          style={{ height: listClient.length === 0 ? 'auto' : '450px' }}
           columns={columnsClient}
           dataSource={listClient}
           pagination={{ defaultPageSize: 2, position: ['topRight'] }}

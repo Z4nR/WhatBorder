@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -14,8 +14,8 @@ import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
 import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
-import DesktopCreateLocation from './components/create-location/DesktopCreateLocation';
-import ClientAddCoordinate from './components/create-location/ClientAddCoordinate';
+import DesktopCreateLocation from './components/create-location/desktop/DesktopCreateLocation';
+import ClientAddCoordinate from './components/create-location/mobile/ClientAddCoordinate';
 
 const queryClient = new QueryClient();
 
