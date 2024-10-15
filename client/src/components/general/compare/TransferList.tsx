@@ -4,6 +4,7 @@ import {
   TransferItem,
 } from '@/utils/state/compare/compare.types';
 import EmptyData from '../utils/EmptyData';
+import React from 'react';
 
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
 

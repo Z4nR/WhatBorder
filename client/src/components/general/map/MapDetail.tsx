@@ -1,5 +1,6 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import FlyMapTo from './FlyMapTo';
+import React from 'react';
 
 interface MapDetailProps {
   data: {

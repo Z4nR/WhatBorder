@@ -18,7 +18,7 @@ import {
   theme,
 } from 'antd';
 import { Navigate } from 'react-router-dom';
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import useAuthState from '@/utils/state/auth/authState';
 import { registerAcc } from '@/utils/networks';
 import CryptoJS from 'crypto-js';

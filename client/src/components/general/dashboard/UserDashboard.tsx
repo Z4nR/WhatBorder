@@ -5,7 +5,6 @@ import {
   Card,
   Col,
   Flex,
-  Modal,
   Row,
   Skeleton,
   Statistic,
@@ -22,10 +21,11 @@ import useUserState from '@/utils/state/user/userState';
 import { useMediaQuery } from 'react-responsive';
 import useDeviceState from '@/utils/state/device/deviceState';
 import useSocketState from '@/utils/state/client/clientState';
-import ClientList from '../modal/ClientList';
 import { useNavigate } from 'react-router-dom';
 import { SocketData } from '@/utils/state/client/client.types';
+import ClientList from '@/components/desktop/modal/ClientList';
 import EmptyData from '../utils/EmptyData';
+import ConfirmTask from '@/components/client/modal/ConfirmTask';
 
 const { Title, Text } = Typography;
 
@@ -261,29 +261,27 @@ const UserDashboard: React.FC = () => {
   return (
     <div style={{ minHeight: '100dvh' }}>
       {clientModal && (
-        <ClientList state={clientModal} setState={setClientModal} />
+        <ClientList
+          state={clientModal}
+          setState={setClientModal}
+          listDevice="list-client-create"
+          rejectClient="reject-client-create"
+          deleteClient="delete-client-create"
+        />
       )}
       {confirmModal &&
         mobile &&
         mobileClient?.id === userState.name &&
         mobileClient?.client === deviceState.device && (
-          <Modal
+          <ConfirmTask
             title="Konfirmasi Penerimaan Tugas"
             open={confirmModal}
-            centered
-            closable={false}
-            maskClosable={false}
             okText="Setuju"
             cancelText="Tolak"
             onCancel={handleOnCancel}
             onOk={handleOnConfirm}
-          >
-            <Text>
-              Perangkat ini dipilih sebagai media untuk memasukkan titik
-              koordinat tempat. <br /> Silahkan Tekan Setujui apabila
-              menyetujuinya
-            </Text>
-          </Modal>
+            taskType="memasukkan"
+          />
         )}
       <Row gutter={[16, 16]} wrap>
         <Col xs={24} md={12}>

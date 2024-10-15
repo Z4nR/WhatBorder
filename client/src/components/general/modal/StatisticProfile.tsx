@@ -2,6 +2,7 @@ import { dateFormatter } from '@/utils/helper';
 import { userDetail } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
 import { Descriptions, DescriptionsProps, Modal, Skeleton } from 'antd';
+import React from 'react';
 
 interface ModalSet {
   setState: (state: boolean) => void;

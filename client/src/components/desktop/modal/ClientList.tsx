@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import EmptyData from '@/components/general/utils/EmptyData';
 import { socketConnection } from '@/utils/helper';
 import { SocketData } from '@/utils/state/client/client.types';
 import useDeviceState from '@/utils/state/device/deviceState';
@@ -5,16 +7,24 @@ import useUserState from '@/utils/state/user/userState';
 import { Button, Modal, Table, TableProps, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import EmptyData from '../utils/EmptyData';
 
 const { Link } = Typography;
 
 interface ModalSet {
   setState: (state: boolean) => void;
   state: boolean;
+  listDevice: string;
+  deleteClient: string;
+  rejectClient: string;
 }
 
-const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
+const ClientList: React.FC<ModalSet> = ({
+  state,
+  setState,
+  listDevice,
+  deleteClient,
+  rejectClient,
+}) => {
   const socket = socketConnection();
   const [listClient, setListClient] = useState<SocketData[]>([]);
   const [disableChoice, setDisableChoice] = useState(false);
@@ -46,10 +56,10 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
       }
     };
 
-    socket.on('list-client', handleClientList);
+    socket.on(listDevice, handleClientList);
 
     return () => {
-      socket.off('list-client', handleClientList);
+      socket.off(listDevice, handleClientList);
     };
   }, [deviceState.device, socket, userState.name]);
 
@@ -63,7 +73,7 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
       );
     };
 
-    socket.on('delete-client', handleClientListUpdate);
+    socket.on(deleteClient, handleClientListUpdate);
   }, [socket]);
 
   // When client reject the permission and enable 'pilih perangkat' button
@@ -80,7 +90,7 @@ const ClientList: React.FC<ModalSet> = ({ state, setState }) => {
       if (exists) setDisableChoice(false);
     };
 
-    socket.on('reject-client', handleRejectClient);
+    socket.on(rejectClient, handleRejectClient);
   }, [listClient, socket]);
 
   console.log(listClient);
