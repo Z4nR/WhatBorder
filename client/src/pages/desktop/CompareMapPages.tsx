@@ -1,5 +1,14 @@
-import { useRef, useState } from 'react';
-import { Button, Flex, Input, Space, Switch, Tag, Typography } from 'antd';
+import React, { useRef, useState } from 'react';
+import {
+  Button,
+  Flex,
+  Input,
+  Result,
+  Space,
+  Switch,
+  Tag,
+  Typography,
+} from 'antd';
 import type {
   GetRef,
   TableColumnsType,
@@ -8,22 +17,23 @@ import type {
   TransferProps,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import UserPlaceList from '@/components/statistic/UserPlaceList';
+import UserPlaceList from '@/components/general/statistic/UserPlaceList';
 import { useQuery } from '@tanstack/react-query';
 import { compareList, myList } from '@/utils/networks';
 import { dateFormatter, onEachFeature, originalStyle } from '@/utils/helper';
 import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import FlyMapTo from '@/components/map/FlyMapTo';
-import TransferList from '@/components/compare/TransferList';
+import FlyMapTo from '@/components/general/map/FlyMapTo';
+import TransferList from '@/components/desktop/compare/TransferList';
 import {
   DataType,
   DataUserPlaceType,
   TableTransferProps,
 } from '@/utils/state/compare/compare.types';
+import { useMediaQuery } from 'react-responsive';
 
-const { Link } = Typography;
+const { Link, Text } = Typography;
 
 interface DataPlaceMap {
   placeId: string;
@@ -46,6 +56,10 @@ const CompareList: React.FC = () => {
   const [pcc, setPcc] = useState(null);
   const [geoJsonData, setGeoJsonData] = useState<DataPlaceMap[]>([]);
   const [userPlace, setUserPlace] = useState<string | null>();
+
+  const isEnoughSpace = useMediaQuery({
+    query: '(min-width: 700px)',
+  });
 
   const onChange: TableTransferProps['onChange'] = (nextTargetKeys) => {
     setTargetKeys(nextTargetKeys);
@@ -190,7 +204,7 @@ const CompareList: React.FC = () => {
       render: (_, { type }) => {
         return (
           <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name}
+            {type.name.toUpperCase()}
           </Tag>
         );
       },
@@ -274,7 +288,7 @@ const CompareList: React.FC = () => {
       render: (_, { type }) => {
         return (
           <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name}
+            {type.name.toUpperCase()}
           </Tag>
         );
       },
@@ -338,6 +352,21 @@ const CompareList: React.FC = () => {
     const map = e.target._map;
     map.fitBounds(e.target.getBounds());
   };
+
+  if (!isEnoughSpace) {
+    return (
+      <Result
+        status="404"
+        title="Perangkat anda terlalu kecil"
+        subTitle="Maaf, halaman yang Anda kunjungi tidak dapat ditampilkan secara baik pada perangkat Anda."
+        extra={
+          <Text style={{ fontSize: '12px' }}>
+            Petunjuk: Buka secara lanskap / coba gunakan perangkat lainnya
+          </Text>
+        }
+      />
+    );
+  }
 
   return (
     <Flex align="end" gap="middle" vertical>
