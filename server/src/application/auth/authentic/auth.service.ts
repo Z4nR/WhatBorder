@@ -100,8 +100,19 @@ export class AuthService {
   }
 
   async login(dto: AuthLoginDto) {
+    const date = new Date().toISOString();
+
     const user = await this.helperService.findByUsername(dto.username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
+
+    await this.prisma.user.update({
+      where: {
+        user_id: user.user_id,
+      },
+      data: {
+        login_at: date,
+      },
+    });
 
     const pw = await compare(dto.password, user.password);
     if (!pw)

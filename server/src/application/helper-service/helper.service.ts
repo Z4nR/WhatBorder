@@ -15,7 +15,9 @@ export class HelperService {
     const fullString = password.indexOf(specialValue);
 
     if (fullString === -1) {
-      throw new BadRequestException(`Your password is hijacked`);
+      throw new BadRequestException(
+        `Server anda sedang tidak aman, kode unik anda telah diganti`,
+      );
     }
 
     const word = password.slice(fullString + specialValue.length);

@@ -55,3 +55,12 @@ html {
   border-color: #ff4d4f !important;
   color: #ff4d4f !important;
 }
+
+.flex-form-item {
+  column-gap: 8px;
+}
+
+.form-item-location {
+  flex-grow: 1;
+  margin-bottom: 8px;
+}
