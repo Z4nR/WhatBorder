@@ -67,7 +67,7 @@ const AddCenterPoint: React.FC<SocketConnect> = ({ client, desktop }) => {
           setUsingCoordinate(true);
         }}
       >
-        Pakai Koordinat
+        Gunakan Koordinat
       </Button>
     </Card>
   );
