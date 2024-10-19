@@ -44,7 +44,7 @@ export class WebsocketGateway
   handleSetClientList(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message list:', data);
-      this.server.emit('list-client', data);
+      this.server.emit('list-client-create', data);
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };
@@ -55,7 +55,7 @@ export class WebsocketGateway
   handleLogoutDevice(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message:', data);
-      this.server.emit('delete-client', data);
+      this.server.emit('delete-client-create', data);
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };
@@ -77,7 +77,7 @@ export class WebsocketGateway
   handleRejectClient(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message:', data);
-      this.server.emit('reject-client', data);
+      this.server.emit('reject-client-create', data);
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };
@@ -95,11 +95,36 @@ export class WebsocketGateway
     }
   }
 
+  @SubscribeMessage('backto-dashboard')
+  handleBackDashboard(client: any, @MessageBody() data: any): WsResponse<any> {
+    try {
+      console.log('Received message:', data);
+      this.server.emit('navigateto-dashboard', data);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      return { event: 'exception', data: { error: 'Internal server error' } };
+    }
+  }
+
   @SubscribeMessage('set-centerpoint')
   handleCenterPoint(client: any, @MessageBody() data: any): WsResponse<any> {
     try {
       console.log('Received message:', data);
       this.server.emit('centerpoint', data);
+    } catch (error) {
+      console.error('Error handling message:', error);
+      return { event: 'exception', data: { error: 'Internal server error' } };
+    }
+  }
+
+  @SubscribeMessage('set-place-coordinate')
+  handlePlaceCoordinate(
+    client: any,
+    @MessageBody() data: any,
+  ): WsResponse<any> {
+    try {
+      console.log('Received message:', data);
+      this.server.emit('place-coordinate', data);
     } catch (error) {
       console.error('Error handling message:', error);
       return { event: 'exception', data: { error: 'Internal server error' } };
