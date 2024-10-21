@@ -5,17 +5,17 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { getLogged } from './utils/networks';
 import useAuthState from './utils/state/auth/authState';
 import useUserState from './utils/state/user/userState';
-import Loading from './components/utils/Loading';
+import Loading from './components/general/utils/Loading';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
-import CompareMapPages from './pages/CompareMapPages';
+import CompareMapPages from './pages/desktop/CompareMapPages';
 import VerifPages from './pages/VerifPages';
 import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
 import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
-import DesktopCreateLocation from './components/create-location/desktop/DesktopCreateLocation';
-import ClientAddCoordinate from './components/create-location/mobile/ClientAddCoordinate';
+import AddCoordinatePages from './pages/client/AddCoordinatePages';
+import CreateLocationPages from './pages/desktop/CreateLocationPages';
 
 const queryClient = new QueryClient();
 
@@ -77,10 +77,10 @@ const App: React.FC = () => {
               <Route path="/compare-map" element={<CompareMapPages />} />
               <Route path="/profile" element={<ProfilePages />} />
               <Route path="/:id/detail" element={<PlaceDetailPages />} />
-              <Route path="/location/new" element={<DesktopCreateLocation />} />
+              <Route path="/location/new" element={<CreateLocationPages />} />
               <Route
                 path="/location/new/coordinate"
-                element={<ClientAddCoordinate />}
+                element={<AddCoordinatePages />}
               />
             </Route>
           </Route>

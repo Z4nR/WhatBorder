@@ -1,4 +1,4 @@
-const geojsonTemplate = (latlong: any[]) => {
+const geojsonTemplate = (latlong: [number, number][]) => {
   return {
     type: 'FeatureCollection',
     features: [
@@ -6,12 +6,13 @@ const geojsonTemplate = (latlong: any[]) => {
         type: 'Feature',
         properties: {},
         geometry: {
-          coordinates: [latlong],
+          coordinates: [[...latlong, latlong[0]]],
           type: 'Polygon',
         },
       },
     ],
   };
 };
+console.log(geojsonTemplate);
 
 export default geojsonTemplate;
