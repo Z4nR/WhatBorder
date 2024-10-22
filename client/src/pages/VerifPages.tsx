@@ -1,29 +1,42 @@
+import ForgotPassword from '@/components/general/auth/ForgotPassword';
+import Login from '@/components/general/auth/Login';
+import Register from '@/components/general/auth/Register';
 import {
   LoginOutlined,
   UserAddOutlined,
   UnlockOutlined,
 } from '@ant-design/icons';
-import { Layout, Tabs } from 'antd';
-import Login from '../components/auth/Login';
-import Register from '../components/auth/Register';
-import ForgotPassword from '../components/auth/ForgotPassword';
+import { Layout, Tabs, Tooltip } from 'antd';
+import React from 'react';
 
 const VerifPages: React.FC = () => {
   const menuItems = [
     {
       key: '1',
       children: <Login />,
-      label: <LoginOutlined style={{ margin: '0 auto' }} />,
+      label: (
+        <Tooltip title="Masuk Ke Laman">
+          <LoginOutlined style={{ margin: '0 auto' }} />
+        </Tooltip>
+      ),
     },
     {
       key: '2',
       children: <Register />,
-      label: <UserAddOutlined style={{ margin: '0 auto' }} />,
+      label: (
+        <Tooltip title="Daftar Sebagai Pengguna">
+          <UserAddOutlined style={{ margin: '0 auto' }} />
+        </Tooltip>
+      ),
     },
     {
       key: '3',
       children: <ForgotPassword />,
-      label: <UnlockOutlined style={{ margin: '0 auto' }} />,
+      label: (
+        <Tooltip title="Atur Ulang Sandi">
+          <UnlockOutlined style={{ margin: '0 auto' }} />
+        </Tooltip>
+      ),
     },
   ];
 
