@@ -35,9 +35,9 @@ import React, { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
-import MapInProfile from '@/components/map/MapInProfile';
+import MapInProfile from '@/components/general/map/MapInProfile';
 import { useNavigate } from 'react-router-dom';
-import EmptyData from '@/components/utils/EmptyData';
+import EmptyData from '@/components/general/utils/EmptyData';
 import { useMediaQuery } from 'react-responsive';
 
 const { Text } = Typography;
@@ -213,7 +213,7 @@ const ProfilePages: React.FC = () => {
       render: (_, { type }) => {
         return (
           <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name}
+            {type.name.toUpperCase()}
           </Tag>
         );
       },
