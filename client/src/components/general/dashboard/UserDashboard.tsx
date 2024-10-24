@@ -60,8 +60,7 @@ const UserDashboard: React.FC = () => {
 
   const userState = useUserState();
   const deviceState = useDeviceState();
-  const socketAdminState = useSocketState.useSocketAdminState();
-  const socketClientState = useSocketState.useSocketClientState();
+  const socketState = useSocketState();
 
   const username = userState.name;
   const uniqueCode = deviceState.uniqueCode;
@@ -198,12 +197,12 @@ const UserDashboard: React.FC = () => {
         data.client === deviceState.device &&
         data.uniqueCode === deviceState.uniqueCode
       ) {
-        socketClientState.setSocket(data);
+        socketState.setSocket(data);
         navigate('/location/new/coordinate');
       }
 
       if (data.desktop === deviceState.device) {
-        socketAdminState.setSocket(data);
+        socketState.setSocket(data);
         navigate('/location/new');
       }
     };
@@ -218,8 +217,7 @@ const UserDashboard: React.FC = () => {
     deviceState.uniqueCode,
     navigate,
     socket,
-    socketAdminState,
-    socketClientState,
+    socketState,
   ]);
 
   const columns: TableProps<DataType>['columns'] = [
@@ -234,7 +232,7 @@ const UserDashboard: React.FC = () => {
       key: 'place-type',
       render: (_, { placeType }) => (
         <Tag style={{ margin: '0' }} color={placeType.label}>
-          {placeType.name}
+          {placeType.name.toUpperCase()}
         </Tag>
       ),
     },
