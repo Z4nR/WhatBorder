@@ -1,6 +1,7 @@
-import AdminDashboard from '@/components/dashboard/AdminDashboard';
-import UserDashboard from '@/components/dashboard/UserDashboard';
+import AdminDashboard from '@/components/general/dashboard/AdminDashboard';
+import UserDashboard from '@/components/general/dashboard/UserDashboard';
 import useUserState from '@/utils/state/user/userState';
+import React from 'react';
 
 const DashboardPages: React.FC = () => {
   const user = useUserState().role;
