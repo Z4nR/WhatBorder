@@ -20,6 +20,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import { FileTextOutlined, GlobalOutlined } from '@ant-design/icons';
+import geojsonTemplate from '@/utils/geojson.template';
 
 const { Title, Text } = Typography;
 
@@ -35,6 +36,7 @@ interface UpdateCoordinate {
 }
 
 const CreateLocationPages: React.FC = () => {
+  const [centerPoint, setCenterPoint] = useState<[number, number]>([0, 0]);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
 
   const addRef = useRef<(fieldsValue?: any, index?: number) => void>(() => {});
@@ -53,6 +55,7 @@ const CreateLocationPages: React.FC = () => {
         data.client === socketStateAdmin.client &&
         data.desktop === socketStateAdmin.desktop
       ) {
+        setCenterPoint([data.lat, data.long]);
         form.setFieldsValue({
           placelat: data.lat,
           placelong: data.long,
@@ -90,7 +93,8 @@ const CreateLocationPages: React.FC = () => {
     };
   }, [socketStateAdmin.client, socketStateAdmin.desktop, socket]);
 
-  console.log(coordinateList);
+  const geoJsonData = geojsonTemplate(coordinateList);
+  console.log(geoJsonData);
 
   const isDesktop = useMediaQuery({
     query: '(min-width: 500px)',
@@ -125,7 +129,7 @@ const CreateLocationPages: React.FC = () => {
     },
     {
       key: '2',
-      children: <MapView />,
+      children: <MapView centerPoint={centerPoint} mapData={geoJsonData} />,
       label: (
         <Tooltip title="Tampilan Pada Peta">
           <GlobalOutlined style={{ margin: '0 auto' }} />
@@ -170,7 +174,7 @@ const CreateLocationPages: React.FC = () => {
           >
             <Row gutter={[16, 16]} wrap>
               <Col xs={24} md={12}>
-                <FormInputData />
+                <FormInputData disable={true} />
               </Col>
               <Col xs={24} md={12}>
                 <Card>
