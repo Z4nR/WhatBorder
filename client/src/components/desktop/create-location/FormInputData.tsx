@@ -6,7 +6,11 @@ import TextArea from 'antd/es/input/TextArea';
 const { Text } = Typography;
 const { Option } = Select;
 
-const FormInputData: React.FC = () => {
+interface FormInputReadOnly {
+  disable: boolean;
+}
+
+const FormInputData: React.FC<FormInputReadOnly> = ({ disable }) => {
   const building = useQuery({
     queryKey: ['building-filter'],
     queryFn: async () => await buildingFilter(),
@@ -105,7 +109,7 @@ const FormInputData: React.FC = () => {
             },
           ]}
         >
-          <Input placeholder="Latitude" disabled />
+          <Input placeholder="Latitude" disabled={disable} />
         </Form.Item>
         <Form.Item
           className="form-item-location"
@@ -118,7 +122,7 @@ const FormInputData: React.FC = () => {
             },
           ]}
         >
-          <Input placeholder="Longitude" disabled />
+          <Input placeholder="Longitude" disabled={disable} />
         </Form.Item>
       </Flex>
     </Card>
