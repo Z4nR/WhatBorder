@@ -1,7 +1,7 @@
 import { socketConnection } from '@/utils/helper';
-import { Row, Col, Card, Button, Flex, Typography } from 'antd';
+import { Row, Col, Card, Button, Flex, Typography, Spin } from 'antd';
 import React, { useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
 
 const { Text } = Typography;
 
@@ -15,6 +15,8 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
   const [long, setLong] = useState(0);
   const [loading, setLoading] = useState(false);
   const [usingCoordinate, setUsingCoordinate] = useState(true);
+
+  const [position, setPosition] = useState(null);
 
   const socket = socketConnection();
 
@@ -31,14 +33,40 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
       },
       (error) => {
         setLoading(false);
-        console.error(`Error getting location: ${error.message}`);
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            console.error('User denied the request for Geolocation.');
+            break;
+          case error.POSITION_UNAVAILABLE:
+            console.error('Location information is unavailable.');
+            break;
+          case error.TIMEOUT:
+            console.error('The request to get user location timed out.');
+            break;
+          default:
+            console.error('An unknown error occurred.');
+            break;
+        }
       },
       {
         enableHighAccuracy: true,
+        timeout: 10000,
         maximumAge: 0,
       }
     );
   };
+
+  // Custom component to handle map events (must be within MapContainer)
+  const MapEventHandler = () => {
+    useMapEvents({
+      click(e: any) {
+        setPosition(e.latlng);
+      },
+    });
+    return null; // This component doesn't render anything
+  };
+
+  console.log(position);
 
   return (
     <Row gutter={[16, 16]} wrap>
@@ -50,7 +78,7 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
             onClick={findCoordinate}
             disabled={loading}
           >
-            Cari Titik Sudut Batas
+            {loading ? <Spin /> : 'Cari Titik Sudut Batas'}
           </Button>
           <Flex style={{ paddingBlock: '1rem' }} gap={'small'} vertical>
             <Text>Longitude: {long}</Text>
@@ -60,7 +88,7 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
             disabled={usingCoordinate}
             style={{ width: '100%' }}
             onClick={() => {
-              socket.emit('set-centerpoint', {
+              socket.emit('set-place-coordinate', {
                 lat: lat,
                 long: long,
                 client: client,
@@ -70,7 +98,7 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
               setUsingCoordinate(true);
             }}
           >
-            Pakai Koordinat
+            Gunakan Koordinat
           </Button>
         </Card>
       </Col>
@@ -78,13 +106,16 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
         <Card>
           <MapContainer
             center={[-1.2480891, 118]}
-            zoom={8}
+            zoom={14}
             scrollWheelZoom={true}
+            style={{ height: '400px', width: '100%' }} // Ensure the map has dimensions
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
+            {position && <Marker position={position}></Marker>}
+            <MapEventHandler /> {/* Attach event handler here */}
           </MapContainer>
         </Card>
       </Col>
