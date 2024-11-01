@@ -18,28 +18,6 @@ const Siders: React.FC = () => {
     query: '(max-width: 992px)',
   });
 
-  const menuItems = [
-    {
-      key: '1',
-      icon: <AppstoreOutlined />,
-      label: <Link to={'/'}>Beranda Anda</Link>,
-    },
-    {
-      key: '2',
-      icon: <FundViewOutlined />,
-      label: <Link to={'/statistic'}>Statistik Data</Link>,
-    },
-    {
-      key: '3',
-      icon: <BlockOutlined />,
-      label: <Link to={'/compare-map'}>Bandingkan Tempat</Link>,
-    },
-  ];
-
-  const siderStyle: CSSProperties = isSideStyle
-    ? { position: 'fixed', height: '100vh', zIndex: 100 }
-    : {};
-
   const triggerStyle: CSSProperties = {
     position: 'fixed',
     top: 50,
@@ -57,6 +35,28 @@ const Siders: React.FC = () => {
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
+  const siderStyle: CSSProperties = isSideStyle
+    ? { position: 'fixed', height: '100vh', zIndex: 100 }
+    : {};
+
+  const menuItems = [
+    {
+      key: '1',
+      icon: <AppstoreOutlined />,
+      label: <Link to={'/'}>Beranda Anda</Link>,
+    },
+    {
+      key: '2',
+      icon: <FundViewOutlined />,
+      label: <Link to={'/statistic'}>Statistik Data</Link>,
+    },
+    {
+      key: '3',
+      icon: <BlockOutlined />,
+      label: <Link to={'/compare-map'}>Bandingkan Tempat</Link>,
+    },
+  ];
 
   return (
     <>
