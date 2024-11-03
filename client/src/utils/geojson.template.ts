@@ -1,4 +1,6 @@
-const geojsonTemplate = (latlong: [number, number][]) => {
+import { FeatureCollection } from 'geojson';
+
+const geojsonTemplate = (latlong: [number, number][]): FeatureCollection => {
   return {
     type: 'FeatureCollection',
     features: [
@@ -13,6 +15,5 @@ const geojsonTemplate = (latlong: [number, number][]) => {
     ],
   };
 };
-console.log(geojsonTemplate);
 
 export default geojsonTemplate;
