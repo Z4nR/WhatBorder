@@ -20,7 +20,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import { FileTextOutlined, GlobalOutlined } from '@ant-design/icons';
-import geojsonTemplate from '@/utils/geojson.template';
+import { FeatureCollection } from 'geojson';
+import EmptyData from '@/components/general/utils/EmptyData';
 
 const { Title, Text } = Typography;
 
@@ -36,8 +37,11 @@ interface UpdateCoordinate {
 }
 
 const CreateLocationPages: React.FC = () => {
-  const [centerPoint, setCenterPoint] = useState<[number, number]>([0, 0]);
+  const [centerPoint, setCenterPoint] = useState<[number, number] | null>(null);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
+  const [geojsonFormat, setGeojsonFormat] = useState<FeatureCollection | null>(
+    null
+  );
 
   const addRef = useRef<(fieldsValue?: any, index?: number) => void>(() => {});
 
@@ -46,6 +50,10 @@ const CreateLocationPages: React.FC = () => {
   const socket = socketConnection();
 
   const socketStateAdmin = useSocketState();
+
+  const isDesktop = useMediaQuery({
+    query: '(min-width: 500px)',
+  });
 
   useEffect(() => {
     const handleCenterPoint = (data: UpdateCoordinate) => {
@@ -93,30 +101,6 @@ const CreateLocationPages: React.FC = () => {
     };
   }, [socketStateAdmin.client, socketStateAdmin.desktop, socket]);
 
-  const geoJsonData = geojsonTemplate(coordinateList);
-  console.log(geoJsonData);
-
-  const isDesktop = useMediaQuery({
-    query: '(min-width: 500px)',
-  });
-
-  const onCreate = (values: any) => {
-    console.log(values);
-
-    // const data = {
-    //   placeName: values.placename,
-    //   placeOwner: values.placeowner,
-    //   placeDescription: values.placedesc,
-    //   placeAddress: values.placeaddress,
-    //   placeType: values.placetype,
-    //   placePoints: [values.placelat, values.placelong],
-    // };
-  };
-
-  const onReset = () => {
-    form.resetFields();
-  };
-
   const menuItems = [
     {
       key: '1',
@@ -129,7 +113,16 @@ const CreateLocationPages: React.FC = () => {
     },
     {
       key: '2',
-      children: <MapView centerPoint={centerPoint} mapData={geoJsonData} />,
+      children:
+        centerPoint && coordinateList.length !== 0 ? (
+          <MapView
+            centerPoint={centerPoint}
+            mapData={coordinateList}
+            setGeojsonFormat={setGeojsonFormat}
+          />
+        ) : (
+          <EmptyData description="Titik Pusat Lokasi Belum Ditentukan" />
+        ),
       label: (
         <Tooltip title="Tampilan Pada Peta">
           <GlobalOutlined style={{ margin: '0 auto' }} />
@@ -137,6 +130,24 @@ const CreateLocationPages: React.FC = () => {
       ),
     },
   ];
+
+  const onCreate = (values: any) => {
+    const data = {
+      placeName: values.placename,
+      placeOwner: values.placeowner,
+      placeDescription: values.placedesc,
+      placeAddress: values.placeaddress,
+      placeType: values.placetype,
+      placePoints: [values.placelat, values.placelong],
+      placeGeojson: geojsonFormat,
+    };
+
+    console.log(data);
+  };
+
+  const onReset = () => {
+    form.resetFields();
+  };
 
   return (
     <>
@@ -170,6 +181,10 @@ const CreateLocationPages: React.FC = () => {
             layout="vertical"
             name="create_place"
             initialValues={{ remember: true }}
+            onValuesChange={(allValues) => {
+              console.log('Updated longlat array:', allValues.longlat);
+              setCoordinateList(allValues.longlat);
+            }}
             onFinish={onCreate}
           >
             <Row gutter={[16, 16]} wrap>
