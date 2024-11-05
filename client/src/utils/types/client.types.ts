@@ -1,4 +1,4 @@
-export interface SocketData {
+export interface SocketProps {
   id: string;
   desktop: string;
   uniqueCode: string;
@@ -14,6 +14,6 @@ export interface SocketState {
   client: string;
   type: string;
   mobile: boolean;
-  setSocket: (state: SocketData) => void;
+  setSocket: (state: SocketProps) => void;
   clearSocket: () => void;
 }

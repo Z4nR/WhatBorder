@@ -1,4 +1,4 @@
-export interface DeviceData {
+export interface DeviceProps {
   uniqueCode: string;
   device: string;
   type: string;
@@ -10,6 +10,6 @@ export interface DeviceState {
   device: string;
   type: string;
   mobile: boolean;
-  setDevice: (state: DeviceData) => void;
+  setDevice: (state: DeviceProps) => void;
   clearDevice: () => void;
 }

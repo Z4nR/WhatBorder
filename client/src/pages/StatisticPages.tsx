@@ -1,6 +1,7 @@
-import PlaceList from '@/components/statistic/PlaceList';
-import UserList from '@/components/statistic/UserList';
+import PlaceList from '@/components/general/statistic/PlaceList';
+import UserList from '@/components/general/statistic/UserList';
 import { Layout, Tabs } from 'antd';
+import React from 'react';
 
 const StatisticPages: React.FC = () => {
   const menuItems = [
@@ -19,7 +20,6 @@ const StatisticPages: React.FC = () => {
   return (
     <Layout
       style={{
-        minHeight: '100vh',
         backgroundColor: 'transparent',
       }}
     >

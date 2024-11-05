@@ -3,7 +3,12 @@ import { ColumnsType } from 'antd/es/table';
 
 export type TransferItem = GetProp<TransferProps, 'dataSource'>[number];
 
-export interface DataType {
+export interface PlaceMapProps {
+  placeId: string;
+  placeGeo: any;
+}
+
+export interface ComparePlaceProps {
   placeId: string;
   placeName: string;
   placeAddress: string;
@@ -18,12 +23,12 @@ export interface DataType {
 }
 
 export interface TableTransferProps extends TransferProps<TransferItem> {
-  dataSource: DataType[];
-  leftColumns: TableColumnsType<DataType>;
-  rightColumns: TableColumnsType<DataType>;
+  dataSource: ComparePlaceProps[];
+  leftColumns: TableColumnsType<ComparePlaceProps>;
+  rightColumns: TableColumnsType<ComparePlaceProps>;
 }
 
-export interface DataUserPlaceType {
+export interface UserPlaceProps {
   placeId: string;
   placeName: string;
   placeAddress: string;
@@ -38,7 +43,7 @@ export interface DataUserPlaceType {
   createdAt: Date;
 }
 
-export interface TableUserProps extends TableProps<DataUserPlaceType> {
-  dataSource: DataUserPlaceType[];
-  columns: ColumnsType<DataUserPlaceType>;
+export interface TableUserProps extends TableProps<UserPlaceProps> {
+  dataSource: UserPlaceProps[];
+  columns: ColumnsType<UserPlaceProps>;
 }
