@@ -1,5 +1,5 @@
 import axios from 'axios';
-import useAuthState from './state/auth/authState';
+import useAuthState from './state/authState';
 
 const Server_URL = import.meta.env.VITE_BACKEND;
 const token = () => useAuthState.getState().accessToken;
@@ -57,6 +57,19 @@ const getLogged = async () => {
 const profileUser = async () => {
   return axios
     .get('/v1/user/profile', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const addNewPlace = async (data: any) => {
+  return axios
+    .post('/v1/place', data, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -190,6 +203,7 @@ export {
   forgetPassword,
   getLogged,
   profileUser,
+  addNewPlace,
   placeList,
   placeDetail,
   placeStatistic,

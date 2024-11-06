@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { UserData, UserState } from './user.types';
+import { UserProps, UserState } from '../../types/user.types';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 const useUserState = create<UserState>()(
@@ -8,7 +8,7 @@ const useUserState = create<UserState>()(
       role: false,
       name: '',
       exp: 0,
-      setUser: (state: UserData) => set(() => ({ ...state })),
+      setUser: (state: UserProps) => set(() => ({ ...state })),
       clearUser: () => set(() => ({ role: false, exp: 0, name: '' })),
     }),
     {

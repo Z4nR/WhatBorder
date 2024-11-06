@@ -7,7 +7,7 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
 import { userList } from '@/utils/networks';
-import useUserState from '@/utils/state/user/userState';
+import useUserState from '@/utils/state/userState';
 import AdminList from './AdminList';
 import StatisticProfile from '../modal/StatisticProfile';
 import EmptyData from '../utils/EmptyData';

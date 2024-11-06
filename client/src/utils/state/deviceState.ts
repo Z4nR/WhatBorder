@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DeviceData, DeviceState } from './device.types';
+import { DeviceProps, DeviceState } from '../../types/device.types';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 const useDeviceState = create<DeviceState>()(
@@ -9,7 +9,7 @@ const useDeviceState = create<DeviceState>()(
       mobile: false,
       device: '',
       type: '',
-      setDevice: (state: DeviceData) => set(() => ({ ...state })),
+      setDevice: (state: DeviceProps) => set(() => ({ ...state })),
       clearDevice: () =>
         set(() => ({ uniqueCode: '', mobile: false, device: '', type: '' })),
     }),

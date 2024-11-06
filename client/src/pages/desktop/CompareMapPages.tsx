@@ -27,24 +27,20 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import FlyMapTo from '@/components/general/map/FlyMapTo';
 import TransferList from '@/components/desktop/compare/TransferList';
 import {
-  DataType,
-  DataUserPlaceType,
+  ComparePlaceProps,
+  UserPlaceProps,
   TableTransferProps,
-} from '@/utils/state/compare/compare.types';
+  PlaceMapProps,
+} from '@/utils/types/compare.types';
 import { useMediaQuery } from 'react-responsive';
 
 const { Link, Text } = Typography;
 
-interface DataPlaceMap {
-  placeId: string;
-  placeGeo: any;
-}
-
 type InputRef = GetRef<typeof Input>;
 
-type DataIndex = keyof DataUserPlaceType;
+type DataIndex = keyof UserPlaceProps;
 
-const filterOption = (input: string, item: DataType) =>
+const filterOption = (input: string, item: ComparePlaceProps) =>
   item.placeName?.includes(input) ||
   item.type.name?.includes(input) ||
   item.placeAddress?.includes(input);
@@ -54,7 +50,7 @@ const CompareList: React.FC = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>();
   const [pcc, setPcc] = useState(null);
-  const [geoJsonData, setGeoJsonData] = useState<DataPlaceMap[]>([]);
+  const [geoJsonData, setGeoJsonData] = useState<PlaceMapProps[]>([]);
   const [userPlace, setUserPlace] = useState<string | null>();
 
   const isEnoughSpace = useMediaQuery({
@@ -95,7 +91,7 @@ const CompareList: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<DataUserPlaceType> => ({
+  ): TableColumnType<UserPlaceProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -171,7 +167,7 @@ const CompareList: React.FC = () => {
       ),
   });
 
-  const addNewPlaceMap = (newPlaceMap: DataPlaceMap) => {
+  const addNewPlaceMap = (newPlaceMap: PlaceMapProps) => {
     setGeoJsonData((prevData) => [...prevData, newPlaceMap]);
     console.log(geoJsonData);
   };
@@ -182,7 +178,7 @@ const CompareList: React.FC = () => {
     );
   };
 
-  const columnsUser: TableProps<DataUserPlaceType>['columns'] = [
+  const columnsUser: TableProps<UserPlaceProps>['columns'] = [
     {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
@@ -274,7 +270,7 @@ const CompareList: React.FC = () => {
     },
   });
 
-  const columnsSource: TableColumnsType<DataType> = [
+  const columnsSource: TableColumnsType<ComparePlaceProps> = [
     {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
@@ -300,7 +296,7 @@ const CompareList: React.FC = () => {
     },
   ];
 
-  const columnsTarget: TableColumnsType<DataType> = [
+  const columnsTarget: TableColumnsType<ComparePlaceProps> = [
     {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
@@ -404,7 +400,7 @@ const CompareList: React.FC = () => {
         />
         {pcc && <FlyMapTo position={pcc} />}
         {geoJsonData &&
-          geoJsonData.map((item: DataPlaceMap, index: number) => (
+          geoJsonData.map((item: PlaceMapProps, index: number) => (
             <GeoJSON
               key={index}
               data={item.placeGeo}

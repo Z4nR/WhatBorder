@@ -1,8 +1,5 @@
 import { Table, TableProps, Transfer } from 'antd';
-import {
-  TableTransferProps,
-  TransferItem,
-} from '@/utils/state/compare/compare.types';
+import { TableTransferProps, TransferItem } from '@/utils/types/compare.types';
 import EmptyData from '../../general/utils/EmptyData';
 import React from 'react';
 

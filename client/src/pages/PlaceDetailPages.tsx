@@ -13,7 +13,7 @@ import {
 import type { DescriptionsProps } from 'antd';
 import { placeDetail } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
-import MapDetail from '@/components/map/MapDetail';
+import MapDetail from '@/components/general/map/MapDetail';
 
 const { Title } = Typography;
 
@@ -96,7 +96,7 @@ const PlaceDetailPages: React.FC = () => {
           </Tag>
         </Flex>
       </Skeleton>
-      <Flex gap={'middle'} vertical={false} style={{ marginTop: '2rem' }}>
+      <Flex gap={'middle'} vertical={false} style={{ marginTop: '2rem' }} wrap>
         <MapDetail data={data} placeMap={placeMap} position={position} />
         <Skeleton loading={isLoading} style={{ width: '100%' }} active>
           <Descriptions

@@ -39,29 +39,13 @@ import MapInProfile from '@/components/general/map/MapInProfile';
 import { useNavigate } from 'react-router-dom';
 import EmptyData from '@/components/general/utils/EmptyData';
 import { useMediaQuery } from 'react-responsive';
+import { ProfilePlaceProps } from '@/utils/types/profile.types';
 
 const { Text } = Typography;
 
 type InputRef = GetRef<typeof Input>;
 
-interface DataType {
-  place_id: string;
-  place_owner: string;
-  place_description: string;
-  place_name: string;
-  place_address: string;
-  place_center_point: any;
-  place_map: any;
-  type: {
-    name: string;
-    label: string;
-    color: string;
-  };
-  created_at: Date;
-  updated_at: Date;
-}
-
-type DataIndex = keyof DataType;
+type DataIndex = keyof ProfilePlaceProps;
 
 const ProfilePages: React.FC = () => {
   const navigate = useNavigate();
@@ -96,7 +80,7 @@ const ProfilePages: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<DataType> => ({
+  ): TableColumnType<ProfilePlaceProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -197,7 +181,7 @@ const ProfilePages: React.FC = () => {
     message.success('Click on Yes');
   };
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<ProfilePlaceProps>['columns'] = [
     {
       title: 'Nama Tempat',
       dataIndex: 'place_name',

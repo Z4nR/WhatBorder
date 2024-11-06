@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { SocketData, SocketState } from './client.types';
+import { SocketProps, SocketState } from '../../types/client.types';
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 const useSocketState = create<SocketState>()(
@@ -11,7 +11,7 @@ const useSocketState = create<SocketState>()(
       client: '',
       type: '',
       mobile: false,
-      setSocket: (state: SocketData) => set(() => ({ ...state })),
+      setSocket: (state: SocketProps) => set(() => ({ ...state })),
       clearSocket: () =>
         set(() => ({
           id: '',

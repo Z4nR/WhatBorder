@@ -1,5 +1,5 @@
 import { Table } from 'antd';
-import { TableUserProps } from '../../../utils/state/compare/compare.types';
+import { TableUserProps } from '../../../utils/types/compare.types';
 import EmptyData from '../utils/EmptyData';
 import React from 'react';
 

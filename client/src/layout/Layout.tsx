@@ -5,9 +5,9 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import Siders from '@/layout/Siders';
 import { socketConnection } from '@/utils/helper';
 import { useQueryClient } from '@tanstack/react-query';
-import useAuthState from '@/utils/state/auth/authState';
-import useUserState from '@/utils/state/user/userState';
-import useDeviceState from '@/utils/state/device/deviceState';
+import useAuthState from '@/utils/state/authState';
+import useUserState from '@/utils/state/userState';
+import useDeviceState from '@/utils/state/deviceState';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -73,7 +73,6 @@ const LayoutPages: React.FC = () => {
             padding: 24,
             background: colorBgContainer,
             borderRadius: 8,
-            minHeight: '100dvh',
           }}
         >
           <Outlet />

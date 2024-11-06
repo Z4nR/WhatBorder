@@ -4,18 +4,14 @@ import { Button, Form, Input, Typography, message, theme } from 'antd';
 import { Navigate } from 'react-router-dom';
 import CryptoJS from 'crypto-js';
 import { getDeviceType } from '@/utils/helper';
-import useDeviceState from '@/utils/state/device/deviceState';
+import useDeviceState from '@/utils/state/deviceState';
 import { customAlphabet } from 'nanoid';
-import useAuthState from '@/utils/state/auth/authState';
+import useAuthState from '@/utils/state/authState';
 import { loginAcc } from '@/utils/networks';
 import React from 'react';
+import { LoginProps } from '@/utils/types/auth.types';
 
 const { Title } = Typography;
-
-interface LoginData {
-  username: string;
-  password: string;
-}
 
 const Login: React.FC = () => {
   const authState = useAuthState();
@@ -57,7 +53,7 @@ const Login: React.FC = () => {
     },
   });
 
-  const onFinish = (values: LoginData) => {
+  const onFinish = (values: LoginProps) => {
     const pw = CryptoJS.AES.encrypt(
       values.password,
       import.meta.env.VITE_SECRET

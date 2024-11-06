@@ -17,12 +17,12 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { placeStatistic } from '@/utils/networks';
 import { dateFormatter, getGreeting, socketConnection } from '@/utils/helper';
-import useUserState from '@/utils/state/user/userState';
+import useUserState from '@/utils/state/userState';
 import { useMediaQuery } from 'react-responsive';
-import useDeviceState from '@/utils/state/device/deviceState';
-import useSocketState from '@/utils/state/client/clientState';
+import useDeviceState from '@/utils/state/deviceState';
+import useSocketState from '@/utils/state/clientState';
 import { useNavigate } from 'react-router-dom';
-import { SocketData } from '@/utils/state/client/client.types';
+import { SocketProps } from '@/utils/types/client.types';
 import ClientList from '@/components/desktop/modal/ClientList';
 import EmptyData from '../utils/EmptyData';
 import ConfirmTask from '@/components/client/modal/ConfirmTask';
@@ -54,7 +54,7 @@ const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [clientModal, setClientModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
-  const [mobileClient, setMobileClient] = useState<SocketData>();
+  const [mobileClient, setMobileClient] = useState<SocketProps>();
   const greeting = getGreeting();
   const socket = socketConnection();
 
@@ -158,7 +158,7 @@ const UserDashboard: React.FC = () => {
 
   // When device choose as client
   useEffect(() => {
-    const handleChooseClient = (data: SocketData) => {
+    const handleChooseClient = (data: SocketProps) => {
       console.log(data);
 
       if (
@@ -190,7 +190,7 @@ const UserDashboard: React.FC = () => {
 
   // When client accept the process
   useEffect(() => {
-    const handleNavigation = (data: SocketData) => {
+    const handleNavigation = (data: SocketProps) => {
       console.log(data);
 
       if (

@@ -19,22 +19,15 @@ import {
 } from 'antd';
 import { Navigate } from 'react-router-dom';
 import React, { useRef } from 'react';
-import useAuthState from '@/utils/state/auth/authState';
+import useAuthState from '@/utils/state/authState';
 import { registerAcc } from '@/utils/networks';
 import CryptoJS from 'crypto-js';
 import { getDeviceType } from '@/utils/helper';
-import useDeviceState from '@/utils/state/device/deviceState';
+import useDeviceState from '@/utils/state/deviceState';
 import { customAlphabet } from 'nanoid';
+import { RegisterProps } from '@/utils/types/auth.types';
 
 const { Title } = Typography;
-
-interface RegisterData {
-  username: string;
-  fullname: string;
-  password: string;
-  verify: string;
-  code: string;
-}
 
 const Register: React.FC = () => {
   const authState = useAuthState();
@@ -80,7 +73,7 @@ const Register: React.FC = () => {
     },
   });
 
-  const onFinish = (values: RegisterData) => {
+  const onFinish = (values: RegisterProps) => {
     const pw = CryptoJS.AES.encrypt(
       values.password,
       import.meta.env.VITE_SECRET

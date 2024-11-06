@@ -1,5 +1,6 @@
 import { GetProp, TableColumnsType, TableProps, TransferProps } from 'antd';
 import { ColumnsType } from 'antd/es/table';
+import { FeatureCollection } from 'geojson';
 
 export type TransferItem = GetProp<TransferProps, 'dataSource'>[number];
 
@@ -13,7 +14,7 @@ export interface ComparePlaceProps {
   placeName: string;
   placeAddress: string;
   placeMap: {
-    place_geojson: any;
+    place_geojson: FeatureCollection;
   };
   type: {
     name: string;
@@ -32,9 +33,9 @@ export interface UserPlaceProps {
   placeId: string;
   placeName: string;
   placeAddress: string;
-  placeCenterPoint: any;
+  placeCenterPoint: [number, number];
   placeMap: {
-    place_geojson: any;
+    place_geojson: FeatureCollection;
   };
   type: {
     name: string;

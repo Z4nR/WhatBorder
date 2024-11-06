@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import EmptyData from '@/components/general/utils/EmptyData';
 import { socketConnection } from '@/utils/helper';
-import { SocketData } from '@/utils/state/client/client.types';
-import useDeviceState from '@/utils/state/device/deviceState';
-import useUserState from '@/utils/state/user/userState';
+import { SocketProps } from '@/utils/types/client.types';
+import useDeviceState from '@/utils/state/deviceState';
+import useUserState from '@/utils/state/userState';
 import { Button, Modal, Table, TableProps, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
@@ -26,7 +26,7 @@ const ClientList: React.FC<ModalSet> = ({
   rejectClient,
 }) => {
   const socket = socketConnection();
-  const [listClient, setListClient] = useState<SocketData[]>([]);
+  const [listClient, setListClient] = useState<SocketProps[]>([]);
   const [disableChoice, setDisableChoice] = useState(false);
 
   const userState = useUserState();
@@ -36,7 +36,7 @@ const ClientList: React.FC<ModalSet> = ({
 
   // When push client to list
   useEffect(() => {
-    const handleClientList = (data: SocketData) => {
+    const handleClientList = (data: SocketProps) => {
       console.log(data);
 
       if (data.id === userState.name && data.desktop === deviceState.device) {
@@ -95,7 +95,7 @@ const ClientList: React.FC<ModalSet> = ({
 
   console.log(listClient);
 
-  const columnsClient: TableProps<SocketData>['columns'] = [
+  const columnsClient: TableProps<SocketProps>['columns'] = [
     {
       title: 'Kode Perangkat',
       dataIndex: 'uniqueCode',
