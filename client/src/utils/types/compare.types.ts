@@ -33,7 +33,7 @@ export interface UserPlaceProps {
   placeId: string;
   placeName: string;
   placeAddress: string;
-  placeCenterPoint: [number, number];
+  placeCenterPoint: any;
   placeMap: {
     place_geojson: FeatureCollection;
   };

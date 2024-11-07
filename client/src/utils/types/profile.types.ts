@@ -16,3 +16,10 @@ export interface ProfilePlaceProps {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface MapInProfileProps {
+  place_id: string;
+  place_center_point: any;
+  place_map: any;
+  color: string;
+}

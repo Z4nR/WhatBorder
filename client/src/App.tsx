@@ -48,7 +48,7 @@ const AuthRoute = () => {
 
       message.open({
         type: 'error',
-        content: 'Sesi Anda Telah Habis, Silahkan Login Kembali',
+        content: 'Sesi Anda Telah Habis, Silahkan Masuk Kembali',
         duration: 5,
         className: 'custom-class',
         style: {
