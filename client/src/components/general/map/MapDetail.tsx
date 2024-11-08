@@ -1,20 +1,13 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import FlyMapTo from './FlyMapTo';
 import React from 'react';
+import { MapStatDetailProps } from '@/utils/types/statistic.types';
 
-interface MapDetailProps {
-  data: {
-    placeMap: any;
-    placeId: string;
-    type: {
-      color: string;
-    };
-  };
-  placeMap: any;
-  position: any;
-}
-
-const MapDetail: React.FC<MapDetailProps> = ({ data, placeMap, position }) => {
+const MapDetail: React.FC<MapStatDetailProps> = ({
+  data,
+  placeMap,
+  position,
+}) => {
   return (
     <MapContainer center={[-1.2480891, 118]} zoom={17} scrollWheelZoom={false}>
       <TileLayer

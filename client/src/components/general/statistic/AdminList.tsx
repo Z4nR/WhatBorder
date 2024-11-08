@@ -17,17 +17,11 @@ import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
 import { adminUserList } from '@/utils/networks';
 import EmptyData from '../utils/EmptyData';
+import { AdminListProps } from '@/utils/types/statistic.types';
 
 type InputRef = GetRef<typeof Input>;
-interface DataType {
-  userId: string;
-  userName: string;
-  description: string;
-  admin: boolean;
-  createdAt: Date;
-}
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof AdminListProps;
 
 const AdminList: React.FC = () => {
   const { data, isLoading } = useQuery({
@@ -56,7 +50,7 @@ const AdminList: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<DataType> => ({
+  ): TableColumnType<AdminListProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -132,7 +126,7 @@ const AdminList: React.FC = () => {
       ),
   });
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<AdminListProps>['columns'] = [
     {
       title: 'Nama Pengguna',
       dataIndex: 'userName',

@@ -1,14 +1,8 @@
+import { MapInProfileProps } from '@/utils/types/profile.types';
 import React from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 
-interface MapProfile {
-  place_id: string;
-  place_center_point: any;
-  place_map: any;
-  color: string;
-}
-
-const MapInProfile: React.FC<MapProfile> = ({
+const MapInProfile: React.FC<MapInProfileProps> = ({
   place_id,
   place_center_point,
   place_map,

@@ -7,18 +7,11 @@ import useUserState from '@/utils/state/userState';
 import { Button, Modal, Table, TableProps, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
+import { ClientProps } from '@/utils/types/modal.types';
 
 const { Link } = Typography;
 
-interface ModalSet {
-  setState: (state: boolean) => void;
-  state: boolean;
-  listDevice: string;
-  deleteClient: string;
-  rejectClient: string;
-}
-
-const ClientList: React.FC<ModalSet> = ({
+const ClientList: React.FC<ClientProps> = ({
   state,
   setState,
   listDevice,

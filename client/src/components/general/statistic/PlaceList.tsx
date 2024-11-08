@@ -17,21 +17,11 @@ import Highlighter from 'react-highlight-words';
 import { placeList } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
 import EmptyData from '../utils/EmptyData';
+import { PlaceListProps } from '@/utils/types/statistic.types';
 
 type InputRef = GetRef<typeof Input>;
-interface DataType {
-  placeId: string;
-  placeName: string;
-  placeAddress: string;
-  type: {
-    name: string;
-    label: string;
-  };
-  createdBy: string;
-  createdAt: Date;
-}
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof PlaceListProps;
 
 const PlaceList: React.FC = () => {
   const { data, isLoading } = useQuery({
@@ -60,7 +50,7 @@ const PlaceList: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<DataType> => ({
+  ): TableColumnType<PlaceListProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -136,7 +126,7 @@ const PlaceList: React.FC = () => {
       ),
   });
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<PlaceListProps>['columns'] = [
     {
       title: 'Nama Tempat',
       dataIndex: 'placeName',

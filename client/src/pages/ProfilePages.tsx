@@ -3,7 +3,6 @@ import { profileUser } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
 import {
   Avatar,
-  Breadcrumb,
   Button,
   Col,
   Descriptions,
@@ -36,10 +35,10 @@ import Highlighter from 'react-highlight-words';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { id } from 'date-fns/locale';
 import MapInProfile from '@/components/general/map/MapInProfile';
-import { useNavigate } from 'react-router-dom';
 import EmptyData from '@/components/general/utils/EmptyData';
 import { useMediaQuery } from 'react-responsive';
 import { ProfilePlaceProps } from '@/utils/types/profile.types';
+import BreadcrumbComponent from '@/components/general/utils/Breadcrumb';
 
 const { Text } = Typography;
 
@@ -48,8 +47,6 @@ type InputRef = GetRef<typeof Input>;
 type DataIndex = keyof ProfilePlaceProps;
 
 const ProfilePages: React.FC = () => {
-  const navigate = useNavigate();
-
   const isMobile = useMediaQuery({
     query: '(max-width: 600px)',
   });
@@ -234,22 +231,7 @@ const ProfilePages: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb
-        items={[
-          {
-            onClick: () => navigate('/'),
-            title: (
-              <Button type="link" className="home-breadcrumb">
-                Kembali
-              </Button>
-            ),
-          },
-          {
-            title: `Profil Pengguna`,
-          },
-        ]}
-        style={{ marginBottom: '1rem' }}
-      />
+      <BreadcrumbComponent title="Profil Pengguna" buttonTitle="Kembali" />
       <Flex gap={'middle'} vertical>
         <Skeleton
           loading={userProfile.isLoading}
@@ -286,6 +268,7 @@ const ProfilePages: React.FC = () => {
                       <Button
                         className="icon-profile"
                         icon={<EditOutlined />}
+                        onClick={() => console.log('testing')}
                       />
                     </Tooltip>
                     <Tooltip title="Bagikan Profil">

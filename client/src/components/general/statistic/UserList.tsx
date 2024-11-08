@@ -11,16 +11,11 @@ import useUserState from '@/utils/state/userState';
 import AdminList from './AdminList';
 import StatisticProfile from '../modal/StatisticProfile';
 import EmptyData from '../utils/EmptyData';
+import { UserListProps } from '@/utils/types/statistic.types';
 
 type InputRef = GetRef<typeof Input>;
-interface DataType {
-  userId: string;
-  userName: string;
-  description: string;
-  createdAt: Date;
-}
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof UserListProps;
 
 const UserList: React.FC = () => {
   const [profileModal, setProfileModal] = useState(false);
@@ -54,7 +49,7 @@ const UserList: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<DataType> => ({
+  ): TableColumnType<UserListProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -130,7 +125,7 @@ const UserList: React.FC = () => {
       ),
   });
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<UserListProps>['columns'] = [
     {
       title: 'Nama Pengguna',
       dataIndex: 'userName',

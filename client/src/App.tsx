@@ -70,21 +70,38 @@ const App: React.FC = () => {
     <>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/" element={<AuthRoute />}>
+          <Route caseSensitive path="/" element={<AuthRoute />}>
             <Route element={<LayoutPages />}>
               <Route index element={<DashboardPages />} />
-              <Route path="/statistic" element={<StatisticPages />} />
-              <Route path="/compare-map" element={<CompareMapPages />} />
-              <Route path="/profile" element={<ProfilePages />} />
-              <Route path="/:id/detail" element={<PlaceDetailPages />} />
-              <Route path="/location/new" element={<CreateLocationPages />} />
               <Route
+                caseSensitive
+                path="/statistic"
+                element={<StatisticPages />}
+              />
+              <Route
+                caseSensitive
+                path="/compare-map"
+                element={<CompareMapPages />}
+              />
+              <Route caseSensitive path="/profile" element={<ProfilePages />} />
+              <Route
+                caseSensitive
+                path="/:id/detail"
+                element={<PlaceDetailPages />}
+              />
+              <Route
+                caseSensitive
+                path="/location/new"
+                element={<CreateLocationPages />}
+              />
+              <Route
+                caseSensitive
                 path="/location/new/coordinate"
                 element={<AddCoordinatePages />}
               />
             </Route>
           </Route>
-          <Route path="/auth" element={<VerifPages />} />
+          <Route caseSensitive path="/auth" element={<VerifPages />} />
         </Routes>
       </QueryClientProvider>
     </>

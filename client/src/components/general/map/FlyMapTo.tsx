@@ -1,9 +1,6 @@
+import { FlyMapToProps } from '@/utils/types/statistic.types';
 import React, { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-
-interface FlyMapToProps {
-  position: [number, number] | null;
-}
 
 const FlyMapTo: React.FC<FlyMapToProps> = ({ position }) => {
   const map = useMap();

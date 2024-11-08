@@ -1,4 +1,4 @@
-export interface ClientModalProps {
+export interface ClientProps {
   setState: (state: boolean) => void;
   state: boolean;
   listDevice: string;
@@ -6,13 +6,13 @@ export interface ClientModalProps {
   rejectClient: string;
 }
 
-export interface StatisticModalProps {
+export interface StatisticProps {
   setState: (state: boolean) => void;
   state: boolean;
   id: string;
 }
 
-export interface ConfirmModalProps {
+export interface ConfirmProps {
   title: string;
   okText: string;
   cancelText: string;
@@ -20,4 +20,9 @@ export interface ConfirmModalProps {
   onCancel: () => void;
   open: boolean;
   taskType: string;
+}
+
+export interface EditProfileProps {
+  setState: (state: boolean) => void;
+  state: boolean;
 }

@@ -1,19 +1,10 @@
-import { Modal, Typography } from 'antd';
 import React from 'react';
+import { ConfirmProps } from '@/utils/types/modal.types';
+import { Modal, Typography } from 'antd';
 
 const { Text } = Typography;
 
-interface ClientModal {
-  title: string;
-  okText: string;
-  cancelText: string;
-  onOk: () => void;
-  onCancel: () => void;
-  open: boolean;
-  taskType: string;
-}
-
-const ConfirmTask: React.FC<ClientModal> = ({
+const ConfirmTask: React.FC<ConfirmProps> = ({
   title,
   okText,
   cancelText,

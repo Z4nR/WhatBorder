@@ -1,25 +1,17 @@
 import { useQuery } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import React, { useMemo } from 'react';
-import {
-  Breadcrumb,
-  Button,
-  Descriptions,
-  Flex,
-  Skeleton,
-  Tag,
-  Typography,
-} from 'antd';
+import { Descriptions, Flex, Skeleton, Tag, Typography } from 'antd';
 import type { DescriptionsProps } from 'antd';
 import { placeDetail } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
 import MapDetail from '@/components/general/map/MapDetail';
+import BreadcrumbComponent from '@/components/general/utils/Breadcrumb';
 
 const { Title } = Typography;
 
 const PlaceDetailPages: React.FC = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
   const { data, isPending, isLoading } = useQuery({
     queryKey: ['place', id],
@@ -71,21 +63,7 @@ const PlaceDetailPages: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb
-        items={[
-          {
-            onClick: () => navigate('/statistic'),
-            title: (
-              <Button type="link" className="home-breadcrumb">
-                Kembali
-              </Button>
-            ),
-          },
-          {
-            title: 'Rincian Tempat',
-          },
-        ]}
-      />
+      <BreadcrumbComponent title="Rincian Tempat" buttonTitle="Kembali" />
       <Skeleton loading={isLoading} active title paragraph={{ rows: 1 }}>
         <Title level={3} style={{ textAlign: 'center', marginBottom: '0' }}>
           {data?.placeName}

@@ -1,16 +1,15 @@
+import React from 'react';
 import { dateFormatter } from '@/utils/helper';
 import { userDetail } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
 import { Descriptions, DescriptionsProps, Modal, Skeleton } from 'antd';
-import React from 'react';
+import { StatisticProps } from '@/utils/types/modal.types';
 
-interface ModalSet {
-  setState: (state: boolean) => void;
-  state: boolean;
-  id: string;
-}
-
-const StatisticProfile: React.FC<ModalSet> = ({ id, state, setState }) => {
+const StatisticProfile: React.FC<StatisticProps> = ({
+  id,
+  state,
+  setState,
+}) => {
   const { data, isLoading } = useQuery({
     queryKey: ['user-mini-profile', id],
     queryFn: async () => await userDetail(id),

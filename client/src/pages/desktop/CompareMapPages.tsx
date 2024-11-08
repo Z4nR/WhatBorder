@@ -266,7 +266,6 @@ const CompareList: React.FC = () => {
       if (userId) {
         return await compareList(userId);
       }
-      return [];
     },
   });
 
