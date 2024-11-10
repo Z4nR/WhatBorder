@@ -1,3 +1,4 @@
+import { PreviewMapProps } from '@/utils/types/map.types';
 import { Card } from 'antd';
 import React from 'react';
 import {
@@ -8,14 +9,7 @@ import {
   useMapEvents,
 } from 'react-leaflet';
 
-interface PreviewData {
-  setLat: (value: React.SetStateAction<number>) => void;
-  setLong: (value: React.SetStateAction<number>) => void;
-  setPosition: (value: React.SetStateAction<[number, number] | null>) => void;
-  position: any;
-}
-
-const MapPositionPreview: React.FC<PreviewData> = ({
+const MapPositionPreview: React.FC<PreviewMapProps> = ({
   position,
   setPosition,
   setLat,
@@ -28,7 +22,6 @@ const MapPositionPreview: React.FC<PreviewData> = ({
         setPosition([lat, lng]);
         setLat(lat);
         setLong(lng);
-        console.log(`Map clicked at Latitude: ${lat}, Longitude: ${lng}`);
       },
     });
     return null;
