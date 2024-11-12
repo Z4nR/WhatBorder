@@ -2,16 +2,12 @@ import React, { useEffect, useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { json, jsonParseLinter } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
-import { FeatureCollection } from 'geojson';
 import { Typography } from 'antd';
+import { GeoFormatProps } from '@/utils/types/map.types';
 
 const { Text } = Typography;
 
-interface FormatProps {
-  initialJson: FeatureCollection | null;
-}
-
-const GeojsonFormat: React.FC<FormatProps> = ({ initialJson }) => {
+const GeojsonFormat: React.FC<GeoFormatProps> = ({ initialJson }) => {
   const initialJsonString = JSON.stringify(initialJson, null, 2);
 
   const [jsonString, setJsonString] = useState(initialJsonString);

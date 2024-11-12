@@ -25,4 +25,9 @@ export interface ConfirmProps {
 export interface EditProfileProps {
   setState: (state: boolean) => void;
   state: boolean;
+  initialValue: {
+    username: string;
+    fullname: string;
+    description: string;
+  };
 }
