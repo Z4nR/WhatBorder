@@ -1,5 +1,10 @@
 import { FeatureCollection } from 'geojson';
 
+export interface DesktopConnectProps {
+  id: string;
+  desktop: string;
+}
+
 export interface SocketConnectProps {
   client: string;
   desktop: string;

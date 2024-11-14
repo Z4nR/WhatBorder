@@ -15,7 +15,8 @@ import StatisticPages from './pages/StatisticPages';
 import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
 import AddCoordinatePages from './pages/client/AddCoordinatePages';
-import CreateLocationPages from './pages/desktop/CreateLocationPages';
+import CreateLocationIntegratedPages from './pages/desktop/CreateLocationIntegratedPages';
+import CreateLocationManualPages from './pages/desktop/CreateLocationManualPages';
 
 const queryClient = new QueryClient();
 
@@ -89,16 +90,23 @@ const App: React.FC = () => {
                 path="/:id/detail"
                 element={<PlaceDetailPages />}
               />
-              <Route
-                caseSensitive
-                path="/location/new"
-                element={<CreateLocationPages />}
-              />
-              <Route
-                caseSensitive
-                path="/location/new/coordinate"
-                element={<AddCoordinatePages />}
-              />
+              <Route caseSensitive path="/location" element={<Outlet />}>
+                <Route
+                  caseSensitive
+                  path="/location/new/desktop"
+                  element={<CreateLocationIntegratedPages />}
+                />
+                <Route
+                  caseSensitive
+                  path="/location/new/client"
+                  element={<AddCoordinatePages />}
+                />
+                <Route
+                  caseSensitive
+                  path="/location/new/manual"
+                  element={<CreateLocationManualPages />}
+                />
+              </Route>
             </Route>
           </Route>
           <Route caseSensitive path="/auth" element={<VerifPages />} />

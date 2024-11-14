@@ -40,3 +40,19 @@ export interface PlaceListProps {
   createdBy: string;
   createdAt: Date;
 }
+
+export interface DashboardPlaceListProps {
+  placeId: string;
+  placeName: string;
+  placeType: {
+    name: string;
+    label: string;
+  };
+  createdAt: Date;
+}
+
+export interface DashboardChartProps {
+  buildingName: string;
+  placeCount: number;
+  color: string;
+}
