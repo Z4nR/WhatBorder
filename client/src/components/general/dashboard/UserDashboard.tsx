@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Chart } from '@antv/g2';
-import { ShakeOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  ShakeOutlined,
+  UserOutlined,
+  FileAddOutlined,
+} from '@ant-design/icons';
 import {
   Card,
   Col,
@@ -26,29 +30,13 @@ import { SocketProps } from '@/utils/types/client.types';
 import ClientList from '@/components/desktop/modal/ClientList';
 import EmptyData from '../utils/EmptyData';
 import ConfirmTask from '@/components/client/modal/ConfirmTask';
+import {
+  DashboardChartProps,
+  DashboardPlaceListProps,
+} from '@/utils/types/statistic.types';
+import { DesktopConnectProps } from '@/utils/types/map.types';
 
 const { Title, Text } = Typography;
-
-interface Statistic {
-  buildingName: string;
-  placeCount: number;
-  color: string;
-}
-
-interface DataType {
-  placeId: string;
-  placeName: string;
-  placeType: {
-    name: string;
-    label: string;
-  };
-  createdAt: Date;
-}
-
-interface DesktopData {
-  id: string;
-  desktop: string;
-}
 
 const UserDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -67,6 +55,12 @@ const UserDashboard: React.FC = () => {
   const mobile = deviceState.mobile;
 
   const actions: React.ReactNode[] = [
+    <Tooltip title="Tambah Lokasi Manual">
+      <FileAddOutlined
+        key="manual"
+        onClick={() => navigate('/location/new/manual')}
+      />
+    </Tooltip>,
     <Tooltip title="Buat Koneksi">
       <ShakeOutlined
         key="connect"
@@ -102,7 +96,7 @@ const UserDashboard: React.FC = () => {
       autoFit: true,
     });
 
-    const chartData = data?.detail.map((item: Statistic) => ({
+    const chartData = data?.detail.map((item: DashboardChartProps) => ({
       Jenis: item.buildingName,
       Jumlah: item.placeCount,
       color: item.color,
@@ -116,7 +110,7 @@ const UserDashboard: React.FC = () => {
       .encode('color', 'Jenis')
       .style('minHeight', 10)
       .scale('color', {
-        range: chartData.map((item: Statistic) => item.color),
+        range: chartData.map((item: DashboardChartProps) => item.color),
       });
 
     chart.render();
@@ -128,7 +122,7 @@ const UserDashboard: React.FC = () => {
 
   // When get client device
   useEffect(() => {
-    const handleGetClient = (data: DesktopData) => {
+    const handleGetClient = (data: DesktopConnectProps) => {
       console.log(data);
 
       if (
@@ -198,12 +192,12 @@ const UserDashboard: React.FC = () => {
         data.uniqueCode === deviceState.uniqueCode
       ) {
         socketState.setSocket(data);
-        navigate('/location/new/coordinate');
+        navigate('/location/new/client');
       }
 
       if (data.desktop === deviceState.device) {
         socketState.setSocket(data);
-        navigate('/location/new');
+        navigate('/location/new/desktop');
       }
     };
 
@@ -220,7 +214,7 @@ const UserDashboard: React.FC = () => {
     socketState,
   ]);
 
-  const columns: TableProps<DataType>['columns'] = [
+  const columns: TableProps<DashboardPlaceListProps>['columns'] = [
     {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
