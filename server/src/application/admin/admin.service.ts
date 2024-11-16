@@ -1,10 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { AddBuildingDto } from './dto/create-admin.dto';
 import { PrismaService } from 'src/db/prisma.service';
+import { PlaceService } from '../place/place.service';
+import { HelperService } from '../helper-service/helper.service';
 
 @Injectable()
 export class AdminService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly placeService: PlaceService,
+    private readonly helperService: HelperService,
+  ) {}
+
+  async validateUserAccount(id: string) {
+    try {
+      const userExist = await this.helperService.findByIdUser(id);
+      if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
+      if (userExist.admin)
+        throw new BadRequestException('Tidak Dapat Menghapus Sesama Admin');
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async validatePlaceData(id: string) {
+    try {
+      const placeExist = await this.placeService.findOne(id);
+      if (!placeExist) throw new NotFoundException('Tempat Tidak Ditemukan');
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async findAll() {
     try {
