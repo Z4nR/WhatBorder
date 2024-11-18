@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePlaceDto } from './dto/create-place.dto';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { CreatePlaceDto, GeoJson } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
@@ -12,6 +12,27 @@ export class PlaceService {
     private readonly prisma: PrismaService,
     private helperService: HelperService,
   ) {}
+
+  async validatePlaceExist(placeName: string, placeGeojson: GeoJson) {
+    try {
+      const place = await this.helperService.checkingPlaceName(placeName);
+      const map = await this.helperService.checkingPlaceMap(placeGeojson);
+
+      if (place)
+        throw new ConflictException(
+          'Nama tempat sudah ditambahkan oleh orang lain',
+        );
+      if (map)
+        throw new ConflictException('Lokasi sudah ditambahkan oleh orang lain');
+      if (place && map)
+        throw new ConflictException(
+          'Nama dan Lokasi sudah ditambahkan oleh orang lain',
+        );
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async create(user_id: string, name: string, createPlaceDto: CreatePlaceDto) {
     try {
@@ -92,28 +113,27 @@ export class PlaceService {
           },
         },
       });
+      console.log(compare);
 
-      const data = compare.map((place: any) => {
-        console.log(place.place_center_point[0]);
+      const dataCompare: any[] = [];
+      compare.map((place: any) => {
         const rangeCount = this.helperService.rangeCount(
           place_center_point[0],
           place.place_center_point[0],
           place_center_point[1],
           place.place_center_point[1],
         );
-
         console.log(rangeCount);
 
         if (rangeCount < 5) {
-          return {
+          dataCompare.push({
             ...place,
             rangePlace: `+- ${rangeCount} M`,
-          };
+          });
         }
       });
-      console.log(data[0] === undefined);
 
-      return data[0] !== undefined ? data : [];
+      return dataCompare;
     } catch (error) {
       console.log(error);
       throw error;
