@@ -1,11 +1,31 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { compare } from 'bcrypt';
+import { HelperService } from '../helper-service/helper.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly helperService: HelperService,
+  ) {}
+
+  async validateUserAccount(id: string) {
+    try {
+      const userExist = await this.helperService.findByIdUser(id);
+      if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
+
+      return userExist;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async findAll(id: string) {
     try {
