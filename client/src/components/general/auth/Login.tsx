@@ -53,7 +53,7 @@ const Login: React.FC = () => {
     },
   });
 
-  const onFinish = (values: LoginProps) => {
+  const onLogin = (values: LoginProps) => {
     const pw = CryptoJS.AES.encrypt(
       values.password,
       import.meta.env.VITE_SECRET
@@ -82,8 +82,7 @@ const Login: React.FC = () => {
         boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.05)',
         background: colorBgContainer,
       }}
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
+      onFinish={onLogin}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
         Masuk

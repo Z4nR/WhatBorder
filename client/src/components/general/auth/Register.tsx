@@ -73,7 +73,7 @@ const Register: React.FC = () => {
     },
   });
 
-  const onFinish = (values: RegisterProps) => {
+  const onRegist = (values: RegisterProps) => {
     const pw = CryptoJS.AES.encrypt(
       values.password,
       import.meta.env.VITE_SECRET
@@ -105,11 +105,10 @@ const Register: React.FC = () => {
         boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.05)',
         background: colorBgContainer,
       }}
-      initialValues={{ remember: true }}
       ref={(form) => {
         formRef.current = form as FormInstance | null;
       }}
-      onFinish={onFinish}
+      onFinish={onRegist}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
         Buat Akun

@@ -48,7 +48,7 @@ const ForgotPassword: React.FC = () => {
     },
   });
 
-  const onFinish = (values: any) => {
+  const onForgot = (values: any) => {
     mutate(values);
   };
 
@@ -65,11 +65,10 @@ const ForgotPassword: React.FC = () => {
         boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.05)',
         background: colorBgContainer,
       }}
-      initialValues={{ remember: true }}
       ref={(form) => {
         formRef.current = form as FormInstance | null;
       }}
-      onFinish={onFinish}
+      onFinish={onForgot}
     >
       <Title level={4} style={{ paddingBottom: 16 }}>
         Lupa Kata Sandi
