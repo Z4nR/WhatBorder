@@ -4,23 +4,18 @@ import {
   Body,
   Patch,
   Delete,
-  NotFoundException,
   Req,
   Param,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { HelperService } from '../helper-service/helper.service';
 import { Request } from 'express';
 import { Roles } from '../auth/authorize/decorator/role.decorator';
 import { Role } from '../auth/authorize/enum/role.enum';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly helperService: HelperService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Roles(Role.USER)
   @Get()
@@ -33,8 +28,7 @@ export class UserController {
   @Roles(Role.USER, Role.ADMIN)
   @Get(':id/detail')
   async findOne(@Param('id') id: string) {
-    const userDetail = await this.helperService.findByIdUser(id);
-    if (!userDetail) throw new NotFoundException('Pengguna Tidak Ditemukan');
+    await this.userService.validateUserAccount(id);
 
     return await this.userService.findOne(id);
   }
@@ -45,8 +39,7 @@ export class UserController {
     const user = req['user'];
     const userId = user.sub;
 
-    const findUser = await this.helperService.findByIdUser(userId);
-    if (!findUser) throw new NotFoundException('Pengguna Tidak Ditemukan');
+    await this.userService.validateUserAccount(userId);
 
     return await this.userService.myProfile(userId);
   }
@@ -57,8 +50,7 @@ export class UserController {
     const user = req['user'];
     const userId = user.sub;
 
-    const findUser = await this.helperService.findByIdUser(userId);
-    if (!findUser) throw new NotFoundException('Pengguna Tidak Ditemukan');
+    await this.userService.validateUserAccount(userId);
 
     return await this.userService.update(userId, updateUserDto);
   }
@@ -69,13 +61,9 @@ export class UserController {
     const user = req['user'];
     const userId = user.sub;
 
-    const findUser = await this.helperService.findByIdUser(userId);
-    if (!findUser) throw new NotFoundException('Pengguna Tidak Ditemukan');
-
-    console.log(data);
+    const findUser = await this.userService.validateUserAccount(userId);
 
     const { password } = data;
-
     return await this.userService.remove(userId, findUser.password, password);
   }
 }
