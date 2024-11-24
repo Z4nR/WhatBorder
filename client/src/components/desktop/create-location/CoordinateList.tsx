@@ -1,14 +1,11 @@
 import React from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input, Typography } from 'antd';
+import { CoordinateListProps } from '@/utils/types/utils.types';
 
 const { Text } = Typography;
 
-interface AddRef {
-  addRef: React.MutableRefObject<(fieldsValue?: any, index?: number) => void>;
-}
-
-const CoordinateList: React.FC<AddRef> = ({ addRef }) => {
+const CoordinateList: React.FC<CoordinateListProps> = ({ addRef, disable }) => {
   return (
     <>
       <Text>Titik Koordinat Batas Tempat (Longitude, Latitude)</Text>
@@ -90,17 +87,19 @@ const CoordinateList: React.FC<AddRef> = ({ addRef }) => {
                     </Flex>
                   </Form.Item>
                 ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    style={{ width: '60%', marginTop: '10px' }}
-                    icon={<PlusOutlined />}
-                  >
-                    Add field
-                  </Button>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
+                {!disable && (
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      style={{ width: '60%', marginTop: '10px' }}
+                      icon={<PlusOutlined />}
+                    >
+                      Add field
+                    </Button>
+                    <Form.ErrorList errors={errors} />
+                  </Form.Item>
+                )}
               </>
             );
           }}
