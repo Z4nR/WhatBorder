@@ -39,6 +39,7 @@ import EmptyData from '@/components/general/utils/EmptyData';
 import { useMediaQuery } from 'react-responsive';
 import { ProfilePlaceProps } from '@/utils/types/profile.types';
 import BreadcrumbComponent from '@/components/general/utils/Breadcrumb';
+import EditProfile from '@/components/general/modal/EditProfile';
 
 const { Text } = Typography;
 
@@ -47,6 +48,8 @@ type InputRef = GetRef<typeof Input>;
 type DataIndex = keyof ProfilePlaceProps;
 
 const ProfilePages: React.FC = () => {
+  const [editProfileModal, setEditProfileModal] = useState(false);
+
   const isMobile = useMediaQuery({
     query: '(max-width: 600px)',
   });
@@ -231,6 +234,17 @@ const ProfilePages: React.FC = () => {
 
   return (
     <>
+      {editProfileModal && (
+        <EditProfile
+          state={editProfileModal}
+          setState={setEditProfileModal}
+          initialValue={{
+            username: userProfile.data?.userName,
+            fullname: userProfile.data?.fullName,
+            description: userProfile.data?.description,
+          }}
+        />
+      )}
       <BreadcrumbComponent title="Profil Pengguna" buttonTitle="Kembali" />
       <Flex gap={'middle'} vertical>
         <Skeleton
@@ -268,7 +282,7 @@ const ProfilePages: React.FC = () => {
                       <Button
                         className="icon-profile"
                         icon={<EditOutlined />}
-                        onClick={() => console.log('testing')}
+                        onClick={() => setEditProfileModal(true)}
                       />
                     </Tooltip>
                     <Tooltip title="Bagikan Profil">
