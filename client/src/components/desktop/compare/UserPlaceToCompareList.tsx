@@ -1,9 +1,9 @@
 import { Table } from 'antd';
 import { TableUserProps } from '../../../utils/types/compare.types';
-import EmptyData from '../utils/EmptyData';
 import React from 'react';
+import EmptyData from '@/components/general/utils/EmptyData';
 
-const UserPlaceList: React.FC<TableUserProps> = (props) => {
+const UserPlaceToCompareList: React.FC<TableUserProps> = (props) => {
   return (
     <Table
       bordered
@@ -20,4 +20,4 @@ const UserPlaceList: React.FC<TableUserProps> = (props) => {
   );
 };
 
-export default UserPlaceList;
+export default UserPlaceToCompareList;
