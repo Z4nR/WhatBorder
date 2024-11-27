@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -124,6 +125,14 @@ export class UserService {
   }
 
   async update(id: string, dto: UpdateUserDto) {
+    console.log(dto.username);
+
+    if (dto.username) {
+      const username = await this.helperService.findByUsername(dto.username);
+      if (username)
+        throw new ConflictException('Nama Pengguna sudah digunakan');
+    }
+
     try {
       await this.prisma.user.update({
         where: {
