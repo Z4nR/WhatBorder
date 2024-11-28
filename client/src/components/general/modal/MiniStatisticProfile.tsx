@@ -2,14 +2,16 @@ import React from 'react';
 import { dateFormatter } from '@/utils/helper';
 import { userDetail } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
-import { Descriptions, DescriptionsProps, Modal, Skeleton } from 'antd';
+import { Button, Descriptions, DescriptionsProps, Modal, Skeleton } from 'antd';
 import { StatisticProps } from '@/utils/types/modal.types';
+import { useNavigate } from 'react-router-dom';
 
-const StatisticProfile: React.FC<StatisticProps> = ({
+const MiniStatisticProfile: React.FC<StatisticProps> = ({
   id,
   state,
   setState,
 }) => {
+  const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ['user-mini-profile', id],
     queryFn: async () => await userDetail(id),
@@ -49,7 +51,17 @@ const StatisticProfile: React.FC<StatisticProps> = ({
       open={state}
       maskClosable={false}
       centered
-      footer={null}
+      footer={() => (
+        <Button
+          type="primary"
+          onClick={() => {
+            navigate(`/statistic/user/${id}`);
+            setState(false);
+          }}
+        >
+          Kunjungi Profile
+        </Button>
+      )}
       onCancel={() => {
         setState(false);
       }}
@@ -61,4 +73,4 @@ const StatisticProfile: React.FC<StatisticProps> = ({
   );
 };
 
-export default StatisticProfile;
+export default MiniStatisticProfile;
