@@ -1,51 +1,22 @@
-import { dateFormatter } from '@/utils/helper';
 import { profileUser } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
+import { Button, Col, Flex, Row, Skeleton, Space, Tooltip } from 'antd';
 import {
-  Avatar,
-  Button,
-  Col,
-  Descriptions,
-  DescriptionsProps,
-  Flex,
-  GetRef,
-  Input,
-  message,
-  Popconfirm,
-  PopconfirmProps,
-  Row,
-  Skeleton,
-  Space,
-  Table,
-  TableColumnType,
-  TableProps,
-  Tag,
-  Tooltip,
-  Typography,
-} from 'antd';
-import { FilterDropdownProps } from 'antd/es/table/interface';
-import {
-  SearchOutlined,
   EditOutlined,
   DeleteOutlined,
   ShareAltOutlined,
 } from '@ant-design/icons';
-import React, { useRef, useState } from 'react';
-import Highlighter from 'react-highlight-words';
-import { formatDistanceToNow, parseISO } from 'date-fns';
-import { id } from 'date-fns/locale';
-import MapInProfile from '@/components/general/map/MapInProfile';
-import EmptyData from '@/components/general/utils/EmptyData';
+import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
-import { ProfilePlaceProps } from '@/utils/types/profile.types';
 import BreadcrumbComponent from '@/components/general/utils/Breadcrumb';
 import EditProfile from '@/components/general/modal/EditProfile';
-
-const { Text } = Typography;
-
-type InputRef = GetRef<typeof Input>;
-
-type DataIndex = keyof ProfilePlaceProps;
+import ProfilePlaceList from '@/components/general/profile/ProfilePlaceList';
+import {
+  ProfileAvatar,
+  ProfileLastUpdate,
+  ProfileName,
+} from '@/components/general/profile/ProfileData';
+import ProfileMiniDesc from '@/components/general/profile/ProfileMiniDesc';
 
 const ProfilePages: React.FC = () => {
   const [editProfileModal, setEditProfileModal] = useState(false);
@@ -54,183 +25,10 @@ const ProfilePages: React.FC = () => {
     query: '(max-width: 600px)',
   });
 
-  const userProfile = useQuery({
-    queryKey: ['user-profile'],
+  const myProfile = useQuery({
+    queryKey: ['my-profile'],
     queryFn: async () => await profileUser(),
   });
-
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
-  const searchInput = useRef<InputRef>(null);
-
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
-  ) => {
-    confirm({ closeDropdown: true });
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText('');
-  };
-
-  const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): TableColumnType<ProfilePlaceProps> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          style={{ marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Cari
-          </Button>
-          <Button
-            onClick={() => {
-              clearFilters && handleReset(clearFilters);
-              confirm({ closeDropdown: true });
-            }}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Hapus
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            Tutup
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
-
-  const itemsDescUser: DescriptionsProps['items'] = [
-    {
-      key: '1',
-      label: 'Dibuat Pada',
-      children: dateFormatter(userProfile.data?.createdAt),
-    },
-    {
-      key: '2',
-      label: 'Status Akun',
-      children: userProfile.data?.admin ? 'Pengelola' : 'Pengguna',
-    },
-    {
-      key: '3',
-      label: 'Deskripsi Akun',
-      children: userProfile.data?.description
-        ? userProfile.data?.description
-        : '-',
-    },
-  ];
-
-  const confirm: PopconfirmProps['onConfirm'] = (e) => {
-    console.log(e);
-    message.success('Click on Yes');
-  };
-
-  const columns: TableProps<ProfilePlaceProps>['columns'] = [
-    {
-      title: 'Nama Tempat',
-      dataIndex: 'place_name',
-      key: 'place-name',
-      ...getColumnSearchProps('place_name'),
-    },
-    {
-      title: 'Tipe',
-      dataIndex: 'type',
-      key: 'place-type',
-      width: '150px',
-      responsive: ['sm'],
-      render: (_, { type }) => {
-        return (
-          <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name.toUpperCase()}
-          </Tag>
-        );
-      },
-    },
-    {
-      title: 'Tindakan',
-      key: 'place-action',
-      align: 'center',
-      width: '150px',
-      render: () => (
-        <Space size="middle">
-          <Tooltip title="Ubah Data Tempat" placement="bottom">
-            <Button type="primary">
-              <EditOutlined />
-            </Button>
-          </Tooltip>
-          <Popconfirm
-            title="Delete the task"
-            description="Are you sure to delete this task?"
-            onConfirm={confirm}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Tooltip title="Hapus Data Tempat" placement="bottom">
-              <Button danger>
-                <DeleteOutlined />
-              </Button>
-            </Tooltip>
-          </Popconfirm>
-        </Space>
-      ),
-    },
-  ];
 
   return (
     <>
@@ -239,42 +37,29 @@ const ProfilePages: React.FC = () => {
           state={editProfileModal}
           setState={setEditProfileModal}
           initialValue={{
-            username: userProfile.data?.userName,
-            fullname: userProfile.data?.fullName,
-            description: userProfile.data?.description,
+            username: myProfile.data?.userName,
+            fullname: myProfile.data?.fullName,
+            description: myProfile.data?.description,
           }}
         />
       )}
       <BreadcrumbComponent title="Profil Pengguna" buttonTitle="Kembali" />
       <Flex gap={'middle'} vertical>
         <Skeleton
-          loading={userProfile.isLoading}
+          loading={myProfile.isLoading}
           active
           avatar
           paragraph={{ rows: 2 }}
         >
           <Space direction={isMobile ? 'vertical' : 'horizontal'}>
-            <Avatar
-              size={48}
-              style={{
-                backgroundColor: '#1677ff',
-              }}
-            >
-              {userProfile.data?.avatar}
-            </Avatar>
+            <ProfileAvatar avatar={myProfile.data?.avatar} />
             <Flex vertical>
               <Row>
                 <Col flex="auto">
-                  <Text
-                    style={{ fontSize: '1rem' }}
-                    strong
-                    copyable={{
-                      text: `${userProfile.data?.userName}`,
-                      tooltips: ['Salin Username', 'Username Berhasil Disalin'],
-                    }}
-                  >
-                    {userProfile.data?.fullName}
-                  </Text>
+                  <ProfileName
+                    fullname={myProfile.data?.fullName}
+                    username={myProfile.data?.userName}
+                  />
                 </Col>
                 <Col flex="none">
                   <Space.Compact block>
@@ -300,86 +85,20 @@ const ProfilePages: React.FC = () => {
                   </Space.Compact>
                 </Col>
               </Row>
-              {userProfile.data && (
-                <Text>
-                  Terakhir Diperbarui{' '}
-                  {formatDistanceToNow(parseISO(userProfile.data?.updatedAt), {
-                    addSuffix: true,
-                    locale: id,
-                  })}
-                </Text>
+              {myProfile.data && (
+                <ProfileLastUpdate updatedAt={myProfile.data?.updatedAt} />
               )}
-              <Descriptions size="small" items={itemsDescUser} />
+              <ProfileMiniDesc
+                createdAt={myProfile.data?.createdAt}
+                admin={myProfile.data?.admin}
+                description={myProfile.data?.description}
+              />
             </Flex>
           </Space>
         </Skeleton>
-        <Table
-          size="small"
-          sticky
-          style={{ backgroundColor: 'transparent' }}
-          loading={userProfile.isLoading}
-          columns={columns}
-          dataSource={userProfile.data?.place}
-          rowKey={({ place_id }) => place_id}
-          locale={{
-            emptyText: (
-              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
-            ),
-          }}
-          expandable={{
-            expandedRowRender: ({
-              place_id,
-              place_owner,
-              place_description,
-              place_map,
-              place_center_point,
-              place_address,
-              type,
-              created_at,
-              updated_at,
-            }) => (
-              <div style={{ paddingInline: '8px', paddingBottom: '8px' }}>
-                <Descriptions
-                  size="small"
-                  style={{ marginBottom: '1em' }}
-                  title="Info Tempat"
-                  items={[
-                    {
-                      key: '1',
-                      label: 'Ditambahkan Pada',
-                      children: dateFormatter(created_at),
-                    },
-                    {
-                      key: '2',
-                      label: 'Diperbarui Pada',
-                      children: dateFormatter(updated_at),
-                    },
-                    {
-                      key: '3',
-                      label: 'Pemilik Tempat',
-                      children: place_owner ? place_owner : '-',
-                    },
-                    {
-                      key: '4',
-                      label: 'Alamat Tempat',
-                      children: place_address,
-                    },
-                    {
-                      key: '5',
-                      label: 'Penjelasan Tempat',
-                      children: place_description ? place_description : '-',
-                    },
-                  ]}
-                />
-                <MapInProfile
-                  place_center_point={place_center_point}
-                  place_id={place_id}
-                  color={type.color}
-                  place_map={place_map}
-                />
-              </div>
-            ),
-          }}
+        <ProfilePlaceList
+          data={myProfile.data?.place}
+          loading={myProfile.isLoading}
         />
       </Flex>
     </>
