@@ -1,19 +1,17 @@
-import { socketConnection } from '@/utils/helper';
-import { Button, Card, Flex, Typography, Spin } from 'antd';
 import React, { useState } from 'react';
+import { Button, Card, Typography, Spin, Row, Col } from 'antd';
+import { socketConnection } from '@/utils/helper';
+import MapPositionPreview from './MapPositionPreview';
+import { SocketConnectProps } from '@/utils/types/map.types';
 
 const { Text } = Typography;
 
-interface SocketConnect {
-  client: string;
-  desktop: string;
-}
-
-const AddCenterPoint: React.FC<SocketConnect> = ({ client, desktop }) => {
+const AddCenterPoint: React.FC<SocketConnectProps> = ({ client, desktop }) => {
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
   const [loading, setLoading] = useState(false);
   const [usingCoordinate, setUsingCoordinate] = useState(true);
+  const [position, setPosition] = useState<[number, number] | null>(null);
 
   const socket = socketConnection();
 
@@ -24,6 +22,7 @@ const AddCenterPoint: React.FC<SocketConnect> = ({ client, desktop }) => {
         const { latitude, longitude } = position.coords;
         setLat(latitude);
         setLong(longitude);
+        setPosition([latitude, longitude]);
         setUsingCoordinate(false);
         setLoading(false);
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
@@ -54,36 +53,50 @@ const AddCenterPoint: React.FC<SocketConnect> = ({ client, desktop }) => {
   };
 
   return (
-    <Card>
-      <Text style={{ fontWeight: 'bold' }}>Tambahkan Titik Pusat Tempat</Text>
-      <Button
-        style={{ marginTop: '1rem', width: '100%' }}
-        onClick={findCoordinate}
-        disabled={loading}
-      >
-        {loading ? <Spin /> : 'Cari Titik Pusat'}
-      </Button>
-      <Flex style={{ paddingBlock: '1rem' }} gap={'small'} vertical>
-        <Text>Latitude: {lat}</Text>
-        <Text>Longitude: {long}</Text>
-      </Flex>
-      <Button
-        disabled={usingCoordinate}
-        style={{ width: '100%' }}
-        onClick={() => {
-          socket.emit('set-centerpoint', {
-            lat: lat,
-            long: long,
-            client: client,
-            desktop: desktop,
-          });
-
-          setUsingCoordinate(true);
-        }}
-      >
-        Gunakan Koordinat
-      </Button>
-    </Card>
+    <Row gutter={[16, 16]} wrap>
+      <Col xs={24} md={12}>
+        <Card>
+          <Text style={{ fontWeight: 'bold' }}>
+            Tambahkan Titik Pusat Tempat
+          </Text>
+          <Button
+            style={{ marginTop: '1rem', width: '100%' }}
+            onClick={findCoordinate}
+            disabled={loading}
+          >
+            {loading ? <Spin /> : 'Cari Titik Pusat'}
+          </Button>
+          <div style={{ paddingBlock: '1rem' }}>
+            <Text>Latitude: {lat}</Text>
+            <br />
+            <Text>Longitude: {long}</Text>
+          </div>
+          <Button
+            disabled={usingCoordinate}
+            style={{ width: '100%' }}
+            onClick={() => {
+              socket.emit('set-centerpoint', {
+                lat: lat,
+                long: long,
+                client: client,
+                desktop: desktop,
+              });
+              setUsingCoordinate(true);
+            }}
+          >
+            Gunakan Koordinat
+          </Button>
+        </Card>
+      </Col>
+      <Col xs={24} md={12}>
+        <MapPositionPreview
+          position={position}
+          setPosition={setPosition}
+          setLat={setLat}
+          setLong={setLong}
+        />
+      </Col>
+    </Row>
   );
 };
 

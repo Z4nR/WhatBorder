@@ -1,22 +1,17 @@
+import React, { useState } from 'react';
 import { socketConnection } from '@/utils/helper';
 import { Row, Col, Card, Button, Flex, Typography, Spin } from 'antd';
-import React, { useState } from 'react';
-import { MapContainer, Marker, TileLayer, useMapEvents } from 'react-leaflet';
+import MapPositionPreview from './MapPositionPreview';
+import { SocketConnectProps } from '@/utils/types/map.types';
 
 const { Text } = Typography;
 
-interface SocketConnect {
-  client: string;
-  desktop: string;
-}
-
-const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
+const AddPlacePattern: React.FC<SocketConnectProps> = ({ client, desktop }) => {
   const [lat, setLat] = useState(0);
   const [long, setLong] = useState(0);
   const [loading, setLoading] = useState(false);
   const [usingCoordinate, setUsingCoordinate] = useState(true);
-
-  const [position, setPosition] = useState(null);
+  const [position, setPosition] = useState<[number, number] | null>(null);
 
   const socket = socketConnection();
 
@@ -27,6 +22,7 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
         const { latitude, longitude } = position.coords;
         setLat(latitude);
         setLong(longitude);
+        setPosition([latitude, longitude]);
         setUsingCoordinate(false);
         setLoading(false);
         console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
@@ -55,18 +51,6 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
       }
     );
   };
-
-  // Custom component to handle map events (must be within MapContainer)
-  const MapEventHandler = () => {
-    useMapEvents({
-      click(e: any) {
-        setPosition(e.latlng);
-      },
-    });
-    return null; // This component doesn't render anything
-  };
-
-  console.log(position);
 
   return (
     <Row gutter={[16, 16]} wrap>
@@ -103,21 +87,12 @@ const AddPlacePattern: React.FC<SocketConnect> = ({ client, desktop }) => {
         </Card>
       </Col>
       <Col xs={24} md={12}>
-        <Card>
-          <MapContainer
-            center={[-1.2480891, 118]}
-            zoom={14}
-            scrollWheelZoom={true}
-            style={{ height: '400px', width: '100%' }} // Ensure the map has dimensions
-          >
-            <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {position && <Marker position={position}></Marker>}
-            <MapEventHandler /> {/* Attach event handler here */}
-          </MapContainer>
-        </Card>
+        <MapPositionPreview
+          position={position}
+          setPosition={setPosition}
+          setLat={setLat}
+          setLong={setLong}
+        />
       </Col>
     </Row>
   );
