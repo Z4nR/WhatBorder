@@ -183,7 +183,7 @@ const PlaceList: React.FC = () => {
       align: 'center',
       width: '150px',
       render: (_, { placeId }) => (
-        <Link to={`/${placeId}/detail`}>Rincian</Link>
+        <Link to={`/statistic/place/${placeId}`}>Rincian</Link>
       ),
     },
   ];

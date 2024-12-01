@@ -33,7 +33,11 @@ type InputRef = GetRef<typeof Input>;
 
 type DataIndex = keyof ProfilePlaceProps;
 
-const ProfilePlaceList: React.FC<TablePlaceProps> = ({ data, loading }) => {
+const ProfilePlaceList: React.FC<TablePlaceProps> = ({
+  data,
+  loading,
+  action,
+}) => {
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
@@ -147,7 +151,7 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({ data, loading }) => {
       title: 'Tipe',
       dataIndex: 'type',
       key: 'place-type',
-      width: '150px',
+      width: action ? '150px' : '250px',
       responsive: ['sm'],
       render: (_, { type }) => {
         return (
@@ -157,7 +161,10 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({ data, loading }) => {
         );
       },
     },
-    {
+  ];
+
+  if (action) {
+    columns.push({
       title: 'Tindakan',
       key: 'place-action',
       align: 'center',
@@ -184,8 +191,8 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({ data, loading }) => {
           </Popconfirm>
         </Space>
       ),
-    },
-  ];
+    });
+  }
 
   return (
     <Table

@@ -1,6 +1,15 @@
 import { profileUser } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Col, Flex, Row, Skeleton, Space, Tooltip } from 'antd';
+import {
+  Button,
+  Col,
+  Flex,
+  message,
+  Row,
+  Skeleton,
+  Space,
+  Tooltip,
+} from 'antd';
 import {
   EditOutlined,
   DeleteOutlined,
@@ -25,10 +34,28 @@ const ProfilePages: React.FC = () => {
     query: '(max-width: 600px)',
   });
 
-  const myProfile = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['my-profile'],
     queryFn: async () => await profileUser(),
   });
+
+  const shareProfile = () => {
+    const currentUrl = window.location.href;
+    const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(`${baseUrl}statistic/user/${data?.me}`)
+        .then(() => {
+          message.info('Tautan berhasil disalin ke clipboard!');
+        })
+        .catch((err) => {
+          message.error('Gagal menyalin tautan: ', err);
+        });
+    } else {
+      message.error('Clipboard API tidak mendukung peramban versi ini.');
+    }
+  };
 
   return (
     <>
@@ -37,28 +64,24 @@ const ProfilePages: React.FC = () => {
           state={editProfileModal}
           setState={setEditProfileModal}
           initialValue={{
-            username: myProfile.data?.userName,
-            fullname: myProfile.data?.fullName,
-            description: myProfile.data?.description,
+            username: data?.userName,
+            fullname: data?.fullName,
+            description: data?.description,
           }}
         />
       )}
       <BreadcrumbComponent title="Profil Pengguna" buttonTitle="Kembali" />
       <Flex gap={'middle'} vertical>
-        <Skeleton
-          loading={myProfile.isLoading}
-          active
-          avatar
-          paragraph={{ rows: 2 }}
-        >
+        <Skeleton loading={isLoading} active avatar paragraph={{ rows: 2 }}>
           <Space direction={isMobile ? 'vertical' : 'horizontal'}>
-            <ProfileAvatar avatar={myProfile.data?.avatar} />
+            <ProfileAvatar avatar={data?.avatar} />
             <Flex vertical>
               <Row>
                 <Col flex="auto">
                   <ProfileName
-                    fullname={myProfile.data?.fullName}
-                    username={myProfile.data?.userName}
+                    fullname={data?.fullName}
+                    username={data?.userName}
+                    copy={false}
                   />
                 </Col>
                 <Col flex="none">
@@ -74,6 +97,7 @@ const ProfilePages: React.FC = () => {
                       <Button
                         className="icon-profile"
                         icon={<ShareAltOutlined />}
+                        onClick={() => shareProfile()}
                       />
                     </Tooltip>
                     <Tooltip title="Hapus Profil">
@@ -85,20 +109,19 @@ const ProfilePages: React.FC = () => {
                   </Space.Compact>
                 </Col>
               </Row>
-              {myProfile.data && (
-                <ProfileLastUpdate updatedAt={myProfile.data?.updatedAt} />
-              )}
+              {data && <ProfileLastUpdate updatedAt={data?.updatedAt} />}
               <ProfileMiniDesc
-                createdAt={myProfile.data?.createdAt}
-                admin={myProfile.data?.admin}
-                description={myProfile.data?.description}
+                createdAt={data?.createdAt}
+                admin={data?.admin}
+                description={data?.description}
               />
             </Flex>
           </Space>
         </Skeleton>
         <ProfilePlaceList
-          data={myProfile.data?.place}
-          loading={myProfile.isLoading}
+          data={data?.place}
+          loading={isLoading}
+          action={true}
         />
       </Flex>
     </>

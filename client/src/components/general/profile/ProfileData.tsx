@@ -18,18 +18,23 @@ export const ProfileAvatar: React.FC<{ avatar: string }> = ({ avatar }) => {
   );
 };
 
-export const ProfileName: React.FC<{ fullname: string; username: string }> = ({
-  fullname,
-  username,
-}) => {
+export const ProfileName: React.FC<{
+  fullname: string;
+  username: string;
+  copy: boolean;
+}> = ({ fullname, username, copy }) => {
   return (
     <Text
       style={{ fontSize: '1rem' }}
       strong
-      copyable={{
-        text: `${username}`,
-        tooltips: ['Salin Username', 'Username Berhasil Disalin'],
-      }}
+      copyable={
+        copy
+          ? {
+              text: `${username}`,
+              tooltips: ['Salin Username', 'Username Berhasil Disalin'],
+            }
+          : undefined
+      }
     >
       {fullname}
     </Text>
