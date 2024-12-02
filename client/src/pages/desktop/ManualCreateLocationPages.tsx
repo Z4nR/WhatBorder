@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import FormInputData from '@/components/desktop/create-location/FormInputData';
 import {
   Breadcrumb,
@@ -24,7 +24,7 @@ import EmptyData from '@/components/general/utils/EmptyData';
 import GeojsonFormat from '@/components/desktop/create-location/GeojsonFormat';
 import { FeatureCollection } from 'geojson';
 import MapView from '@/components/desktop/create-location/MapView';
-import CoordinateList from '@/components/desktop/create-location/CoordinateList';
+import ManualCoordinateList from '@/components/desktop/create-location/ManualCoordinateList';
 
 const { Title, Text } = Typography;
 
@@ -32,7 +32,7 @@ const layout = {
   labelCol: { span: 8 },
 };
 
-const CreateLocationManualPages: React.FC = () => {
+const ManualCreateLocationPages: React.FC = () => {
   const [centerPoint, setCenterPoint] = useState<[number, number] | null>(null);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
   const [geojsonFormat, setGeojsonFormat] = useState<FeatureCollection | null>(
@@ -42,8 +42,6 @@ const CreateLocationManualPages: React.FC = () => {
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const addRef = useRef<(fieldsValue?: any, index?: number) => void>(() => {});
-
   const isDesktop = useMediaQuery({
     query: '(min-width: 500px)',
   });
@@ -51,7 +49,7 @@ const CreateLocationManualPages: React.FC = () => {
   const menuItems = [
     {
       key: '1',
-      children: <CoordinateList addRef={addRef} disable={false} />,
+      children: <ManualCoordinateList disable={false} />,
       label: (
         <Tooltip title="Daftar Titik Sudut">
           <FileTextOutlined style={{ margin: '0 auto' }} />
@@ -131,7 +129,7 @@ const CreateLocationManualPages: React.FC = () => {
       {isDesktop ? (
         <div>
           <Title level={5} style={{ marginTop: '8px' }}>
-            Pengaturan Penambahan Tempat
+            Pengaturan Penambahan Tempat Manual
           </Title>
           <Form
             {...layout}
@@ -149,7 +147,7 @@ const CreateLocationManualPages: React.FC = () => {
                   allValues.placelat,
                   allValues.placelong,
                 ]);
-                setCenterPoint([allValues.lat, allValues.long]);
+                setCenterPoint([allValues.placelat, allValues.palcelong]);
               }
             }}
             onFinish={onCreate}
@@ -203,4 +201,4 @@ const CreateLocationManualPages: React.FC = () => {
   );
 };
 
-export default CreateLocationManualPages;
+export default ManualCreateLocationPages;

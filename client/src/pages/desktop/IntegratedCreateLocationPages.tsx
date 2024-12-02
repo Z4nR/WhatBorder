@@ -1,4 +1,4 @@
-import CoordinateList from '@/components/desktop/create-location/CoordinateList';
+import React, { useEffect, useRef, useState } from 'react';
 import FormInputData from '@/components/desktop/create-location/FormInputData';
 import MapView from '@/components/desktop/create-location/MapView';
 import { socketConnection } from '@/utils/helper';
@@ -16,7 +16,6 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -31,6 +30,7 @@ import { useMutation } from '@tanstack/react-query';
 import { addNewPlace } from '@/utils/networks';
 import useSocketState from '@/utils/state/clientState';
 import { UpdateCoordinateProps } from '@/utils/types/map.types';
+import IntegratedCoordinateList from '@/components/desktop/create-location/IntegratedCoordinateList';
 
 const { Title, Text } = Typography;
 
@@ -38,7 +38,7 @@ const layout = {
   labelCol: { span: 8 },
 };
 
-const CreateLocationIntegratedPages: React.FC = () => {
+const IntegratedCreateLocationPages: React.FC = () => {
   const [centerPoint, setCenterPoint] = useState<[number, number] | null>(null);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
   const [geojsonFormat, setGeojsonFormat] = useState<FeatureCollection | null>(
@@ -106,7 +106,7 @@ const CreateLocationIntegratedPages: React.FC = () => {
   const menuItems = [
     {
       key: '1',
-      children: <CoordinateList addRef={addRef} disable={true} />,
+      children: <IntegratedCoordinateList addRef={addRef} disable={true} />,
       label: (
         <Tooltip title="Daftar Titik Sudut">
           <FileTextOutlined style={{ margin: '0 auto' }} />
@@ -147,7 +147,7 @@ const CreateLocationIntegratedPages: React.FC = () => {
     },
   ];
 
-  const { mutateAsync } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: addNewPlace,
     onSuccess: (data) => {
       message.open({
@@ -177,7 +177,7 @@ const CreateLocationIntegratedPages: React.FC = () => {
     };
     console.log(data);
 
-    mutateAsync(data);
+    mutate(data);
   };
 
   const onReset = () => {
@@ -190,7 +190,7 @@ const CreateLocationIntegratedPages: React.FC = () => {
         items={[
           {
             onClick: () => {
-              navigate('/');
+              navigate(-1);
               socketStateAdmin.clearSocket();
               socket.emit('backto-dashboard', '/');
             },
@@ -208,7 +208,7 @@ const CreateLocationIntegratedPages: React.FC = () => {
       {isDesktop ? (
         <div>
           <Title level={5} style={{ marginTop: '8px' }}>
-            Pengaturan Penambahan Tempat
+            Pengaturan Penambahan Tempat Terintegrasi
           </Title>
           <Form
             {...layout}
@@ -227,10 +227,7 @@ const CreateLocationIntegratedPages: React.FC = () => {
               <Col xs={24} md={12}>
                 <FormInputData disable={true} />
                 <Form.Item style={{ marginTop: '1.5rem' }}>
-                  <Space
-                    align="end"
-                    style={{ width: '100%', justifyContent: 'center' }}
-                  >
+                  <Space style={{ width: '100%', justifyContent: 'center' }}>
                     <Button type="primary" htmlType="submit">
                       Submit
                     </Button>
@@ -272,4 +269,4 @@ const CreateLocationIntegratedPages: React.FC = () => {
   );
 };
 
-export default CreateLocationIntegratedPages;
+export default IntegratedCreateLocationPages;

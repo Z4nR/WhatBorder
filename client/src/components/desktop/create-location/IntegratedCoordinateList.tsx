@@ -1,11 +1,14 @@
 import React from 'react';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input, Typography } from 'antd';
-import { CoordinateListProps } from '@/utils/types/utils.types';
+import { IntegratedCoordinateListProps } from '@/utils/types/utils.types';
 
 const { Text } = Typography;
 
-const CoordinateList: React.FC<CoordinateListProps> = ({ addRef, disable }) => {
+const IntegratedCoordinateList: React.FC<IntegratedCoordinateListProps> = ({
+  addRef,
+  disable,
+}) => {
   return (
     <>
       <Text>Titik Koordinat Batas Tempat (Longitude, Latitude)</Text>
@@ -48,11 +51,11 @@ const CoordinateList: React.FC<CoordinateListProps> = ({ addRef, disable }) => {
                         rules={[
                           {
                             required: true,
-                            message: 'Please input the longitude.',
+                            message: 'Harap masukkan nilai longitude.',
                           },
                         ]}
                         style={{ width: '100%', marginBottom: 0 }}
-                        key={`${field.key}-longitude`}
+                        key={`${field.key}-integrated-longitude`}
                       >
                         <Input
                           placeholder="Longitude"
@@ -66,11 +69,11 @@ const CoordinateList: React.FC<CoordinateListProps> = ({ addRef, disable }) => {
                         rules={[
                           {
                             required: true,
-                            message: 'Please input the latitude.',
+                            message: 'Harap masukkan nilai latitude.',
                           },
                         ]}
                         style={{ width: '100%', marginBottom: 0 }}
-                        key={`${field.key}-latitude`}
+                        key={`${field.key}-integrated-latitude`}
                       >
                         <Input
                           placeholder="Latitude"
@@ -109,4 +112,4 @@ const CoordinateList: React.FC<CoordinateListProps> = ({ addRef, disable }) => {
   );
 };
 
-export default CoordinateList;
+export default IntegratedCoordinateList;
