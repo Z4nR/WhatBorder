@@ -50,7 +50,7 @@ export class UserService {
     }
   }
 
-  async myProfile(id: string) {
+  async profile(id: string) {
     try {
       const data = await this.prisma.user.findUnique({
         select: {
@@ -93,7 +93,7 @@ export class UserService {
       const inisialAvatar = data.user_name.split('');
       const avatar = inisialAvatar[0] + inisialAvatar[1];
 
-      return { ...data, avatar: avatar };
+      return { ...data, avatar: avatar, me: id };
     } catch (error) {
       console.log(error);
       throw error;

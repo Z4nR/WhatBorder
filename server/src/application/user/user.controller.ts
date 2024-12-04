@@ -26,11 +26,18 @@ export class UserController {
   }
 
   @Roles(Role.USER, Role.ADMIN)
-  @Get(':id/detail')
+  @Get(':id/resume')
   async findOne(@Param('id') id: string) {
     await this.userService.validateUserAccount(id);
 
     return await this.userService.findOne(id);
+  }
+  @Roles(Role.USER, Role.ADMIN)
+  @Get(':id/detail')
+  async findOther(@Param('id') id: string) {
+    await this.userService.validateUserAccount(id);
+
+    return await this.userService.profile(id);
   }
 
   @Roles(Role.USER)
@@ -41,7 +48,7 @@ export class UserController {
 
     await this.userService.validateUserAccount(userId);
 
-    return await this.userService.myProfile(userId);
+    return await this.userService.profile(userId);
   }
 
   @Roles(Role.USER)
