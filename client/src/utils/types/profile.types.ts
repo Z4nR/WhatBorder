@@ -1,5 +1,17 @@
 import { FeatureCollection } from 'geojson';
 
+export interface TablePlaceProps {
+  data: any;
+  loading: boolean;
+  action: boolean;
+}
+
+export interface ProfileMiniDescription {
+  createdAt: any;
+  admin: boolean;
+  description: string | null;
+}
+
 export interface ProfilePlaceProps {
   place_id: string;
   place_owner: string;

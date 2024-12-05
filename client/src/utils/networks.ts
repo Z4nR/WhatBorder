@@ -67,6 +67,19 @@ const profileUser = async () => {
     });
 };
 
+const editProfileUser = async (data: any) => {
+  return axios
+    .patch('/v1/user/update', data, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const addNewPlace = async (data: any) => {
   return axios
     .post('/v1/place', data, {
@@ -75,8 +88,8 @@ const addNewPlace = async (data: any) => {
       },
     })
     .then((res) => {
-      const { data } = res.data;
-      return data;
+      const { message } = res.data;
+      return message;
     });
 };
 
@@ -122,6 +135,19 @@ const placeStatistic = async () => {
 const userList = async () => {
   return axios
     .get('/v1/user', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const userResume = async (id: any) => {
+  return axios
+    .get(`/v1/user/${id}/resume`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -203,11 +229,13 @@ export {
   forgetPassword,
   getLogged,
   profileUser,
+  editProfileUser,
   addNewPlace,
   placeList,
   placeDetail,
   placeStatistic,
   userList,
+  userResume,
   userDetail,
   adminUserList,
   compareList,

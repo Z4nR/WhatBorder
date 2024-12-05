@@ -10,8 +10,3 @@ export interface EmptyProps {
 export interface FormInputProps {
   disable: boolean;
 }
-
-export interface CoordinateListProps {
-  addRef: React.MutableRefObject<(fieldsValue?: any, index?: number) => void>;
-  disable: boolean;
-}
