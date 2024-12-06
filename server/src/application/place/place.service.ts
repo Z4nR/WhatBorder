@@ -4,7 +4,7 @@ import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
 import { HelperService } from '../helper-service/helper.service';
-import { Prisma } from '@prisma/client';
+import { endOfMonth, startOfMonth } from 'date-fns';
 
 @Injectable()
 export class PlaceService {
@@ -253,8 +253,18 @@ export class PlaceService {
   }
 
   async statistic(user_id: string) {
+    const now = new Date();
+
     try {
       const totalPlaceCount = await this.prisma.placeData.count();
+      const totalPlaceCountByMonth = await this.prisma.placeData.count({
+        where: {
+          created_at: {
+            gte: startOfMonth(now),
+            lt: endOfMonth(now),
+          },
+        },
+      });
 
       const buildingCount = await this.prisma.buildingType.findMany({
         select: {
@@ -308,6 +318,7 @@ export class PlaceService {
 
       return {
         total_place: totalPlaceCount,
+        total_place_this_month: totalPlaceCountByMonth,
         detail: building,
         new_place: newest,
       };
