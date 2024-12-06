@@ -23,7 +23,7 @@ const CoordinateField: React.FC<{
           style={{ width: '100%', marginBottom: 0 }}
           key={`${field.key}-integrated-longitude`}
         >
-          <Input placeholder="Longitude" style={{ width: '100%' }} />
+          <Input placeholder="Longitude" disabled style={{ width: '100%' }} />
         </Form.Item>
         <Form.Item
           {...field}
@@ -38,7 +38,7 @@ const CoordinateField: React.FC<{
           style={{ width: '100%', marginBottom: 0 }}
           key={`${field.key}-integrated-latitude`}
         >
-          <Input placeholder="Latitude" style={{ width: '100%' }} />
+          <Input placeholder="Latitude" disabled style={{ width: '100%' }} />
         </Form.Item>
 
         {fields.length > 1 ? (

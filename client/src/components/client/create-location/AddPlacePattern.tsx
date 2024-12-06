@@ -55,6 +55,14 @@ const AddPlacePattern: React.FC<SocketConnectProps> = ({ client, desktop }) => {
   return (
     <Row gutter={[16, 16]} wrap>
       <Col xs={24} md={12}>
+        <MapPositionPreview
+          position={position}
+          setPosition={setPosition}
+          setLat={setLat}
+          setLong={setLong}
+        />
+      </Col>
+      <Col xs={24} md={12}>
         <Card>
           <Text>Tambahkan Titik Sudut Batas Tempat</Text>
           <Button
@@ -85,14 +93,6 @@ const AddPlacePattern: React.FC<SocketConnectProps> = ({ client, desktop }) => {
             Gunakan Koordinat
           </Button>
         </Card>
-      </Col>
-      <Col xs={24} md={12}>
-        <MapPositionPreview
-          position={position}
-          setPosition={setPosition}
-          setLat={setLat}
-          setLong={setLong}
-        />
       </Col>
     </Row>
   );

@@ -1,4 +1,5 @@
 import { buildingFilter } from '@/utils/networks';
+import { FormInputProps } from '@/utils/types/utils.types';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Flex, Form, Input, Select, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -6,11 +7,7 @@ import TextArea from 'antd/es/input/TextArea';
 const { Text } = Typography;
 const { Option } = Select;
 
-interface FormInputReadOnly {
-  disable: boolean;
-}
-
-const FormInputData: React.FC<FormInputReadOnly> = ({ disable }) => {
+const FormInputData: React.FC<FormInputProps> = ({ disable }) => {
   const building = useQuery({
     queryKey: ['building-filter'],
     queryFn: async () => await buildingFilter(),
