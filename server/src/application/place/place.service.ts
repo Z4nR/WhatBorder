@@ -4,7 +4,6 @@ import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
 import { HelperService } from '../helper-service/helper.service';
-import { endOfMonth, startOfMonth } from 'date-fns';
 
 @Injectable()
 export class PlaceService {
@@ -254,14 +253,24 @@ export class PlaceService {
 
   async statistic(user_id: string) {
     const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1); // First day of the month
+    const endOfMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    ); // Last day of the month
 
     try {
       const totalPlaceCount = await this.prisma.placeData.count();
       const totalPlaceCountByMonth = await this.prisma.placeData.count({
         where: {
           created_at: {
-            gte: startOfMonth(now),
-            lt: endOfMonth(now),
+            gte: startOfMonth,
+            lt: endOfMonth,
           },
         },
       });
