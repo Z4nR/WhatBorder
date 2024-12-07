@@ -9,9 +9,9 @@ import { dateFormatter } from '@/utils/helper';
 import { userList } from '@/utils/networks';
 import useUserState from '@/utils/state/userState';
 import AdminList from './AdminList';
-import StatisticProfile from '../modal/StatisticProfile';
 import EmptyData from '../utils/EmptyData';
 import { UserListProps } from '@/utils/types/statistic.types';
+import MiniStatisticProfile from '../modal/MiniStatisticProfile';
 
 type InputRef = GetRef<typeof Input>;
 
@@ -177,7 +177,7 @@ const UserList: React.FC = () => {
   ) : (
     <>
       {profileModal && (
-        <StatisticProfile
+        <MiniStatisticProfile
           id={selectedUserId}
           state={profileModal}
           setState={setProfileModal}

@@ -6,7 +6,6 @@ import {
   Input,
   message,
   Popconfirm,
-  PopconfirmProps,
   Space,
   Table,
   TableColumnType,
@@ -28,6 +27,8 @@ import {
 import MapInProfile from '../map/MapInProfile';
 import { dateFormatter } from '@/utils/helper';
 import EmptyData from '../utils/EmptyData';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { placeDelete } from '@/utils/networks';
 
 type InputRef = GetRef<typeof Input>;
 
@@ -38,6 +39,29 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
   loading,
   action,
 }) => {
+  const client = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: placeDelete,
+    onSuccess: (data) => {
+      client.invalidateQueries({
+        queryKey: ['my-profile'],
+      });
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
+    },
+    onError: (error: any) => {
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
+    },
+  });
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
@@ -135,9 +159,8 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       ),
   });
 
-  const confirm: PopconfirmProps['onConfirm'] = (e) => {
-    console.log(e);
-    message.success('Click on Yes');
+  const confirmDeleted = (id: string) => {
+    mutate(id);
   };
 
   const columns: TableProps<ProfilePlaceProps>['columns'] = [
@@ -169,7 +192,7 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       key: 'place-action',
       align: 'center',
       width: '150px',
-      render: () => (
+      render: (_, { place_id }) => (
         <Space size="middle">
           <Tooltip title="Ubah Data Tempat" placement="bottom">
             <Button type="primary">
@@ -177,17 +200,16 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
             </Button>
           </Tooltip>
           <Popconfirm
-            title="Hapus akun"
-            description="Yakin nih mau dihapus? Semua data tempat yang kamu tambahkan akan otomatis terhapus juga lho."
-            onConfirm={confirm}
-            okText="Yes"
-            cancelText="No"
+            placement="left"
+            title="Yakin nih mau dihapus?"
+            description="Semua data terkait tempat ini akan hilang"
+            onConfirm={() => confirmDeleted(place_id)}
+            okText="Yakin"
+            cancelText="Tidak Dulu"
           >
-            <Tooltip title="Hapus Data Tempat" placement="bottom">
-              <Button danger>
-                <DeleteOutlined />
-              </Button>
-            </Tooltip>
+            <Button danger>
+              <DeleteOutlined />
+            </Button>
           </Popconfirm>
         </Space>
       ),
