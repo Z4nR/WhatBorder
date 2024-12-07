@@ -132,6 +132,19 @@ const placeStatistic = async () => {
     });
 };
 
+const placeDelete = async (id: any) => {
+  return axios
+    .delete(`/v1/place/${id}/remove`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const userList = async () => {
   return axios
     .get('/v1/user', {
@@ -234,6 +247,7 @@ export {
   placeList,
   placeDetail,
   placeStatistic,
+  placeDelete,
   userList,
   userResume,
   userDetail,

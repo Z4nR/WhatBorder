@@ -30,6 +30,5 @@ export interface GeoFormatProps {
 
 export interface MapViewProps {
   centerPoint: [number, number];
-  mapData: [number, number][];
-  setGeojsonFormat: (data: FeatureCollection) => void;
+  mapData: FeatureCollection;
 }
