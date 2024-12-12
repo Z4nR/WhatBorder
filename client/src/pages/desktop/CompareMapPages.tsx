@@ -17,7 +17,6 @@ import type {
   TransferProps,
 } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
-import UserPlaceList from '@/components/general/statistic/UserPlaceList';
 import { useQuery } from '@tanstack/react-query';
 import { compareList, myList } from '@/utils/networks';
 import { dateFormatter, onEachFeature, originalStyle } from '@/utils/helper';
@@ -33,6 +32,7 @@ import {
   PlaceMapProps,
 } from '@/utils/types/compare.types';
 import { useMediaQuery } from 'react-responsive';
+import UserPlaceToCompareList from '@/components/desktop/compare/UserPlaceToCompareList';
 
 const { Link, Text } = Typography;
 
@@ -365,7 +365,7 @@ const CompareList: React.FC = () => {
 
   return (
     <Flex align="end" gap="middle" vertical>
-      <UserPlaceList
+      <UserPlaceToCompareList
         rowKey={({ placeId }) => placeId}
         dataSource={my.data}
         columns={columnsUser}
