@@ -80,6 +80,20 @@ const editProfileUser = async (data: any) => {
     });
 };
 
+const deleteAccount = async (data: any) => {
+  return axios
+    .delete('/v1/user/delete', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+      data: data,
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const addNewPlace = async (data: any) => {
   return axios
     .post('/v1/place', data, {
@@ -243,6 +257,7 @@ export {
   getLogged,
   profileUser,
   editProfileUser,
+  deleteAccount,
   addNewPlace,
   placeList,
   placeDetail,
