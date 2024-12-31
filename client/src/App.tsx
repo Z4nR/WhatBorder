@@ -15,8 +15,9 @@ import StatisticPages from './pages/StatisticPages';
 import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
 import AddCoordinatePages from './pages/client/AddCoordinatePages';
-import CreateLocationIntegratedPages from './pages/desktop/CreateLocationIntegratedPages';
-import CreateLocationManualPages from './pages/desktop/CreateLocationManualPages';
+import StatisticProfilePages from './pages/StatisticProfilePages';
+import IntegratedCreateLocationPages from './pages/desktop/IntegratedCreateLocationPages';
+import ManualCreateLocationPages from './pages/desktop/ManualCreateLocationPages';
 
 const queryClient = new QueryClient();
 
@@ -74,27 +75,12 @@ const App: React.FC = () => {
           <Route caseSensitive path="/" element={<AuthRoute />}>
             <Route element={<LayoutPages />}>
               <Route index element={<DashboardPages />} />
-              <Route
-                caseSensitive
-                path="/statistic"
-                element={<StatisticPages />}
-              />
-              <Route
-                caseSensitive
-                path="/compare-map"
-                element={<CompareMapPages />}
-              />
               <Route caseSensitive path="/profile" element={<ProfilePages />} />
-              <Route
-                caseSensitive
-                path="/:id/detail"
-                element={<PlaceDetailPages />}
-              />
               <Route caseSensitive path="/location" element={<Outlet />}>
                 <Route
                   caseSensitive
                   path="/location/new/desktop"
-                  element={<CreateLocationIntegratedPages />}
+                  element={<IntegratedCreateLocationPages />}
                 />
                 <Route
                   caseSensitive
@@ -104,9 +90,27 @@ const App: React.FC = () => {
                 <Route
                   caseSensitive
                   path="/location/new/manual"
-                  element={<CreateLocationManualPages />}
+                  element={<ManualCreateLocationPages />}
                 />
               </Route>
+              <Route caseSensitive path="/statistic" element={<Outlet />}>
+                <Route index element={<StatisticPages />} />
+                <Route
+                  caseSensitive
+                  path="/statistic/user/:id"
+                  element={<StatisticProfilePages />}
+                />
+                <Route
+                  caseSensitive
+                  path="/statistic/place/:id"
+                  element={<PlaceDetailPages />}
+                />
+              </Route>
+              <Route
+                caseSensitive
+                path="/compare-map"
+                element={<CompareMapPages />}
+              />
             </Route>
           </Route>
           <Route caseSensitive path="/auth" element={<VerifPages />} />
