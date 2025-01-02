@@ -1,3 +1,4 @@
+import { message } from 'antd';
 import { io, Socket } from 'socket.io-client';
 
 const getDeviceType = (userAgent: any) => {
@@ -104,6 +105,21 @@ const onEachFeature = (feature: any, layer: any, zoomToFeature: any) => {
   });
 };
 
+const shareLink = (text: string) => {
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        message.info('Tautan berhasil disalin ke clipboard!');
+      })
+      .catch((err) => {
+        message.error('Gagal menyalin tautan: ', err);
+      });
+  } else {
+    message.error('Clipboard API tidak mendukung peramban versi ini.');
+  }
+};
+
 export {
   dateFormatter,
   getGreeting,
@@ -114,4 +130,5 @@ export {
   highlightFeature,
   resetHighlight,
   onEachFeature,
+  shareLink,
 };
