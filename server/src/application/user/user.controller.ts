@@ -12,6 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Request } from 'express';
 import { Roles } from '../auth/authorize/decorator/role.decorator';
 import { Role } from '../auth/authorize/enum/role.enum';
+import { UserDelete } from './entities/user.entity';
 
 @Controller('user')
 export class UserController {
@@ -64,13 +65,16 @@ export class UserController {
 
   @Roles(Role.USER, Role.ADMIN)
   @Delete('delete')
-  async remove(@Req() req: Request, @Body() data: any) {
+  async remove(@Req() req: Request, @Body() data: UserDelete) {
     const user = req['user'];
     const userId = user.sub;
 
     const findUser = await this.userService.validateUserAccount(userId);
 
-    const { password } = data;
-    return await this.userService.remove(userId, findUser.password, password);
+    return await this.userService.remove(
+      userId,
+      findUser.password,
+      data.password,
+    );
   }
 }
