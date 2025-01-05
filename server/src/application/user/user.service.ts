@@ -173,21 +173,25 @@ export class UserService {
           .then((users) =>
             users.map((user) => user.place.map((place) => place.map_id)),
           );
-        console.log(findPlaceId);
 
-        const flatPlaceId = findPlaceId[0][0];
+        const mapId = findPlaceId[0];
+        console.log(mapId);
 
-        await tx.placeMap.delete({
-          where: {
-            map_id: flatPlaceId,
-          },
-        });
+        if (mapId.length !== 0) {
+          for (const item of mapId) {
+            await tx.placeMap.delete({
+              where: {
+                map_id: item,
+              },
+            });
+          }
 
-        await tx.placeData.deleteMany({
-          where: {
-            user_id: id,
-          },
-        });
+          await tx.placeData.deleteMany({
+            where: {
+              user_id: id,
+            },
+          });
+        }
 
         await tx.user.delete({
           where: {
