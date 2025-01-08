@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Typography } from 'antd';
-import CoordinateField from './CoordinateField';
+import CreateCoordinateField from './CreateCoordinateField';
 
 const { Text } = Typography;
 
@@ -31,7 +31,7 @@ const IntegratedCoordinateList: React.FC<{
             return (
               <>
                 {fields.map((field) => (
-                  <CoordinateField
+                  <CreateCoordinateField
                     key={field.key}
                     fields={fields}
                     field={field}

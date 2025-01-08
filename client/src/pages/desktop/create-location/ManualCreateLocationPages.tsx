@@ -1,7 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import FormInputData from '@/components/desktop/create-location/FormInputData';
-import MapView from '@/components/desktop/create-location/MapView';
-import { socketConnection } from '@/utils/helper';
+import React, { useState } from 'react';
 import {
   Breadcrumb,
   Button,
@@ -16,21 +13,22 @@ import {
   Tooltip,
   Typography,
 } from 'antd';
-import { useMediaQuery } from 'react-responsive';
-import { useNavigate } from 'react-router-dom';
 import {
   FileTextOutlined,
   GlobalOutlined,
   CodeOutlined,
 } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 import { FeatureCollection } from 'geojson';
 import EmptyData from '@/components/general/utils/EmptyData';
-import GeojsonFormat from '@/components/desktop/create-location/GeojsonFormat';
-import { useMutation } from '@tanstack/react-query';
+import FormInputData from '@/components/desktop/form-location/FormInputData';
+import GeojsonFormat from '@/components/desktop/form-location/GeojsonFormat';
+import MapView from '@/components/desktop/form-location/MapView';
+import geojsonTemplate from '@/utils/geojson.template';
 import { addNewPlace } from '@/utils/networks';
-import useSocketState from '@/utils/state/clientState';
-import { UpdateCoordinateProps } from '@/utils/types/map.types';
-import IntegratedCoordinateList from '@/components/desktop/create-location/IntegratedCoordinateList';
+import { useMutation } from '@tanstack/react-query';
+import ManualCoordinateList from '@/components/desktop/form-location/create/ManualCoordinateList';
 
 const { Title, Text } = Typography;
 
@@ -38,75 +36,28 @@ const layout = {
   labelCol: { span: 8 },
 };
 
-const IntegratedCreateLocationPages: React.FC = () => {
+const ManualCreateLocationPages: React.FC = () => {
   const [centerPoint, setCenterPoint] = useState<[number, number] | null>(null);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
-  const [geojsonFormat, setGeojsonFormat] = useState<FeatureCollection | null>(
-    null
-  );
-
-  const addRef = useRef<(fieldsValue?: any, index?: number) => void>(() => {});
 
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const socket = socketConnection();
-
-  const socketStateAdmin = useSocketState();
 
   const isDesktop = useMediaQuery({
     query: '(min-width: 500px)',
   });
 
-  useEffect(() => {
-    const handleCenterPoint = (data: UpdateCoordinateProps) => {
-      console.log(data);
-
-      if (
-        data.client === socketStateAdmin.client &&
-        data.desktop === socketStateAdmin.desktop
-      ) {
-        setCenterPoint([data.lat, data.long]);
-        form.setFieldsValue({
-          placelat: data.lat,
-          placelong: data.long,
-        });
-      }
-    };
-
-    socket.on('centerpoint', handleCenterPoint);
-
-    return () => {
-      socket.off('centerpoint', handleCenterPoint);
-    };
-  }, [form, socket, socketStateAdmin.client, socketStateAdmin.desktop]);
-
-  useEffect(() => {
-    const handlePlaceCoordinate = (data: UpdateCoordinateProps) => {
-      console.log(data);
-
-      if (
-        data.client === socketStateAdmin.client &&
-        data.desktop === socketStateAdmin.desktop
-      ) {
-        setCoordinateList((prevData) => [...prevData, [data.long, data.lat]]);
-
-        if (addRef.current) {
-          addRef.current([data.long, data.lat]);
-        }
-      }
-    };
-
-    socket.on('place-coordinate', handlePlaceCoordinate);
-
-    return () => {
-      socket.off('place-coordinate', handlePlaceCoordinate);
-    };
-  }, [socketStateAdmin.client, socketStateAdmin.desktop, socket]);
+  const geoJsonData: FeatureCollection | null = geojsonTemplate(coordinateList);
+  console.log(geoJsonData);
 
   const menuItems = [
     {
       key: '1',
-      children: <IntegratedCoordinateList addRef={addRef} disable={true} />,
+      children: centerPoint ? (
+        <ManualCoordinateList form={form} />
+      ) : (
+        <EmptyData description="Harap Tambahkan Titik Pusat Terlebih Dahulu" />
+      ),
       label: (
         <Tooltip title="Daftar Titik Sudut">
           <FileTextOutlined style={{ margin: '0 auto' }} />
@@ -116,12 +67,8 @@ const IntegratedCreateLocationPages: React.FC = () => {
     {
       key: '2',
       children:
-        centerPoint && coordinateList.length !== 0 ? (
-          <MapView
-            centerPoint={centerPoint}
-            mapData={coordinateList}
-            setGeojsonFormat={setGeojsonFormat}
-          />
+        centerPoint && coordinateList.length !== 0 && geoJsonData ? (
+          <MapView centerPoint={centerPoint} mapData={geoJsonData} />
         ) : (
           <EmptyData description="Lokasi Belum Ditentukan" />
         ),
@@ -134,8 +81,8 @@ const IntegratedCreateLocationPages: React.FC = () => {
     {
       key: '3',
       children:
-        geojsonFormat !== null ? (
-          <GeojsonFormat initialJson={geojsonFormat} />
+        geoJsonData !== null ? (
+          <GeojsonFormat initialJson={geoJsonData} />
         ) : (
           <EmptyData description="Lokasi Belum Ditentukan" />
         ),
@@ -152,9 +99,10 @@ const IntegratedCreateLocationPages: React.FC = () => {
     onSuccess: (data) => {
       message.open({
         type: 'success',
-        content: data.message,
+        content: data,
         duration: 3,
       });
+      navigate(-1);
     },
     onError: (error: any) => {
       message.open({
@@ -173,7 +121,7 @@ const IntegratedCreateLocationPages: React.FC = () => {
       placeAddress: values.placeaddress,
       placeType: values.placetype,
       placePoints: [values.placelat, values.placelong],
-      placeGeojson: geojsonFormat,
+      placeGeojson: geoJsonData,
     };
     console.log(data);
 
@@ -191,8 +139,6 @@ const IntegratedCreateLocationPages: React.FC = () => {
           {
             onClick: () => {
               navigate(-1);
-              socketStateAdmin.clearSocket();
-              socket.emit('backto-dashboard', '/');
             },
             title: (
               <Button type="link" className="home-breadcrumb">
@@ -208,7 +154,7 @@ const IntegratedCreateLocationPages: React.FC = () => {
       {isDesktop ? (
         <div>
           <Title level={5} style={{ marginTop: '8px' }}>
-            Pengaturan Penambahan Tempat Terintegrasi
+            Pengaturan Penambahan Tempat Manual
           </Title>
           <Form
             {...layout}
@@ -220,22 +166,34 @@ const IntegratedCreateLocationPages: React.FC = () => {
                 console.log('Updated longlat array:', allValues.longlat);
                 setCoordinateList(allValues.longlat);
               }
+
+              if (allValues.placelat || allValues.placelong) {
+                setCenterPoint((prevState) => {
+                  if (prevState) {
+                    // Ensure exactly two numbers are returned: [number, number]
+                    const newLat = allValues.placelat
+                      ? Number(allValues.placelat)
+                      : prevState[0];
+                    const newLong = allValues.placelong
+                      ? Number(allValues.placelong)
+                      : prevState[1];
+                    return [newLat, newLong] as [number, number]; // Explicitly type as [number, number]
+                  } else {
+                    // If prevState is null, initialize with default values: [number, number]
+                    const newCenterPoint: [number, number] = [
+                      allValues.placelat ? Number(allValues.placelat) : 0, // Default to 0 if lat is missing
+                      allValues.placelong ? Number(allValues.placelong) : 0, // Default to 0 if long is missing
+                    ];
+                    return newCenterPoint;
+                  }
+                });
+              }
             }}
             onFinish={onCreate}
           >
             <Row gutter={[16, 16]} wrap>
               <Col xs={24} md={12}>
-                <FormInputData disable={true} />
-                <Form.Item style={{ marginTop: '1.5rem' }}>
-                  <Space style={{ width: '100%', justifyContent: 'center' }}>
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
-                    <Button htmlType="button" onClick={onReset}>
-                      Reset
-                    </Button>
-                  </Space>
-                </Form.Item>
+                <FormInputData disable={false} />
               </Col>
               <Col xs={24} md={12}>
                 <Card>
@@ -251,6 +209,19 @@ const IntegratedCreateLocationPages: React.FC = () => {
                 </Card>
               </Col>
             </Row>
+            <Form.Item style={{ marginTop: '1.5rem' }}>
+              <Space
+                align="end"
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                <Button type="primary" htmlType="submit">
+                  Tambahkan
+                </Button>
+                <Button htmlType="button" onClick={onReset}>
+                  Ulangi
+                </Button>
+              </Space>
+            </Form.Item>
           </Form>
         </div>
       ) : (
@@ -269,4 +240,4 @@ const IntegratedCreateLocationPages: React.FC = () => {
   );
 };
 
-export default IntegratedCreateLocationPages;
+export default ManualCreateLocationPages;

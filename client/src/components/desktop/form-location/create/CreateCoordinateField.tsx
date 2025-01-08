@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Form, FormListFieldData, Input } from 'antd';
 import { MinusCircleOutlined } from '@ant-design/icons';
 
-const CoordinateField: React.FC<{
+const CreateCoordinateField: React.FC<{
   fields: FormListFieldData[];
   field: FormListFieldData;
   remove: (index: number | number[]) => void;
@@ -21,7 +21,7 @@ const CoordinateField: React.FC<{
             },
           ]}
           style={{ width: '100%', marginBottom: 0 }}
-          key={`${field.key}-integrated-longitude`}
+          key={`${field.key}-create-longitude`}
         >
           <Input placeholder="Longitude" disabled style={{ width: '100%' }} />
         </Form.Item>
@@ -36,7 +36,7 @@ const CoordinateField: React.FC<{
             },
           ]}
           style={{ width: '100%', marginBottom: 0 }}
-          key={`${field.key}-integrated-latitude`}
+          key={`${field.key}-create-latitude`}
         >
           <Input placeholder="Latitude" disabled style={{ width: '100%' }} />
         </Form.Item>
@@ -52,4 +52,4 @@ const CoordinateField: React.FC<{
   );
 };
 
-export default CoordinateField;
+export default CreateCoordinateField;

@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import FormInputData from '@/components/desktop/create-location/FormInputData';
+import FormInputData from '@/components/desktop/form-location/FormInputData';
+import MapView from '@/components/desktop/form-location/MapView';
+import EmptyData from '@/components/general/utils/EmptyData';
+import geojsonTemplate from '@/utils/geojson.template';
 import {
   Breadcrumb,
   Button,
@@ -18,13 +21,11 @@ import {
   GlobalOutlined,
   CodeOutlined,
 } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
-import { useMediaQuery } from 'react-responsive';
-import EmptyData from '@/components/general/utils/EmptyData';
-import GeojsonFormat from '@/components/desktop/create-location/GeojsonFormat';
 import { FeatureCollection } from 'geojson';
-import MapView from '@/components/desktop/create-location/MapView';
-import ManualCoordinateList from '@/components/desktop/create-location/ManualCoordinateList';
+import { useMediaQuery } from 'react-responsive';
+import { useNavigate } from 'react-router-dom';
+import GeojsonFormat from '@/components/desktop/form-location/GeojsonFormat';
+import UpdateCoordinateList from '@/components/desktop/form-location/update/UpdateCoordinateList';
 
 const { Title, Text } = Typography;
 
@@ -32,12 +33,9 @@ const layout = {
   labelCol: { span: 8 },
 };
 
-const ManualCreateLocationPages: React.FC = () => {
+const ManualUpdateLocationPages: React.FC = () => {
   const [centerPoint, setCenterPoint] = useState<[number, number] | null>(null);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
-  const [geojsonFormat, setGeojsonFormat] = useState<FeatureCollection | null>(
-    null
-  );
 
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -46,10 +44,17 @@ const ManualCreateLocationPages: React.FC = () => {
     query: '(min-width: 500px)',
   });
 
+  const geoJsonData: FeatureCollection | null = geojsonTemplate(coordinateList);
+  console.log(geoJsonData);
+
   const menuItems = [
     {
       key: '1',
-      children: <ManualCoordinateList disable={false} />,
+      children: centerPoint ? (
+        <UpdateCoordinateList form={form} />
+      ) : (
+        <EmptyData description="Harap Tambahkan Titik Pusat Terlebih Dahulu" />
+      ),
       label: (
         <Tooltip title="Daftar Titik Sudut">
           <FileTextOutlined style={{ margin: '0 auto' }} />
@@ -59,12 +64,8 @@ const ManualCreateLocationPages: React.FC = () => {
     {
       key: '2',
       children:
-        centerPoint && coordinateList.length !== 0 ? (
-          <MapView
-            centerPoint={centerPoint}
-            mapData={coordinateList}
-            setGeojsonFormat={setGeojsonFormat}
-          />
+        centerPoint && coordinateList.length !== 0 && geoJsonData ? (
+          <MapView centerPoint={centerPoint} mapData={geoJsonData} />
         ) : (
           <EmptyData description="Lokasi Belum Ditentukan" />
         ),
@@ -77,8 +78,8 @@ const ManualCreateLocationPages: React.FC = () => {
     {
       key: '3',
       children:
-        geojsonFormat !== null ? (
-          <GeojsonFormat initialJson={geojsonFormat} />
+        geoJsonData !== null ? (
+          <GeojsonFormat initialJson={geoJsonData} />
         ) : (
           <EmptyData description="Lokasi Belum Ditentukan" />
         ),
@@ -91,16 +92,7 @@ const ManualCreateLocationPages: React.FC = () => {
   ];
 
   const onCreate = (values: any) => {
-    const data = {
-      placeName: values.placename,
-      placeOwner: values.placeowner,
-      placeDescription: values.placedesc,
-      placeAddress: values.placeaddress,
-      placeType: values.placetype,
-      placePoints: [values.placelat, values.placelong],
-      placeGeojson: geojsonFormat,
-    };
-    console.log(data);
+    console.log(values);
   };
 
   const onReset = () => {
@@ -122,14 +114,14 @@ const ManualCreateLocationPages: React.FC = () => {
             ),
           },
           {
-            title: 'Tambahkan Rincian Tempat',
+            title: 'Perbarui Rincian Tempat',
           },
         ]}
       />
       {isDesktop ? (
         <div>
           <Title level={5} style={{ marginTop: '8px' }}>
-            Pengaturan Penambahan Tempat Manual
+            Pengaturan Pembaharuan Tempat Manual
           </Title>
           <Form
             {...layout}
@@ -142,12 +134,26 @@ const ManualCreateLocationPages: React.FC = () => {
                 setCoordinateList(allValues.longlat);
               }
 
-              if (allValues.placelat && allValues.placelong) {
-                console.log('Updated longlat array:', [
-                  allValues.placelat,
-                  allValues.placelong,
-                ]);
-                setCenterPoint([allValues.placelat, allValues.palcelong]);
+              if (allValues.placelat || allValues.placelong) {
+                setCenterPoint((prevState) => {
+                  if (prevState) {
+                    // Ensure exactly two numbers are returned: [number, number]
+                    const newLat = allValues.placelat
+                      ? Number(allValues.placelat)
+                      : prevState[0];
+                    const newLong = allValues.placelong
+                      ? Number(allValues.placelong)
+                      : prevState[1];
+                    return [newLat, newLong] as [number, number]; // Explicitly type as [number, number]
+                  } else {
+                    // If prevState is null, initialize with default values: [number, number]
+                    const newCenterPoint: [number, number] = [
+                      allValues.placelat ? Number(allValues.placelat) : 0, // Default to 0 if lat is missing
+                      allValues.placelong ? Number(allValues.placelong) : 0, // Default to 0 if long is missing
+                    ];
+                    return newCenterPoint;
+                  }
+                });
               }
             }}
             onFinish={onCreate}
@@ -155,19 +161,6 @@ const ManualCreateLocationPages: React.FC = () => {
             <Row gutter={[16, 16]} wrap>
               <Col xs={24} md={12}>
                 <FormInputData disable={false} />
-                <Form.Item style={{ marginTop: '1.5rem' }}>
-                  <Space
-                    align="end"
-                    style={{ width: '100%', justifyContent: 'center' }}
-                  >
-                    <Button type="primary" htmlType="submit" disabled>
-                      Submit
-                    </Button>
-                    <Button htmlType="button" disabled onClick={onReset}>
-                      Reset
-                    </Button>
-                  </Space>
-                </Form.Item>
               </Col>
               <Col xs={24} md={12}>
                 <Card>
@@ -183,6 +176,19 @@ const ManualCreateLocationPages: React.FC = () => {
                 </Card>
               </Col>
             </Row>
+            <Form.Item style={{ marginTop: '1.5rem' }}>
+              <Space
+                align="end"
+                style={{ width: '100%', justifyContent: 'center' }}
+              >
+                <Button type="primary" htmlType="submit">
+                  Perbarui
+                </Button>
+                <Button htmlType="button" onClick={onReset}>
+                  Ulangi
+                </Button>
+              </Space>
+            </Form.Item>
           </Form>
         </div>
       ) : (
@@ -201,4 +207,4 @@ const ManualCreateLocationPages: React.FC = () => {
   );
 };
 
-export default ManualCreateLocationPages;
+export default ManualUpdateLocationPages;

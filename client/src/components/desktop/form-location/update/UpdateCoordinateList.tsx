@@ -1,11 +1,11 @@
 import React, { useRef } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, FormInstance, Input, Typography } from 'antd';
-import CoordinateField from './CoordinateField';
+import UpdateCoordinateField from './UpdateCoordinateField';
 
 const { Text } = Typography;
 
-const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
+const UpdateCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
   const addRef = useRef<(fieldsValue?: any, index?: number) => void>();
 
   const handleRef = () => {
@@ -32,6 +32,10 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
                 required: true,
                 message: 'Harap masukkan nilai longitude.',
               },
+              {
+                pattern: /^-?\d+\.\d+$/,
+                message: 'Masukkan format angka yang valid',
+              },
             ]}
             style={{ width: '100%', marginBottom: 0 }}
           >
@@ -44,6 +48,10 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
               {
                 required: true,
                 message: 'Harap masukkan nilai latitude.',
+              },
+              {
+                pattern: /^-?\d+\.\d+$/,
+                message: 'Masukkan format angka yang valid',
               },
             ]}
             style={{ width: '100%', marginBottom: 0 }}
@@ -82,7 +90,7 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
             return (
               <>
                 {fields.map((field) => (
-                  <CoordinateField
+                  <UpdateCoordinateField
                     key={field.key}
                     fields={fields}
                     field={field}
@@ -101,4 +109,4 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
   );
 };
 
-export default ManualCoordinateList;
+export default UpdateCoordinateList;
