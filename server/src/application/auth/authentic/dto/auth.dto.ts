@@ -24,10 +24,6 @@ export class AuthRegistDto {
 
   @IsString()
   @MinLength(8, { message: 'Kata sandi harus lebih dari 8 karakter' })
-  @Matches(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/, {
-    message:
-      'Kata sandi harus mengandung huruf kapital, huruf kecil, dan angka',
-  })
   @IsNotEmpty({ message: 'Kata sandi tidak boleh kosong' })
   password: string;
 
