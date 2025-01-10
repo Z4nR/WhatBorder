@@ -35,7 +35,7 @@ export class CreatePlaceDto {
 
   @IsArray()
   @ArrayNotEmpty()
-  @IsNumber({}, { each: true }) // Ensures each element in the array is a number
+  @IsNumber({}, { each: true })
   placePoints: number[];
 
   @IsObject({ message: 'Pastikan data yang dikirim berupa Javascript Object' })

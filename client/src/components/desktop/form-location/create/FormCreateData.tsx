@@ -1,5 +1,5 @@
 import { buildingFilter } from '@/utils/networks';
-import { FormInputProps } from '@/utils/types/utils.types';
+import { FormCreateProps } from '@/utils/types/utils.types';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Flex, Form, Input, Select, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -7,7 +7,7 @@ import TextArea from 'antd/es/input/TextArea';
 const { Text } = Typography;
 const { Option } = Select;
 
-const FormInputData: React.FC<FormInputProps> = ({ disable }) => {
+const FormCreateData: React.FC<FormCreateProps> = ({ disable }) => {
   const building = useQuery({
     queryKey: ['building-filter'],
     queryFn: async () => await buildingFilter(),
@@ -40,7 +40,7 @@ const FormInputData: React.FC<FormInputProps> = ({ disable }) => {
           rules={[
             {
               max: 20,
-              message: 'Alamat yang anda masukan melebihi 20 karakter',
+              message: 'Nama pemilik yang anda masukan melebihi 20 karakter',
             },
           ]}
         >
@@ -104,6 +104,10 @@ const FormInputData: React.FC<FormInputProps> = ({ disable }) => {
               required: true,
               message: 'Data koordinat latitude tidak boleh kosong',
             },
+            {
+              pattern: /^-?\d+\.\d+$/,
+              message: 'Masukkan format angka yang valid',
+            },
           ]}
         >
           <Input placeholder="Latitude" disabled={disable} />
@@ -117,6 +121,10 @@ const FormInputData: React.FC<FormInputProps> = ({ disable }) => {
               required: true,
               message: 'Data koordinat longitude tidak boleh kosong',
             },
+            {
+              pattern: /^-?\d+\.\d+$/,
+              message: 'Masukkan format angka yang valid',
+            },
           ]}
         >
           <Input placeholder="Longitude" disabled={disable} />
@@ -126,4 +134,4 @@ const FormInputData: React.FC<FormInputProps> = ({ disable }) => {
   );
 };
 
-export default FormInputData;
+export default FormCreateData;

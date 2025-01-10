@@ -111,6 +111,9 @@ export class PlaceService {
             },
           },
         },
+        orderBy: {
+          created_at: 'desc',
+        },
       });
       console.log(compare);
 
@@ -174,6 +177,9 @@ export class PlaceService {
           created_by: true,
           created_at: true,
         },
+        orderBy: {
+          created_at: 'desc',
+        },
       });
     } catch (error) {
       console.log(error);
@@ -204,6 +210,9 @@ export class PlaceService {
         },
         where: {
           user_id,
+        },
+        orderBy: {
+          created_at: 'desc',
         },
       });
     } catch (error) {
@@ -265,9 +274,14 @@ export class PlaceService {
     ); // Last day of the month
 
     try {
-      const totalPlaceCount = await this.prisma.placeData.count();
+      const totalPlaceCount = await this.prisma.placeData.count({
+        where: {
+          user_id,
+        },
+      });
       const totalPlaceCountByMonth = await this.prisma.placeData.count({
         where: {
+          user_id,
           created_at: {
             gte: startOfMonth,
             lt: endOfMonth,

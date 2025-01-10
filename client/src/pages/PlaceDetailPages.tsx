@@ -14,7 +14,7 @@ const PlaceDetailPages: React.FC = () => {
   const { id } = useParams();
 
   const { data, isPending, isLoading } = useQuery({
-    queryKey: ['place', id],
+    queryKey: ['place-detail', id],
     queryFn: async () => await placeDetail(id),
   });
 
