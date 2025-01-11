@@ -7,7 +7,7 @@ import TextArea from 'antd/es/input/TextArea';
 const { Text } = Typography;
 const { Option } = Select;
 
-const FormCreateData: React.FC<FormCreateProps> = ({ disable }) => {
+const FormData: React.FC<FormCreateProps> = ({ disable }) => {
   const building = useQuery({
     queryKey: ['building-filter'],
     queryFn: async () => await buildingFilter(),
@@ -134,4 +134,4 @@ const FormCreateData: React.FC<FormCreateProps> = ({ disable }) => {
   );
 };
 
-export default FormCreateData;
+export default FormData;
