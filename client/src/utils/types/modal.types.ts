@@ -31,3 +31,8 @@ export interface EditProfileProps {
     description: string;
   };
 }
+
+export interface DeleteProfileProps {
+  setState: (state: boolean) => void;
+  state: boolean;
+}

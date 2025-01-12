@@ -35,3 +35,9 @@ export interface MapInProfileProps {
   place_map: any;
   color: string;
 }
+
+export interface MiniToolProps {
+  setEdit: (state: boolean) => void;
+  setDelete: (state: boolean) => void;
+  myId: string;
+}

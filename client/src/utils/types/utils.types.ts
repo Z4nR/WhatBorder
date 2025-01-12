@@ -7,6 +7,17 @@ export interface EmptyProps {
   description: string;
 }
 
-export interface FormInputProps {
+export interface FormCreateProps {
   disable: boolean;
+}
+
+export interface FormUpdateProps {
+  disable: boolean;
+  placeName: string;
+  placeType: string;
+  placeAddress: string;
+  placeOwner: string;
+  placeDescription: string;
+  placeLongitude: number;
+  placeLatitude: number;
 }

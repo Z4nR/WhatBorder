@@ -83,6 +83,9 @@ export class UserService {
                 },
               },
             },
+            orderBy: {
+              created_at: 'desc',
+            },
           },
         },
         where: {
