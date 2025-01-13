@@ -22,7 +22,6 @@ import {
 } from '@ant-design/icons';
 import { FeatureCollection } from 'geojson';
 import EmptyData from '@/components/general/utils/EmptyData';
-import FormInputData from '@/components/desktop/form-location/FormInputData';
 import MapView from '@/components/desktop/form-location/MapView';
 import GeojsonFormat from '@/components/desktop/form-location/GeojsonFormat';
 import { useMutation } from '@tanstack/react-query';
@@ -30,8 +29,9 @@ import { socketConnection } from '@/utils/helper';
 import { addNewPlace } from '@/utils/networks';
 import useSocketState from '@/utils/state/clientState';
 import { UpdateCoordinateProps } from '@/utils/types/map.types';
-import geojsonTemplate from '@/utils/geojson.template';
 import IntegratedCoordinateList from '@/components/desktop/form-location/create/IntegratedCoordinateList';
+import { geojsonConstructor } from '@/utils/geojson.template';
+import FormData from '@/components/desktop/form-location/FormData';
 
 const { Title, Text } = Typography;
 
@@ -104,7 +104,8 @@ const IntegratedCreateLocationPages: React.FC = () => {
     };
   }, [socketStateAdmin.client, socketStateAdmin.desktop, socket]);
 
-  const geoJsonData: FeatureCollection | null = geojsonTemplate(coordinateList);
+  const geoJsonData: FeatureCollection | null =
+    geojsonConstructor(coordinateList);
   console.log(geoJsonData);
 
   const menuItems = [
@@ -228,9 +229,19 @@ const IntegratedCreateLocationPages: React.FC = () => {
             }}
             onFinish={onCreate}
           >
+            <Form.Item>
+              <Space style={{ width: '100%', justifyContent: 'end' }}>
+                <Button type="primary" htmlType="submit">
+                  Perbarui
+                </Button>
+                <Button htmlType="button" onClick={onReset}>
+                  Ulangi
+                </Button>
+              </Space>
+            </Form.Item>
             <Row gutter={[16, 16]} wrap>
               <Col xs={24} md={12}>
-                <FormInputData disable={true} />
+                <FormData disable={true} />
               </Col>
               <Col xs={24} md={12}>
                 <Card>
@@ -246,16 +257,6 @@ const IntegratedCreateLocationPages: React.FC = () => {
                 </Card>
               </Col>
             </Row>
-            <Form.Item style={{ marginTop: '1.5rem' }}>
-              <Space style={{ width: '100%', justifyContent: 'center' }}>
-                <Button type="primary" htmlType="submit">
-                  Tambahkan
-                </Button>
-                <Button htmlType="button" onClick={onReset}>
-                  Ulangi
-                </Button>
-              </Space>
-            </Form.Item>
           </Form>
         </div>
       ) : (

@@ -1,10 +1,10 @@
-import { Button, message, Space, Steps, Typography } from 'antd';
-import AddCenterPoint from '../../components/client/create-location/AddCenterPoint';
 import React, { useEffect, useState } from 'react';
+import { Button, Space, Steps, Typography } from 'antd';
+import AddCenterPoint from '../../components/client/create-location/AddCenterPoint';
 import AddPlacePattern from '../../components/client/create-location/AddPlacePattern';
 import { socketConnection } from '@/utils/helper';
-import useSocketState from '@/utils/state/client/clientState';
 import { useNavigate } from 'react-router-dom';
+import useSocketState from '@/utils/state/clientState';
 
 const { Title } = Typography;
 
@@ -85,14 +85,6 @@ const AddCoordinatePages: React.FC = () => {
           {current > 0 && (
             <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
               Kembali
-            </Button>
-          )}
-          {current === steps.length - 1 && (
-            <Button
-              type="primary"
-              onClick={() => message.success('Processing complete!')}
-            >
-              Selesai
             </Button>
           )}
         </div>
