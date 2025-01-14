@@ -145,7 +145,14 @@ const Register: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: 'Masukan Kata Sandi!' }]}
+        rules={[
+          { required: true, message: 'Masukan Kata Sandi!' },
+          {
+            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+            message:
+              'Kata sandi harus mengandung huruf kapital, huruf kecil, dan angka',
+          },
+        ]}
         style={{ maxWidth: 400 }}
       >
         <Input.Password
@@ -159,7 +166,14 @@ const Register: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="verify"
-        rules={[{ required: true, message: 'Verifikasi Kata Sandi!' }]}
+        rules={[
+          { required: true, message: 'Verifikasi Kata Sandi!' },
+          {
+            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+            message:
+              'Kata sandi harus mengandung huruf kapital, huruf kecil, dan angka',
+          },
+        ]}
         style={{ maxWidth: 400 }}
       >
         <Input.Password

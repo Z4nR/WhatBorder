@@ -88,7 +88,14 @@ const ForgotPassword: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="newpass"
-        rules={[{ required: true, message: 'Harap Masukkan Kata Sandi Baru!' }]}
+        rules={[
+          { required: true, message: 'Harap Masukkan Kata Sandi Baru!' },
+          {
+            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+            message:
+              'Kata sandi harus mengandung huruf kapital, huruf kecil, dan angka',
+          },
+        ]}
         style={{ maxWidth: 400 }}
       >
         <Input.Password
@@ -102,7 +109,14 @@ const ForgotPassword: React.FC = () => {
       </Form.Item>
       <Form.Item
         name="verify"
-        rules={[{ required: true, message: 'Verifikasi Kata Sandi Baru Anda' }]}
+        rules={[
+          { required: true, message: 'Verifikasi Kata Sandi Baru Anda' },
+          {
+            pattern: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+            message:
+              'Kata sandi harus mengandung huruf kapital, huruf kecil, dan angka',
+          },
+        ]}
         style={{ maxWidth: 400 }}
       >
         <Input
