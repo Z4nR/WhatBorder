@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import FormInputData from '@/components/desktop/form-location/FormInputData';
+import React, { useEffect, useState } from 'react';
 import MapView from '@/components/desktop/form-location/MapView';
 import EmptyData from '@/components/general/utils/EmptyData';
-import geojsonTemplate from '@/utils/geojson.template';
 import {
   Breadcrumb,
   Button,
   Card,
   Col,
   Form,
+  message,
   Result,
   Row,
+  Skeleton,
   Space,
   Tabs,
   Tooltip,
@@ -23,9 +23,16 @@ import {
 } from '@ant-design/icons';
 import { FeatureCollection } from 'geojson';
 import { useMediaQuery } from 'react-responsive';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import GeojsonFormat from '@/components/desktop/form-location/GeojsonFormat';
 import UpdateCoordinateList from '@/components/desktop/form-location/update/UpdateCoordinateList';
+import { editPlace, placeDetail } from '@/utils/networks';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  geojsonConstructor,
+  geojsonDeconstructor,
+} from '@/utils/geojson.template';
+import FormData from '@/components/desktop/form-location/FormData';
 
 const { Title, Text } = Typography;
 
@@ -34,24 +41,59 @@ const layout = {
 };
 
 const ManualUpdateLocationPages: React.FC = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [centerPoint, setCenterPoint] = useState<[number, number] | null>(null);
   const [coordinateList, setCoordinateList] = useState<[number, number][]>([]);
 
-  const navigate = useNavigate();
+  const { data, isLoading } = useQuery({
+    queryKey: ['place-update', id],
+    queryFn: async () => await placeDetail(id),
+  });
+
   const [form] = Form.useForm();
 
   const isDesktop = useMediaQuery({
     query: '(min-width: 500px)',
   });
 
-  const geoJsonData: FeatureCollection | null = geojsonTemplate(coordinateList);
+  const handleFetchData = (data: any) => {
+    if (data) {
+      form.setFieldsValue({
+        placename: data?.placeName,
+        placeowner: data?.placeOwner,
+        placeaddress: data?.placeAddress,
+        placetype: data?.type.name,
+        placedesc: data?.placeDescription,
+        placelong: data?.placeCenterPoint?.[1],
+        placelat: data?.placeCenterPoint?.[0],
+      });
+
+      const coordinate: [number, number][] = geojsonDeconstructor(
+        data?.placeMap.place_geojson
+      );
+      setCoordinateList(coordinate);
+      setCenterPoint(data?.placeCenterPoint);
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      handleFetchData(data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, form]);
+
+  const geoJsonData: FeatureCollection | null =
+    geojsonConstructor(coordinateList);
   console.log(geoJsonData);
 
   const menuItems = [
     {
       key: '1',
       children: centerPoint ? (
-        <UpdateCoordinateList form={form} />
+        <UpdateCoordinateList form={form} initiateValue={coordinateList} />
       ) : (
         <EmptyData description="Harap Tambahkan Titik Pusat Terlebih Dahulu" />
       ),
@@ -91,12 +133,38 @@ const ManualUpdateLocationPages: React.FC = () => {
     },
   ];
 
+  const { mutate } = useMutation({
+    mutationFn: (v: { id: any; data: any }) => editPlace(v.id, v.data),
+    onSuccess: (data) => {
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
+      navigate(-1);
+    },
+  });
+
   const onCreate = (values: any) => {
-    console.log(values);
+    const data = {
+      placeName: values.placename,
+      placeOwner: values.placeowner,
+      placeDescription: values.placedesc,
+      placeAddress: values.placeaddress,
+      placeType: values.placetype,
+      placePoints: [values.placelat, values.placelong],
+      placeGeojson: geoJsonData,
+    };
+    console.log(data);
+
+    mutate({ id, data });
   };
 
   const onReset = () => {
-    form.resetFields();
+    if (data) {
+      handleFetchData(data);
+    }
+    message.info('Form reset to initial values.');
   };
 
   return (
@@ -123,6 +191,7 @@ const ManualUpdateLocationPages: React.FC = () => {
           <Title level={5} style={{ marginTop: '8px' }}>
             Pengaturan Pembaharuan Tempat Manual
           </Title>
+
           <Form
             {...layout}
             form={form}
@@ -158,29 +227,8 @@ const ManualUpdateLocationPages: React.FC = () => {
             }}
             onFinish={onCreate}
           >
-            <Row gutter={[16, 16]} wrap>
-              <Col xs={24} md={12}>
-                <FormInputData disable={false} />
-              </Col>
-              <Col xs={24} md={12}>
-                <Card>
-                  <Tabs
-                    defaultActiveKey="1"
-                    centered
-                    items={menuItems.map((item) => ({
-                      key: item.key,
-                      children: item.children,
-                      label: item.label,
-                    }))}
-                  />
-                </Card>
-              </Col>
-            </Row>
-            <Form.Item style={{ marginTop: '1.5rem' }}>
-              <Space
-                align="end"
-                style={{ width: '100%', justifyContent: 'center' }}
-              >
+            <Form.Item>
+              <Space style={{ width: '100%', justifyContent: 'end' }}>
                 <Button type="primary" htmlType="submit">
                   Perbarui
                 </Button>
@@ -189,6 +237,28 @@ const ManualUpdateLocationPages: React.FC = () => {
                 </Button>
               </Space>
             </Form.Item>
+            <Row gutter={[16, 16]} wrap>
+              <Col xs={24} md={12}>
+                <Skeleton loading={isLoading} active paragraph={{ rows: 5 }}>
+                  <FormData disable={false} />
+                </Skeleton>
+              </Col>
+              <Col xs={24} md={12}>
+                <Skeleton loading={isLoading} active paragraph={{ rows: 5 }}>
+                  <Card>
+                    <Tabs
+                      defaultActiveKey="1"
+                      centered
+                      items={menuItems.map((item) => ({
+                        key: item.key,
+                        children: item.children,
+                        label: item.label,
+                      }))}
+                    />
+                  </Card>
+                </Skeleton>
+              </Col>
+            </Row>
           </Form>
         </div>
       ) : (
