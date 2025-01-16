@@ -107,6 +107,19 @@ const addNewPlace = async (data: any) => {
     });
 };
 
+const editPlace = async (id: any, data: any) => {
+  return axios
+    .patch(`/v1/place/${id}/update`, data, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const placeList = async () => {
   return axios
     .get('/v1/place', {
@@ -259,6 +272,7 @@ export {
   editProfileUser,
   deleteAccount,
   addNewPlace,
+  editPlace,
   placeList,
   placeDetail,
   placeStatistic,
