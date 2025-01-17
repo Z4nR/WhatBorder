@@ -29,6 +29,7 @@ import { dateFormatter } from '@/utils/helper';
 import EmptyData from '../utils/EmptyData';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { placeDelete } from '@/utils/networks';
+import { useNavigate } from 'react-router-dom';
 
 type InputRef = GetRef<typeof Input>;
 
@@ -40,6 +41,7 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
   action,
 }) => {
   const client = useQueryClient();
+  const navigate = useNavigate();
 
   const { mutate } = useMutation({
     mutationFn: placeDelete,
@@ -195,7 +197,10 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       render: (_, { place_id }) => (
         <Space size="middle">
           <Tooltip title="Ubah Data Tempat" placement="bottom">
-            <Button type="primary">
+            <Button
+              type="primary"
+              onClick={() => navigate(`/location/update/manual/${place_id}`)}
+            >
               <EditOutlined />
             </Button>
           </Tooltip>
