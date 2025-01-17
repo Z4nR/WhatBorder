@@ -16,8 +16,10 @@ import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
 import AddCoordinatePages from './pages/client/AddCoordinatePages';
 import StatisticProfilePages from './pages/StatisticProfilePages';
-import IntegratedCreateLocationPages from './pages/desktop/IntegratedCreateLocationPages';
-import ManualCreateLocationPages from './pages/desktop/ManualCreateLocationPages';
+import IntegratedCreateLocationPages from './pages/desktop/create-location/IntegratedCreateLocationPages';
+import ManualCreateLocationPages from './pages/desktop/create-location/ManualCreateLocationPages';
+import ManualUpdateLocationPages from './pages/desktop/update-location/ManualUpdateLocationPages';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const queryClient = new QueryClient();
 
@@ -27,7 +29,7 @@ const AuthRoute = () => {
   const [notified, setNotified] = useState(false);
 
   const { data, error, isError, isFetching } = useQuery({
-    queryKey: ['login', authState.accessToken],
+    queryKey: ['login'],
     queryFn: async () => await getLogged(),
     enabled: !!authState.accessToken,
     staleTime: 60 * 60 * 1000,
@@ -71,6 +73,7 @@ const App: React.FC = () => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools />
         <Routes>
           <Route caseSensitive path="/" element={<AuthRoute />}>
             <Route element={<LayoutPages />}>
@@ -91,6 +94,11 @@ const App: React.FC = () => {
                   caseSensitive
                   path="/location/new/manual"
                   element={<ManualCreateLocationPages />}
+                />
+                <Route
+                  caseSensitive
+                  path="/location/update/manual/:id"
+                  element={<ManualUpdateLocationPages />}
                 />
               </Route>
               <Route caseSensitive path="/statistic" element={<Outlet />}>
