@@ -8,7 +8,7 @@ const MapView: React.FC<MapViewProps> = ({ centerPoint, mapData }) => {
   return (
     <>
       <Text>Tampilan Batas Tempat Pada Peta</Text>
-      <MapContainer center={centerPoint} zoom={17} scrollWheelZoom={true}>
+      <MapContainer center={centerPoint} zoom={17} scrollWheelZoom={false}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
