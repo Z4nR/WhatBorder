@@ -25,7 +25,7 @@ const IntegratedCoordinateList: React.FC<{
             },
           ]}
         >
-          {(fields, { add, remove }, { errors }) => {
+          {(fields, { add, remove }) => {
             addRef.current = add;
 
             return (
@@ -38,9 +38,6 @@ const IntegratedCoordinateList: React.FC<{
                     remove={remove}
                   />
                 ))}
-                <Form.Item>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
               </>
             );
           }}
