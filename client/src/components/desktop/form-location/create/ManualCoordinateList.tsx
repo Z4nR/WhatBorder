@@ -85,7 +85,7 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
             },
           ]}
         >
-          {(fields, { add, remove }, { errors }) => {
+          {(fields, { add, remove }) => {
             addRef.current = add;
             return (
               <>
@@ -97,9 +97,6 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
                     remove={remove}
                   />
                 ))}
-                <Form.Item>
-                  <Form.ErrorList errors={errors} />
-                </Form.Item>
               </>
             );
           }}
