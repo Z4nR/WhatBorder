@@ -286,7 +286,10 @@ const UserDashboard: React.FC = () => {
             </Text>
             <Flex gap={30} style={{ marginTop: '8px' }} wrap>
               <Statistic title={'Total Tempat'} value={data?.totalPlace} />
-              <Statistic title={'Baru Ditambahkan Bulan Ini'} value={2} />
+              <Statistic
+                title={'Baru Ditambahkan Bulan Ini'}
+                value={data?.totalPlaceThisMonth}
+              />
             </Flex>
           </Card>
           <Skeleton style={{ marginTop: '1rem' }} loading={isLoading} active>
