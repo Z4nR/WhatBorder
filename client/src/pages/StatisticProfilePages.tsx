@@ -8,19 +8,11 @@ import ProfilePlaceList from '@/components/general/profile/ProfilePlaceList';
 import BreadcrumbComponent from '@/components/general/utils/Breadcrumb';
 import { userDetail } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Button,
-  Col,
-  Flex,
-  message,
-  Row,
-  Skeleton,
-  Space,
-  Tooltip,
-} from 'antd';
+import { Button, Col, Flex, Row, Skeleton, Space, Tooltip } from 'antd';
 import { ShareAltOutlined } from '@ant-design/icons';
 import { useMediaQuery } from 'react-responsive';
 import { useParams } from 'react-router-dom';
+import { shareLink } from '@/utils/helper';
 
 const StatisticProfilePages: React.FC = () => {
   const { id } = useParams();
@@ -37,19 +29,7 @@ const StatisticProfilePages: React.FC = () => {
   const shareProfile = () => {
     const currentUrl = window.location.href;
     const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(`${baseUrl}${data?.me}`)
-        .then(() => {
-          message.info('Tautan berhasil disalin ke clipboard!');
-        })
-        .catch((err) => {
-          message.error('Gagal menyalin tautan: ', err);
-        });
-    } else {
-      message.error('Clipboard API tidak mendukung peramban versi ini.');
-    }
+    shareLink(`${baseUrl}${data?.me}`);
   };
 
   return (

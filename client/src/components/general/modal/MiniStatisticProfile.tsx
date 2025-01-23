@@ -1,6 +1,6 @@
 import React from 'react';
 import { dateFormatter } from '@/utils/helper';
-import { userDetail } from '@/utils/networks';
+import { userResume } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
 import { Button, Descriptions, DescriptionsProps, Modal, Skeleton } from 'antd';
 import { StatisticProps } from '@/utils/types/modal.types';
@@ -14,7 +14,7 @@ const MiniStatisticProfile: React.FC<StatisticProps> = ({
   const navigate = useNavigate();
   const { data, isLoading } = useQuery({
     queryKey: ['user-mini-profile', id],
-    queryFn: async () => await userDetail(id),
+    queryFn: async () => await userResume(id),
   });
 
   const itemDescSimple: DescriptionsProps['items'] = [
@@ -59,7 +59,7 @@ const MiniStatisticProfile: React.FC<StatisticProps> = ({
             setState(false);
           }}
         >
-          Kunjungi Profile
+          Kunjungi Profil
         </Button>
       )}
       onCancel={() => {
