@@ -1,20 +1,6 @@
 import { profileUser } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Button,
-  Col,
-  Flex,
-  message,
-  Row,
-  Skeleton,
-  Space,
-  Tooltip,
-} from 'antd';
-import {
-  EditOutlined,
-  DeleteOutlined,
-  ShareAltOutlined,
-} from '@ant-design/icons';
+import { Col, Flex, Row, Skeleton, Space } from 'antd';
 import React, { useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import BreadcrumbComponent from '@/components/general/utils/Breadcrumb';
@@ -26,9 +12,12 @@ import {
   ProfileName,
 } from '@/components/general/profile/ProfileData';
 import ProfileMiniDesc from '@/components/general/profile/ProfileMiniDesc';
+import ProfileMiniTool from '@/components/general/profile/ProfileMiniTool';
+import DeleteProfile from '@/components/general/modal/DeleteProfile';
 
 const ProfilePages: React.FC = () => {
   const [editProfileModal, setEditProfileModal] = useState(false);
+  const [deleteProfileModal, setDeleteProfileModal] = useState(false);
 
   const isMobile = useMediaQuery({
     query: '(max-width: 600px)',
@@ -38,24 +27,6 @@ const ProfilePages: React.FC = () => {
     queryKey: ['my-profile'],
     queryFn: async () => await profileUser(),
   });
-
-  const shareProfile = () => {
-    const currentUrl = window.location.href;
-    const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
-
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(`${baseUrl}statistic/user/${data?.me}`)
-        .then(() => {
-          message.info('Tautan berhasil disalin ke clipboard!');
-        })
-        .catch((err) => {
-          message.error('Gagal menyalin tautan: ', err);
-        });
-    } else {
-      message.error('Clipboard API tidak mendukung peramban versi ini.');
-    }
-  };
 
   return (
     <>
@@ -68,6 +39,12 @@ const ProfilePages: React.FC = () => {
             fullname: data?.fullName,
             description: data?.description,
           }}
+        />
+      )}
+      {deleteProfileModal && (
+        <DeleteProfile
+          state={deleteProfileModal}
+          setState={setDeleteProfileModal}
         />
       )}
       <BreadcrumbComponent title="Profil Pengguna" buttonTitle="Kembali" />
@@ -85,28 +62,11 @@ const ProfilePages: React.FC = () => {
                   />
                 </Col>
                 <Col flex="none">
-                  <Space.Compact block>
-                    <Tooltip title="Perbarui Profil">
-                      <Button
-                        className="icon-profile"
-                        icon={<EditOutlined />}
-                        onClick={() => setEditProfileModal(true)}
-                      />
-                    </Tooltip>
-                    <Tooltip title="Bagikan Profil">
-                      <Button
-                        className="icon-profile"
-                        icon={<ShareAltOutlined />}
-                        onClick={() => shareProfile()}
-                      />
-                    </Tooltip>
-                    <Tooltip title="Hapus Profil">
-                      <Button
-                        className="icon-profile-danger"
-                        icon={<DeleteOutlined />}
-                      />
-                    </Tooltip>
-                  </Space.Compact>
+                  <ProfileMiniTool
+                    setEdit={setEditProfileModal}
+                    setDelete={setDeleteProfileModal}
+                    myId={data?.me}
+                  />
                 </Col>
               </Row>
               {data && <ProfileLastUpdate updatedAt={data?.updatedAt} />}
