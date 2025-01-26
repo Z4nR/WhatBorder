@@ -20,6 +20,7 @@ import IntegratedCreateLocationPages from './pages/desktop/create-location/Integ
 import ManualCreateLocationPages from './pages/desktop/create-location/ManualCreateLocationPages';
 import ManualUpdateLocationPages from './pages/desktop/update-location/ManualUpdateLocationPages';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import BuildingActionPages from './pages/BuildingActionPages';
 
 const queryClient = new QueryClient();
 
@@ -79,6 +80,11 @@ const App: React.FC = () => {
             <Route element={<LayoutPages />}>
               <Route index element={<DashboardPages />} />
               <Route caseSensitive path="/profile" element={<ProfilePages />} />
+              <Route
+                caseSensitive
+                path="/building-action"
+                element={<BuildingActionPages />}
+              />
               <Route caseSensitive path="/location" element={<Outlet />}>
                 <Route
                   caseSensitive
