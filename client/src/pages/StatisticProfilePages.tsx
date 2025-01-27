@@ -60,7 +60,7 @@ const StatisticProfilePages: React.FC = () => {
                   </Space.Compact>
                 </Col>
               </Row>
-              {data && <ProfileLastUpdate updatedAt={data?.updatedAt} />}
+              {data && <ProfileLastUpdate loginAt={data?.loginAt} />}
               <ProfileMiniDesc
                 createdAt={data?.createdAt}
                 admin={data?.admin}

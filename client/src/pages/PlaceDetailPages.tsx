@@ -69,7 +69,7 @@ const PlaceDetailPages: React.FC = () => {
           {data?.placeName}
         </Title>
         <Flex justify="center" align="center">
-          <Tag style={{ margin: '0' }} color={data?.type.label}>
+          <Tag style={{ marginTop: '4px' }} color={data?.type.label}>
             {data?.type.name.toUpperCase()}
           </Tag>
         </Flex>

@@ -19,7 +19,7 @@ import type {
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
 import { compareList, myList } from '@/utils/networks';
-import { dateFormatter, onEachFeature, originalStyle } from '@/utils/helper';
+import { colorTransferMap, dateFormatter, onEachFeature } from '@/utils/helper';
 import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
@@ -403,7 +403,12 @@ const CompareList: React.FC = () => {
             <GeoJSON
               key={index}
               data={item.placeGeo}
-              style={{ ...originalStyle }}
+              style={{
+                weight: 2,
+                dashArray: '3',
+                fillColor: 'transparent',
+                color: colorTransferMap(index),
+              }}
               onEachFeature={(feature, layer) =>
                 onEachFeature(feature, layer, zoomToFeature)
               }

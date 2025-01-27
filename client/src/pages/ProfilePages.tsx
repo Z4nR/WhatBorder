@@ -69,7 +69,7 @@ const ProfilePages: React.FC = () => {
                   />
                 </Col>
               </Row>
-              {data && <ProfileLastUpdate updatedAt={data?.updatedAt} />}
+              {data && <ProfileLastUpdate loginAt={data?.loginAt} />}
               <ProfileMiniDesc
                 createdAt={data?.createdAt}
                 admin={data?.admin}
