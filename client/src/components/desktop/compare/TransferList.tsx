@@ -1,12 +1,17 @@
-import { Table, TableProps, Transfer } from 'antd';
+import React, { useState } from 'react';
+import { Table, TableProps, Transfer, message } from 'antd';
 import { TableTransferProps, TransferItem } from '@/utils/types/compare.types';
 import EmptyData from '../../general/utils/EmptyData';
-import React from 'react';
 
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
 
 const TransferList: React.FC<TableTransferProps> = (props) => {
   const { leftColumns, rightColumns, ...restProps } = props;
+
+  const [rightTableCount, setRightTableCount] = useState(0);
+
+  // Maximum number of items allowed in the right table
+  const maxItemsInRightTable = 3;
 
   return (
     <Transfer
@@ -23,10 +28,44 @@ const TransferList: React.FC<TableTransferProps> = (props) => {
         disabled: listDisabled,
       }) => {
         const columns = direction === 'left' ? leftColumns : rightColumns;
+
+        // Handle individual item selection
+        const handleItemSelect = (key: string, selected: boolean) => {
+          const newCount = rightTableCount + (selected ? 1 : -1);
+          if (
+            direction === 'left' &&
+            selected &&
+            rightTableCount >= maxItemsInRightTable
+          ) {
+            message.warning(
+              `You can only select up to ${maxItemsInRightTable} items in the right table.`
+            );
+            return;
+          }
+          setRightTableCount(newCount);
+          onItemSelect(key, selected);
+        };
+
+        // Handle selecting/deselecting multiple items at once
+        const handleItemSelectAll = (keys: string[], type: 'replace') => {
+          if (
+            direction === 'left' &&
+            type === 'replace' &&
+            keys.length > maxItemsInRightTable - rightTableCount
+          ) {
+            message.warning(
+              `Kamu hanya dapat memilih tempak sampai ${maxItemsInRightTable} tempat di tabel kanan.`
+            );
+            return;
+          }
+          setRightTableCount(keys.length); // Update count based on the new selection
+          onItemSelectAll(keys, type);
+        };
+
         const rowSelection: TableRowSelection<TransferItem> = {
           getCheckboxProps: () => ({ disabled: listDisabled }),
           onChange(selectedRowKeys) {
-            onItemSelectAll(selectedRowKeys, 'replace');
+            handleItemSelectAll(selectedRowKeys as string[], 'replace');
           },
           selectedRowKeys: listSelectedKeys,
           selections: [
@@ -58,7 +97,7 @@ const TransferList: React.FC<TableTransferProps> = (props) => {
                       if (itemDisabled || listDisabled) {
                         return;
                       }
-                      onItemSelect(key, !listSelectedKeys.includes(key));
+                      handleItemSelect(key, !listSelectedKeys.includes(key));
                     },
                   })
                 : undefined
