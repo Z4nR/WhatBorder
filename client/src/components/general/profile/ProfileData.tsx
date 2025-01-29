@@ -41,13 +41,11 @@ export const ProfileName: React.FC<{
   );
 };
 
-export const ProfileLastUpdate: React.FC<{ updatedAt: any }> = ({
-  updatedAt,
-}) => {
+export const ProfileLastUpdate: React.FC<{ loginAt: any }> = ({ loginAt }) => {
   return (
     <Text>
-      Terakhir Diperbarui{' '}
-      {formatDistanceToNow(parseISO(updatedAt), {
+      Terakhir masuk{' '}
+      {formatDistanceToNow(parseISO(loginAt), {
         addSuffix: true,
         locale: id,
       })}
