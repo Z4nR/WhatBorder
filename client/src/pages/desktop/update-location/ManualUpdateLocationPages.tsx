@@ -60,6 +60,11 @@ const ManualUpdateLocationPages: React.FC = () => {
 
   const handleFetchData = (data: any) => {
     if (data) {
+      const coordinate: [number, number][] = geojsonDeconstructor(
+        data?.placeMap.place_geojson
+      );
+      console.log(coordinate);
+
       form.setFieldsValue({
         placename: data?.placeName,
         placeowner: data?.placeOwner,
@@ -70,11 +75,8 @@ const ManualUpdateLocationPages: React.FC = () => {
         placelat: data?.placeCenterPoint?.[0],
       });
 
-      const coordinate: [number, number][] = geojsonDeconstructor(
-        data?.placeMap.place_geojson
-      );
-      setCoordinateList(coordinate);
       setCenterPoint(data?.placeCenterPoint);
+      setCoordinateList(coordinate);
     }
   };
 
@@ -143,28 +145,71 @@ const ManualUpdateLocationPages: React.FC = () => {
       });
       navigate(-1);
     },
+    onError: (error: any) => {
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
+    },
   });
 
   const onCreate = (values: any) => {
-    const data = {
-      placeName: values.placename,
-      placeOwner: values.placeowner,
-      placeDescription: values.placedesc,
-      placeAddress: values.placeaddress,
-      placeType: values.placetype,
-      placePoints: [values.placelat, values.placelong],
-      placeGeojson: geoJsonData,
-    };
-    console.log(data);
+    const updateData: { [key: string]: any } = {};
 
-    mutate({ id, data });
+    if (values.placename && values.placename !== data.placeName) {
+      updateData.placeName = values.placename;
+    }
+
+    if (values.placeowner && values.placeowner !== data.placeOwner) {
+      updateData.placeOwner = values.placeowner;
+    }
+
+    if (values.placedesc && values.placedesc !== data.placeDescription) {
+      updateData.placeDescription = values.placedesc;
+    }
+
+    if (values.placeaddress && values.placeaddress !== data.placeAddress) {
+      updateData.placeAddress = values.placeaddress;
+    }
+
+    if (values.placetype && values.placetype !== data.type.name) {
+      updateData.placeType = values.placetype;
+    }
+
+    if (
+      values.placelat &&
+      values.placelat !== data.placeCenterPoint[0] &&
+      values.placelong &&
+      values.placelong !== data.placeCenterPoint[1]
+    ) {
+      updateData.placePoints = [values.placelat, values.placelong];
+    }
+
+    const stringifyMapFromApi = JSON.stringify(data?.placeMap.place_geojson);
+    const stringifyMapFromConstructor = JSON.stringify(geoJsonData);
+
+    if (stringifyMapFromConstructor !== stringifyMapFromApi) {
+      updateData.placeGeojson = geoJsonData;
+    }
+
+    if (Object.keys(updateData).length === 0) {
+      message.info('Tidak ada perubahan data');
+      return;
+    }
+
+    mutate({ id, data: updateData });
   };
 
   const onReset = () => {
+    // Reset form fields to initial values
+    form.resetFields();
+
+    // Call handleFetchData with the necessary data to reset state
     if (data) {
       handleFetchData(data);
     }
-    message.info('Form reset to initial values.');
+    message.info('Form berhasil disetel ulang');
   };
 
   return (
