@@ -8,17 +8,17 @@ const geojsonConstructor = (
   }
 
   return {
-    type: 'FeatureCollection',
     features: [
       {
-        type: 'Feature',
-        properties: {},
         geometry: {
           coordinates: [[...latlong, latlong[0]]],
           type: 'Polygon',
         },
+        properties: {},
+        type: 'Feature',
       },
     ],
+    type: 'FeatureCollection',
   };
 };
 
@@ -27,7 +27,7 @@ const geojsonDeconstructor = (
 ): [number, number][] => {
   const geometry = placeGeojson.features[0].geometry;
 
-  if (geometry.type === 'Polygon' || geometry.type === 'MultiPolygon') {
+  if (geometry.type === 'Polygon') {
     // Filter out invalid Positions to match [number, number][]
     const validCoordinates = geometry.coordinates[0].filter(
       (pos): pos is [number, number] => pos.length === 2
