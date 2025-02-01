@@ -81,26 +81,38 @@ const originalStyle = {
   fillColor: 'transparent',
 };
 
+const colors = ['red', 'blue', 'green', 'orange', 'purple'];
+const colorTransferMap = (index: number) => colors[index % colors.length]; // Cycle colors for border
+
 const highlightFeature = (e: any) => {
   const layer = e.target;
+
+  // Highlight the feature with a new style
   layer.setStyle({
     weight: 4,
     color: '#f9844d',
   });
+
+  // Bring the layer to the front to emphasize
   layer.bringToFront();
 };
 
 const resetHighlight = (e: any) => {
   const layer = e.target;
-  layer.setStyle(originalStyle);
+
+  // Reset the style back to its original style
+  layer.setStyle(layer.defaultOptions);
 };
 
 const onEachFeature = (feature: any, layer: any, zoomToFeature: any) => {
+  // Save the original style to the layer's options
+  layer.defaultOptions = { ...layer.options };
+
   layer.on({
-    mouseover: highlightFeature,
-    mouseout: resetHighlight,
+    mouseover: highlightFeature, // Highlight on hover
+    mouseout: resetHighlight, // Reset on mouseout
     click: (e: any) => {
-      zoomToFeature(e, feature);
+      zoomToFeature(e, feature); // Handle click for zoom
     },
   });
 };
@@ -127,6 +139,7 @@ export {
   socketConnection,
   disconnectSocket,
   originalStyle,
+  colorTransferMap,
   highlightFeature,
   resetHighlight,
   onEachFeature,
