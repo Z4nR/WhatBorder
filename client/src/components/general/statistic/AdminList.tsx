@@ -147,7 +147,7 @@ const AdminList: React.FC = () => {
       width: '150px',
       responsive: ['sm'],
       render: (_, tag) => {
-        const color: string = tag.admin === false ? 'volcano' : 'green';
+        const color: string = tag.admin === false ? '#fa541c' : '#52c41a';
         const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
         return <Tag color={color}>{admin.toUpperCase()}</Tag>;
       },
