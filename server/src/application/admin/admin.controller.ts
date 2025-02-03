@@ -20,10 +20,7 @@ import { Request } from 'express';
 @Roles(Role.ADMIN)
 @Controller('admin')
 export class AdminController {
-  constructor(
-    private readonly adminService: AdminService,
-    private readonly placeService: PlaceService,
-  ) {}
+  constructor(private readonly adminService: AdminService) {}
 
   @Post('building')
   create(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
