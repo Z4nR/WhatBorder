@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Space, Steps, Typography } from 'antd';
-import AddCenterPoint from '../../components/client/create-location/AddCenterPoint';
-import AddPlacePattern from '../../components/client/create-location/AddPlacePattern';
 import { socketConnection } from '@/utils/helper';
 import { useNavigate } from 'react-router-dom';
 import useSocketState from '@/utils/state/clientState';
+import AddCenterPoint from '@/components/client/create-location/AddCenterPoint';
+import AddPlacePattern from '@/components/client/create-location/AddPlacePattern';
 
 const { Title } = Typography;
 
