@@ -39,9 +39,9 @@ export class UserService {
         },
         where: {
           admin: false,
-          // NOT: {
-          //   user_id: id,
-          // },
+          NOT: {
+            user_id: id,
+          },
         },
       });
     } catch (error) {
@@ -59,7 +59,7 @@ export class UserService {
           admin: true,
           description: true,
           created_at: true,
-          updated_at: true,
+          login_at: true,
           place: {
             select: {
               place_id: true,
