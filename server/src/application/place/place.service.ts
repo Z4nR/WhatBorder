@@ -148,6 +148,8 @@ export class PlaceService {
         select: {
           building_id: true,
           name: true,
+          label: true,
+          color: true,
         },
       });
 
