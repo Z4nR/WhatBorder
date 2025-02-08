@@ -14,13 +14,13 @@ import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
 import PlaceDetailPages from './pages/PlaceDetailPages';
 import { message } from 'antd';
-import AddCoordinatePages from './pages/client/AddCoordinatePages';
 import StatisticProfilePages from './pages/StatisticProfilePages';
-import IntegratedCreateLocationPages from './pages/desktop/create-location/IntegratedCreateLocationPages';
-import ManualCreateLocationPages from './pages/desktop/create-location/ManualCreateLocationPages';
-import ManualUpdateLocationPages from './pages/desktop/update-location/ManualUpdateLocationPages';
+import IntegratedCreateLocationPages from './pages/user/desktop/create-location/IntegratedCreateLocationPages';
+import ManualCreateLocationPages from './pages/user/desktop/create-location/ManualCreateLocationPages';
+import ManualUpdateLocationPages from './pages/user/desktop/update-location/ManualUpdateLocationPages';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import BuildingActionPages from './pages/BuildingActionPages';
+import PlaceTypePages from './pages/admin/PlaceTypePages';
+import AddCoordinatePages from './pages/user/client/AddCoordinatePages';
 
 const queryClient = new QueryClient();
 
@@ -82,8 +82,8 @@ const App: React.FC = () => {
               <Route caseSensitive path="/profile" element={<ProfilePages />} />
               <Route
                 caseSensitive
-                path="/building-action"
-                element={<BuildingActionPages />}
+                path="/place-action"
+                element={<PlaceTypePages />}
               />
               <Route caseSensitive path="/location" element={<Outlet />}>
                 <Route
