@@ -21,3 +21,10 @@ export interface FormUpdateProps {
   placeLongitude: number;
   placeLatitude: number;
 }
+
+export interface BuildingListProps {
+  buildingId: string;
+  name: string;
+  label: string;
+  color: string;
+}
