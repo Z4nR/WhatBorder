@@ -40,20 +40,18 @@ const EditProfile: React.FC<EditProfileProps> = ({
     form.resetFields();
   };
 
-  const onEdit = (values: any) => {
-    const updateData: { [key: string]: string } = {};
+  type EditValue = {
+    username: string;
+    fullname: string;
+    description: string;
+  };
 
-    if (values.username && values.username !== initialValue.username) {
-      updateData.username = values.username;
-    }
-
-    if (values.fullname && values.fullname !== initialValue.fullname) {
-      updateData.fullname = values.fullname;
-    }
-
-    if (values.description && values.description !== initialValue.description) {
-      updateData.description = values.description;
-    }
+  const onEdit = (values: EditValue) => {
+    const updateData = Object.fromEntries(
+      Object.entries(values).filter(
+        ([key, value]) => value !== initialValue[key as keyof EditValue]
+      )
+    );
 
     if (Object.keys(updateData).length === 0) {
       message.info('Tidak ada perubahan data');
