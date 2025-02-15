@@ -64,3 +64,35 @@ html {
   flex-grow: 1;
   margin-bottom: 8px;
 }
+
+.color-palette-box {
+  cursor: pointer;
+  width: 10%;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 5px;
+  position: relative; /* Dibutuhkan untuk absolute positioning */
+}
+
+.color-palette-box span {
+  position: absolute;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.color-palette-code {
+  opacity: 0;
+  transform: translateY(15px); /* Awalnya sedikit di bawah */
+}
+
+.color-palette-box:hover .color-palette-code {
+  opacity: 1;
+  transform: translateY(10px);
+}
+
+.color-palette-box:hover span:first-child {
+  transform: translateY(-10px); /* Naik ke atas saat hover */
+}
