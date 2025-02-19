@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Card,
   ColorPicker,
   Form,
   Input,
@@ -20,36 +19,52 @@ const generateColorPalette = (baseColor: string) => {
   const saturation = baseHSL[1] * 100; // Convert to percentage
   const baseLightness = baseHSL[2] * 100; // Convert to percentage
 
-  if (saturation < 70 && baseLightness < 70) return null; // Block generation if both are < 70
+  if (saturation < 30 || baseLightness < 30) {
+    return null;
+  }
 
-  const lightnessLevels = [
-    95.1,
-    82.94,
-    75.1,
-    67.06,
-    56.67,
-    baseLightness,
-    38.04,
-    30.59,
-    22.94,
-    15.49,
-  ];
+  // Generate 5 lighter shades (L1–L5)
+  const lighterShades = Array.from({ length: 5 }, (_, i) => {
+    const factor = (5 - i) / 5; // Creates a scale from 1 to 0
+    return Math.min(92, baseLightness + factor * (92 - baseLightness)); // Prevent exceeding 95%
+  });
 
-  return lightnessLevels.map((l, index) =>
-    index === 5 ? baseColor : chroma.hsl(hue, saturation / 100, l / 100).hex()
+  // Generate 4 darker shades (L7–L10)
+  const darkerShades = Array.from({ length: 4 }, (_, i) => {
+    const factor = (i + 1) / 5; // Creates a scale from 0 to 1
+    return Math.max(7, baseLightness - factor * (baseLightness - 7)); // Prevent going below 5%
+  });
+
+  // Combine lightest to darkest with baseColor in the middle (L6)
+  const lightnessLevels = [...lighterShades, baseLightness, ...darkerShades];
+
+  return lightnessLevels.map((l) =>
+    chroma.hsl(hue, saturation / 100, l / 100).hex()
   );
 };
 
 const PlaceTypeCreate: React.FC = () => {
   const [form] = Form.useForm();
-  const [labelColor, setLabelColor] = useState('#1677ff');
-  const [mapColor, setMapColor] = useState('#1677ff');
 
-  const labelPalette = generateColorPalette(labelColor);
-  const mapPalette = generateColorPalette(mapColor);
+  const [generateColor, setGenerateColor] = useState('#1677ff');
+  const generatePalette = generateColorPalette(generateColor);
+  const isColorInvalid = !generatePalette;
 
-  const isLabelInvalid = !labelPalette;
-  const isMapInvalid = !mapPalette;
+  const handleLabelChange = (color: string) => {
+    if (color) {
+      form.setFieldValue('labelupdate', color);
+    }
+  };
+
+  const handleMapChange = (color: string) => {
+    if (color) {
+      form.setFieldValue('colorupdate', color);
+    }
+  };
+
+  const onCreate = (values: any) => {
+    console.log(values);
+  };
 
   const onReset = () => {
     // Reset form fields to initial values
@@ -57,36 +72,39 @@ const PlaceTypeCreate: React.FC = () => {
   };
 
   return (
-    <Card style={{ minHeight: '500px' }}>
-      <Title level={4}>Tambah / Ubah Tipe Tempat</Title>
-      <Form form={form} layout="vertical" name="place_type_form">
+    <div style={{ minHeight: '500px' }}>
+      <Form
+        form={form}
+        layout="vertical"
+        name="place_type_create"
+        onFinish={onCreate}
+      >
         <Form.Item
           label="Nama Tipe Tempat"
-          name="placename"
+          name="typenamecreate"
           rules={[{ required: true, message: 'Nama Tipe Tempat wajib diisi' }]}
         >
           <Input placeholder="Masukkan nama tipe tempat" />
         </Form.Item>
 
         <div style={{ marginBottom: 16 }}>
-          <Title level={5}>Tentukan Warna Dasar Label</Title>
           <ColorPicker
             style={{ marginBottom: 8 }}
-            value={labelColor}
-            onChange={(color) => setLabelColor(color.toHexString())}
+            value={generateColor}
+            onChange={(color) => setGenerateColor(color.toHexString())}
             showText
             disabledAlpha
           />
-
-          {isLabelInvalid && (
+          <Title level={5}>Tentukan Warna Dasar Label</Title>
+          {isColorInvalid && (
             <Alert
-              message="Pilih warna dengan brightness dan saturation lebih tinggi dari 70!"
+              message="Pilih warna dengan brightness lebih tinggi dari 30 dan saturation lebih tinggi dari 30!"
               type="warning"
               showIcon
             />
           )}
 
-          {!isLabelInvalid && (
+          {!isColorInvalid && (
             <div
               style={{
                 display: 'flex',
@@ -95,7 +113,7 @@ const PlaceTypeCreate: React.FC = () => {
                 gap: '2px',
               }}
             >
-              {labelPalette.map((color, index) => (
+              {generatePalette.map((color, index) => (
                 <div
                   className="color-palette-box"
                   key={index}
@@ -104,6 +122,7 @@ const PlaceTypeCreate: React.FC = () => {
                     color: index < 5 ? 'black' : 'white',
                     fontWeight: index === 5 ? 'bold' : 'normal',
                   }}
+                  onClick={() => handleLabelChange(color)}
                 >
                   <span style={{ fontSize: '10px', fontWeight: 'bold' }}>
                     L-{index + 1}
@@ -118,29 +137,18 @@ const PlaceTypeCreate: React.FC = () => {
               ))}
             </div>
           )}
-        </div>
-
-        <div style={{ marginBottom: 16 }}>
           <Title level={5}>Tentukan Warna Dasar Peta</Title>
-          <ColorPicker
-            style={{ marginBottom: 8 }}
-            value={mapColor}
-            onChange={(color) => setMapColor(color.toHexString())}
-            showText
-            disabledAlpha
-          />
-
-          {isMapInvalid && (
+          {isColorInvalid && (
             <Alert
-              message="Pilih warna dengan brightness dan saturation lebih tinggi dari 70!"
+              message="Pilih warna dengan brightness lebih tinggi dari 30 dan saturation lebih tinggi dari 30!"
               type="warning"
               showIcon
             />
           )}
 
-          {!isMapInvalid && (
+          {!isColorInvalid && (
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px' }}>
-              {mapPalette.map((color, index) => (
+              {generatePalette.map((color, index) => (
                 <div
                   className="color-palette-box"
                   key={index}
@@ -149,6 +157,7 @@ const PlaceTypeCreate: React.FC = () => {
                     color: index < 5 ? 'black' : 'white',
                     fontWeight: index === 5 ? 'bold' : 'normal',
                   }}
+                  onClick={() => handleMapChange(color)}
                 >
                   <span style={{ fontSize: '10px', fontWeight: 'bold' }}>
                     L-{index + 1}
@@ -166,18 +175,17 @@ const PlaceTypeCreate: React.FC = () => {
         </div>
 
         <Flex justify="space-around">
-          <Form.Item label="Warna Label Tempat Terpilih" name="label">
-            <ColorPicker size="small" value={labelColor} showText disabled />
+          <Form.Item label="Warna Label Tempat Terpilih" name="labelupdate">
+            <ColorPicker size="small" value={generateColor} showText disabled />
           </Form.Item>
-          <Form.Item label="Warna Peta Tempat Terpilih" name="color">
-            <ColorPicker size="small" value={labelColor} showText disabled />
+          <Form.Item label="Warna Peta Tempat Terpilih" name="colorupdate">
+            <ColorPicker size="small" value={generateColor} showText disabled />
           </Form.Item>
         </Flex>
-
         <Form.Item style={{ marginBottom: 0 }}>
           <Space style={{ width: '100%', justifyContent: 'end' }}>
             <Button type="primary" htmlType="submit">
-              Perbarui
+              Simpan
             </Button>
             <Button htmlType="button" onClick={onReset}>
               Ulangi
@@ -185,7 +193,7 @@ const PlaceTypeCreate: React.FC = () => {
           </Space>
         </Form.Item>
       </Form>
-    </Card>
+    </div>
   );
 };
 
