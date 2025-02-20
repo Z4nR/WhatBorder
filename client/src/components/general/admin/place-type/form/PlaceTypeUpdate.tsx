@@ -10,30 +10,12 @@ import {
   Typography,
   Select,
 } from 'antd';
-import chroma from 'chroma-js';
 import { BuildingListProps } from '@/utils/types/utils.types';
+import { PlaceTypeUpdateProps } from '@/utils/types/admin.types';
+import { generateColorPalette } from '@/utils/helper';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
-
-const generateColorPalette = (baseColor: string) => {
-  const baseHSL = chroma(baseColor).hsl();
-  const hue = baseHSL[0];
-  const saturation = baseHSL[1] * 100; // Convert to percentage
-  const baseLightness = baseHSL[2] * 100; // Convert to percentage
-
-  if (saturation < 50 || baseLightness < 30) {
-    return null;
-  }
-
-  const lightnessLevels = [
-    95.1, 82.94, 75.1, 67.06, 56.67, 46.08, 38.04, 30.59, 22.94, 15.49,
-  ];
-
-  return lightnessLevels.map((l) =>
-    chroma.hsl(hue, saturation / 100, l / 100).hex()
-  );
-};
 
 const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
   const [form] = Form.useForm();
@@ -42,15 +24,22 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
   const generatePalette = generateColorPalette(generateColor);
   const isColorInvalid = !generatePalette;
 
+  const [selectedLabelColor, setSelectedLabelColor] = useState<string | null>(
+    null
+  );
+  const [selectedMapColor, setSelectedMapColor] = useState<string | null>(null);
+
   const handleLabelChange = (color: string) => {
     if (color) {
       form.setFieldValue('labelupdate', color);
+      setSelectedLabelColor(color);
     }
   };
 
   const handleMapChange = (color: string) => {
     if (color) {
       form.setFieldValue('colorupdate', color);
+      setSelectedMapColor(color);
     }
   };
 
@@ -61,7 +50,7 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
 
     if (selected) {
       form.setFieldsValue({
-        typenameupdate: selected.name,
+        nameupdate: selected.name,
         labelupdate: selected.label,
         colorupdate: selected.color,
       });
@@ -70,14 +59,27 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
     }
   };
 
+  const onUpdate = (values: PlaceTypeUpdateProps) => {
+    console.log(values);
+  };
+
   const onReset = () => {
     // Reset form fields to initial values
+    if (selectedLabelColor !== null || selectedMapColor !== null) {
+      setSelectedLabelColor(null);
+      setSelectedMapColor(null);
+    }
     form.resetFields();
   };
 
   return (
     <div style={{ minHeight: '500px' }}>
-      <Form form={form} layout="vertical" name="place_type_update">
+      <Form
+        form={form}
+        layout="vertical"
+        name="place_type_update"
+        onFinish={onUpdate}
+      >
         <Text>Pilih Jenis Tempat Yang Ingin Diubah : </Text>
         <Select
           style={{ marginBlock: 8, width: '100%' }}
@@ -92,7 +94,7 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
         </Select>
         <Form.Item
           label="Nama Tipe Tempat"
-          name="typenameupdate"
+          name="nameupdate"
           rules={[{ required: true, message: 'Nama Tipe Tempat wajib diisi' }]}
         >
           <Input placeholder="Masukkan nama tipe tempat" />
@@ -109,7 +111,7 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
 
           {isColorInvalid && (
             <Alert
-              message="Pilih warna dengan brightness dan saturation lebih tinggi dari 70!"
+              message="Pilih warna dengan brightness lebih tinggi dari 30 dan saturation lebih tinggi dari 30!"
               type="warning"
               showIcon
             />
@@ -132,6 +134,9 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
                     backgroundColor: color,
                     color: index < 5 ? 'black' : 'white',
                     fontWeight: index === 5 ? 'bold' : 'normal',
+                    opacity: selectedMapColor === color ? 0.5 : 1, // Disable if already selected in Map
+                    cursor:
+                      selectedLabelColor === color ? 'not-allowed' : 'pointer',
                   }}
                   onClick={() => handleLabelChange(color)}
                 >
@@ -151,7 +156,7 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
           <Title level={5}>Tentukan Warna Dasar Peta</Title>
           {isColorInvalid && (
             <Alert
-              message="Pilih warna dengan brightness dan saturation lebih tinggi dari 70!"
+              message="Pilih warna dengan brightness lebih tinggi dari 30 dan saturation lebih tinggi dari 30!"
               type="warning"
               showIcon
             />
@@ -167,6 +172,9 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
                     backgroundColor: color,
                     color: index < 5 ? 'black' : 'white',
                     fontWeight: index === 5 ? 'bold' : 'normal',
+                    opacity: selectedLabelColor === color ? 0.5 : 1, // Disable if already selected in Label
+                    cursor:
+                      selectedLabelColor === color ? 'not-allowed' : 'pointer',
                   }}
                   onClick={() => handleMapChange(color)}
                 >
