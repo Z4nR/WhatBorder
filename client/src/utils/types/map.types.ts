@@ -32,3 +32,13 @@ export interface MapViewProps {
   centerPoint: [number, number];
   mapData: FeatureCollection;
 }
+
+export interface UpdateLocationProps {
+  placename: string;
+  placeowner: string;
+  placedesc: string;
+  placeaddress: string;
+  placetype: string;
+  placelat: number;
+  placelong: number;
+}

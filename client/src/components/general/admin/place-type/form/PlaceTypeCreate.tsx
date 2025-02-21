@@ -9,39 +9,10 @@ import {
   Button,
   Space,
 } from 'antd';
-import chroma from 'chroma-js';
+import { PlaceTypeCreateProps } from '@/utils/types/admin.types';
+import { generateColorPalette } from '@/utils/helper';
 
 const { Title } = Typography;
-
-const generateColorPalette = (baseColor: string) => {
-  const baseHSL = chroma(baseColor).hsl();
-  const hue = baseHSL[0];
-  const saturation = baseHSL[1] * 100; // Convert to percentage
-  const baseLightness = baseHSL[2] * 100; // Convert to percentage
-
-  if (saturation < 30 || baseLightness < 30) {
-    return null;
-  }
-
-  // Generate 5 lighter shades (L1–L5)
-  const lighterShades = Array.from({ length: 5 }, (_, i) => {
-    const factor = (5 - i) / 5; // Creates a scale from 1 to 0
-    return Math.min(92, baseLightness + factor * (92 - baseLightness)); // Prevent exceeding 95%
-  });
-
-  // Generate 4 darker shades (L7–L10)
-  const darkerShades = Array.from({ length: 4 }, (_, i) => {
-    const factor = (i + 1) / 5; // Creates a scale from 0 to 1
-    return Math.max(7, baseLightness - factor * (baseLightness - 7)); // Prevent going below 5%
-  });
-
-  // Combine lightest to darkest with baseColor in the middle (L6)
-  const lightnessLevels = [...lighterShades, baseLightness, ...darkerShades];
-
-  return lightnessLevels.map((l) =>
-    chroma.hsl(hue, saturation / 100, l / 100).hex()
-  );
-};
 
 const PlaceTypeCreate: React.FC = () => {
   const [form] = Form.useForm();
@@ -50,24 +21,33 @@ const PlaceTypeCreate: React.FC = () => {
   const generatePalette = generateColorPalette(generateColor);
   const isColorInvalid = !generatePalette;
 
+  const [selectedLabelColor, setSelectedLabelColor] = useState<string | null>(
+    null
+  );
+  const [selectedMapColor, setSelectedMapColor] = useState<string | null>(null);
+
   const handleLabelChange = (color: string) => {
     if (color) {
       form.setFieldValue('labelupdate', color);
+      setSelectedLabelColor(color);
     }
   };
 
   const handleMapChange = (color: string) => {
     if (color) {
       form.setFieldValue('colorupdate', color);
+      setSelectedMapColor(color);
     }
   };
 
-  const onCreate = (values: any) => {
+  const onCreate = (values: PlaceTypeCreateProps) => {
     console.log(values);
   };
 
   const onReset = () => {
     // Reset form fields to initial values
+    setSelectedLabelColor(null);
+    setSelectedMapColor(null);
     form.resetFields();
   };
 
@@ -81,12 +61,11 @@ const PlaceTypeCreate: React.FC = () => {
       >
         <Form.Item
           label="Nama Tipe Tempat"
-          name="typenamecreate"
+          name="namecreate"
           rules={[{ required: true, message: 'Nama Tipe Tempat wajib diisi' }]}
         >
           <Input placeholder="Masukkan nama tipe tempat" />
         </Form.Item>
-
         <div style={{ marginBottom: 16 }}>
           <ColorPicker
             style={{ marginBottom: 8 }}
@@ -96,6 +75,7 @@ const PlaceTypeCreate: React.FC = () => {
             disabledAlpha
           />
           <Title level={5}>Tentukan Warna Dasar Label</Title>
+
           {isColorInvalid && (
             <Alert
               message="Pilih warna dengan brightness lebih tinggi dari 30 dan saturation lebih tinggi dari 30!"
@@ -121,6 +101,9 @@ const PlaceTypeCreate: React.FC = () => {
                     backgroundColor: color,
                     color: index < 5 ? 'black' : 'white',
                     fontWeight: index === 5 ? 'bold' : 'normal',
+                    opacity: selectedMapColor === color ? 0.5 : 1, // Disable if already selected in Map
+                    cursor:
+                      selectedMapColor === color ? 'not-allowed' : 'pointer',
                   }}
                   onClick={() => handleLabelChange(color)}
                 >
@@ -156,6 +139,9 @@ const PlaceTypeCreate: React.FC = () => {
                     backgroundColor: color,
                     color: index < 5 ? 'black' : 'white',
                     fontWeight: index === 5 ? 'bold' : 'normal',
+                    opacity: selectedLabelColor === color ? 0.5 : 1, // Disable if already selected in Label
+                    cursor:
+                      selectedLabelColor === color ? 'not-allowed' : 'pointer',
                   }}
                   onClick={() => handleMapChange(color)}
                 >
@@ -175,10 +161,10 @@ const PlaceTypeCreate: React.FC = () => {
         </div>
 
         <Flex justify="space-around">
-          <Form.Item label="Warna Label Tempat Terpilih" name="labelupdate">
+          <Form.Item label="Warna Label Tempat Terpilih" name="labelcreate">
             <ColorPicker size="small" value={generateColor} showText disabled />
           </Form.Item>
-          <Form.Item label="Warna Peta Tempat Terpilih" name="colorupdate">
+          <Form.Item label="Warna Peta Tempat Terpilih" name="colorcreate">
             <ColorPicker size="small" value={generateColor} showText disabled />
           </Form.Item>
         </Flex>

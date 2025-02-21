@@ -66,8 +66,7 @@ html {
 }
 
 .color-palette-box {
-  cursor: pointer;
-  width: 10%;
+  width: calc(20% - 4px);
   height: 50px;
   display: flex;
   flex-direction: column;
@@ -75,7 +74,7 @@ html {
   justify-content: center;
   padding: 5px;
   border-radius: 5px;
-  position: relative; /* Dibutuhkan untuk absolute positioning */
+  position: relative;
 }
 
 .color-palette-box span {
@@ -85,7 +84,7 @@ html {
 
 .color-palette-code {
   opacity: 0;
-  transform: translateY(15px); /* Awalnya sedikit di bawah */
+  transform: translateY(15px);
 }
 
 .color-palette-box:hover .color-palette-code {
@@ -94,5 +93,5 @@ html {
 }
 
 .color-palette-box:hover span:first-child {
-  transform: translateY(-10px); /* Naik ke atas saat hover */
+  transform: translateY(-10px);
 }

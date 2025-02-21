@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import { io, Socket } from 'socket.io-client';
+import chroma from 'chroma-js';
 
 const getDeviceType = (userAgent: any) => {
   switch (true) {
@@ -132,6 +133,36 @@ const shareLink = (text: string) => {
   }
 };
 
+const generateColorPalette = (baseColor: string) => {
+  const baseHSL = chroma(baseColor).hsl();
+  const hue = baseHSL[0];
+  const saturation = baseHSL[1] * 100; // Convert to percentage
+  const baseLightness = baseHSL[2] * 100; // Convert to percentage
+
+  if (saturation < 30 || baseLightness < 30) {
+    return null;
+  }
+
+  // Generate 5 lighter shades (L1–L5)
+  const lighterShades = Array.from({ length: 5 }, (_, i) => {
+    const factor = (5 - i) / 5; // Creates a scale from 1 to 0
+    return Math.min(92, baseLightness + factor * (92 - baseLightness)); // Prevent exceeding 95%
+  });
+
+  // Generate 4 darker shades (L7–L10)
+  const darkerShades = Array.from({ length: 4 }, (_, i) => {
+    const factor = (i + 1) / 5; // Creates a scale from 0 to 1
+    return Math.max(7, baseLightness - factor * (baseLightness - 7)); // Prevent going below 5%
+  });
+
+  // Combine lightest to darkest with baseColor in the middle (L6)
+  const lightnessLevels = [...lighterShades, baseLightness, ...darkerShades];
+
+  return lightnessLevels.map((l) =>
+    chroma.hsl(hue, saturation / 100, l / 100).hex()
+  );
+};
+
 export {
   dateFormatter,
   getGreeting,
@@ -144,4 +175,5 @@ export {
   resetHighlight,
   onEachFeature,
   shareLink,
+  generateColorPalette,
 };

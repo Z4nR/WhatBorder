@@ -11,3 +11,9 @@ export interface UserState {
   setUser: (state: UserProps) => void;
   clearUser: () => void;
 }
+
+export interface EditProfileCompareProps {
+  username: string;
+  fullname: string;
+  description: string;
+}
