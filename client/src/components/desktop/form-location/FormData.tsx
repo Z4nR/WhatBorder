@@ -1,5 +1,5 @@
 import { buildingFilter } from '@/utils/networks';
-import { FormCreateProps } from '@/utils/types/utils.types';
+import { BuildingListProps, FormCreateProps } from '@/utils/types/utils.types';
 import { useQuery } from '@tanstack/react-query';
 import { Card, Flex, Form, Input, Select, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -77,7 +77,7 @@ const FormData: React.FC<FormCreateProps> = ({ disable }) => {
           ]}
         >
           <Select placeholder="Pilih Jenis Tempat" allowClear>
-            {building.data?.map((item: any) => (
+            {building.data?.map((item: BuildingListProps) => (
               <Option key={item.buildingId} value={item.name}>
                 {item.name}
               </Option>
