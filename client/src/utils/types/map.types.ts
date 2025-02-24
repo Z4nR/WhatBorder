@@ -42,3 +42,45 @@ export interface UpdateLocationProps {
   placelat: number;
   placelong: number;
 }
+
+export interface PlaceTableProps {
+  place_id: string;
+  place_owner: string;
+  place_description: string;
+  place_name: string;
+  place_address: string;
+  place_center_point: any;
+  place_map: FeatureCollection;
+  type: {
+    name: string;
+    label: string;
+    color: string;
+  };
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface AdminPlaceTableProps {
+  placeId: string;
+  placeOwner: string;
+  placeDescription: string;
+  placeName: string;
+  placeAddress: string;
+  placeCenterPoint: any;
+  placeMap: FeatureCollection;
+  type: {
+    name: string;
+    label: string;
+    color: string;
+  };
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface MapInTableProps {
+  place_id: string;
+  place_center_point: any;
+  place_map: any;
+  color: string;
+}
