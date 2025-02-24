@@ -105,7 +105,7 @@ const ClientList: React.FC<ClientProps> = ({
       key: 'client-type',
     },
     {
-      title: 'Tindakan',
+      title: 'Aksi',
       key: 'desktop-action',
       align: 'center',
       width: '150px',

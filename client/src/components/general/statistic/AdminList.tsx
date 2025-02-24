@@ -168,7 +168,7 @@ const AdminList: React.FC = () => {
       },
     },
     {
-      title: 'Tindakan',
+      title: 'Aksi',
       key: 'user-action',
       width: '150px',
       align: 'center',

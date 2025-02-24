@@ -1,4 +1,7 @@
 import React, { useRef, useState } from 'react';
+import { adminPlaceAccess, adminRemoveAccess } from '@/utils/networks';
+import { AdminPlaceTableProps } from '@/utils/types/map.types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Descriptions,
@@ -11,41 +14,32 @@ import {
   TableColumnType,
   TableProps,
   Tag,
-  Tooltip,
 } from 'antd';
-import { FilterDropdownProps } from 'antd/es/table/interface';
-import {
-  SearchOutlined,
-  EditOutlined,
-  DeleteOutlined,
-} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { TablePlaceProps } from '@/utils/types/profile.types';
-import MapInProfile from '../map/MapInProfile';
+import { FilterDropdownProps } from 'antd/es/table/interface';
+import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
+import MapInProfile from '../../map/MapInProfile';
 import { dateFormatter } from '@/utils/helper';
-import EmptyData from '../utils/EmptyData';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { placeDelete } from '@/utils/networks';
-import { useNavigate } from 'react-router-dom';
-import { PlaceTableProps } from '@/utils/types/map.types';
+import EmptyData from '../../utils/EmptyData';
 
 type InputRef = GetRef<typeof Input>;
 
-type DataIndex = keyof PlaceTableProps;
+type DataIndex = keyof AdminPlaceTableProps;
 
-const ProfilePlaceList: React.FC<TablePlaceProps> = ({
-  data,
-  loading,
-  action,
-}) => {
+const AdminPlaceList: React.FC = () => {
   const client = useQueryClient();
-  const navigate = useNavigate();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['admin-place-access'],
+    queryFn: async () => await adminPlaceAccess(),
+    staleTime: 5 * 60 * 1000,
+  });
 
   const { mutate } = useMutation({
-    mutationFn: placeDelete,
+    mutationFn: adminRemoveAccess,
     onSuccess: (data) => {
       client.invalidateQueries({
-        queryKey: ['my-profile'],
+        queryKey: ['admin-place-access'],
       });
       message.open({
         type: 'success',
@@ -83,7 +77,7 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<PlaceTableProps> => ({
+  ): TableColumnType<AdminPlaceTableProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -163,50 +157,33 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
     mutate(id);
   };
 
-  const columns: TableProps<PlaceTableProps>['columns'] = [
+  const columns: TableProps<AdminPlaceTableProps>['columns'] = [
     {
       title: 'Nama Tempat',
-      dataIndex: 'place_name',
+      dataIndex: 'placeName',
       key: 'place-name',
-      ...getColumnSearchProps('place_name'),
+      ...getColumnSearchProps('placeName'),
     },
     {
-      title: 'Tipe',
-      dataIndex: 'type',
-      key: 'place-type',
-      width: action ? '150px' : '250px',
+      title: 'Pembuat',
+      dataIndex: 'createdBy',
+      key: 'place-creator',
+      width: '150px',
       responsive: ['sm'],
-      render: (_, { type }) => {
-        return (
-          <Tag style={{ margin: '0' }} color={type.label}>
-            {type.name.toUpperCase()}
-          </Tag>
-        );
-      },
+      ...getColumnSearchProps('createdBy'),
     },
-  ];
-
-  if (action) {
-    columns.push({
-      title: 'Aksi',
+    {
+      title: 'Tindakan',
       key: 'place-action',
       align: 'center',
       width: '150px',
-      render: (_, { place_id }) => (
-        <Space size="middle">
-          <Tooltip title="Ubah Data Tempat" placement="bottom">
-            <Button
-              type="primary"
-              onClick={() => navigate(`/location/update/manual/${place_id}`)}
-            >
-              <EditOutlined />
-            </Button>
-          </Tooltip>
+      render: (_, { placeId }) => {
+        return (
           <Popconfirm
             placement="left"
             title="Yakin nih mau dihapus?"
             description="Semua data terkait tempat ini akan hilang"
-            onConfirm={() => confirmDeleted(place_id)}
+            onConfirm={() => confirmDeleted(placeId)}
             okText="Yakin"
             cancelText="Tidak Dulu"
           >
@@ -214,20 +191,20 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
               <DeleteOutlined />
             </Button>
           </Popconfirm>
-        </Space>
-      ),
-    });
-  }
+        );
+      },
+    },
+  ];
 
   return (
     <Table
       size="small"
       sticky
       style={{ backgroundColor: 'transparent' }}
-      loading={loading}
+      loading={isLoading}
       columns={columns}
       dataSource={data}
-      rowKey={({ place_id }) => place_id}
+      rowKey={({ placeId }) => placeId}
       locale={{
         emptyText: (
           <EmptyData description="Anda Belum Menambahkan Data Tempat" />
@@ -235,15 +212,15 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       }}
       expandable={{
         expandedRowRender: ({
-          place_id,
-          place_owner,
-          place_description,
-          place_map,
-          place_center_point,
-          place_address,
+          placeId,
+          placeOwner,
+          placeDescription,
+          placeMap,
+          placeCenterPoint,
+          placeAddress,
           type,
-          created_at,
-          updated_at,
+          createdAt,
+          updatedAt,
         }) => (
           <div style={{ paddingInline: '8px', paddingBottom: '8px' }}>
             <Descriptions
@@ -254,35 +231,44 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
                 {
                   key: '1',
                   label: 'Ditambahkan Pada',
-                  children: dateFormatter(created_at),
+                  children: dateFormatter(createdAt),
                 },
                 {
                   key: '2',
                   label: 'Diperbarui Pada',
-                  children: dateFormatter(updated_at),
+                  children: dateFormatter(updatedAt),
                 },
                 {
                   key: '3',
                   label: 'Pemilik Tempat',
-                  children: place_owner ? place_owner : '-',
+                  children: placeOwner ? placeOwner : '-',
                 },
                 {
                   key: '4',
-                  label: 'Alamat Tempat',
-                  children: place_address,
+                  label: 'Jenis Tempat',
+                  children: (
+                    <Tag style={{ margin: '0' }} color={type.label}>
+                      {type.name.toUpperCase()}
+                    </Tag>
+                  ),
                 },
                 {
                   key: '5',
+                  label: 'Alamat Tempat',
+                  children: placeAddress,
+                },
+                {
+                  key: '6',
                   label: 'Penjelasan Tempat',
-                  children: place_description ? place_description : '-',
+                  children: placeDescription ? placeDescription : '-',
                 },
               ]}
             />
             <MapInProfile
-              place_center_point={place_center_point}
-              place_id={place_id}
+              place_center_point={placeCenterPoint}
+              place_id={placeId}
               color={type.color}
-              place_map={place_map}
+              place_map={placeMap}
             />
           </div>
         ),
@@ -291,4 +277,4 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
   );
 };
 
-export default ProfilePlaceList;
+export default AdminPlaceList;
