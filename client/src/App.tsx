@@ -21,6 +21,7 @@ import ManualUpdateLocationPages from './pages/user/desktop/update-location/Manu
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import PlaceTypePages from './pages/admin/PlaceTypePages';
 import AddCoordinatePages from './pages/user/client/AddCoordinatePages';
+import PlaceAccessPages from './pages/admin/PlaceAccessPages';
 
 const queryClient = new QueryClient();
 
@@ -82,8 +83,13 @@ const App: React.FC = () => {
               <Route caseSensitive path="/profile" element={<ProfilePages />} />
               <Route
                 caseSensitive
-                path="/place-action"
+                path="/place-type-action"
                 element={<PlaceTypePages />}
+              />
+              <Route
+                caseSensitive
+                path="/place-action"
+                element={<PlaceAccessPages />}
               />
               <Route caseSensitive path="/location" element={<Outlet />}>
                 <Route

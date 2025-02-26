@@ -1,9 +1,9 @@
 import { Button, Layout, Space, Typography, theme } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Siders from '@/layout/Siders';
-import { socketConnection } from '@/utils/helper';
+import { getGreeting, socketConnection } from '@/utils/helper';
 import { useQueryClient } from '@tanstack/react-query';
 import useAuthState from '@/utils/state/authState';
 import useUserState from '@/utils/state/userState';
@@ -20,6 +20,10 @@ const LayoutPages: React.FC = () => {
   const authState = useAuthState();
   const userState = useUserState();
   const deviceState = useDeviceState();
+  const location = useLocation();
+
+  const username = userState.name;
+  const greeting = getGreeting();
 
   const handleSignOut = () => {
     socket.emit('logout-device', {
@@ -49,7 +53,8 @@ const LayoutPages: React.FC = () => {
         <Header
           style={{
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent:
+              location.pathname !== '/' ? 'space-between' : 'flex-end',
             alignItems: 'center',
             padding: 0,
             background: colorBgContainer,
@@ -60,6 +65,11 @@ const LayoutPages: React.FC = () => {
             boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
           }}
         >
+          {location.pathname !== '/' && (
+            <Text strong style={{ margin: '0 16px' }}>
+              {greeting}, {username}
+            </Text>
+          )}
           <Button style={{ marginRight: 24 }} onClick={() => handleSignOut()}>
             <Space>
               Keluar
