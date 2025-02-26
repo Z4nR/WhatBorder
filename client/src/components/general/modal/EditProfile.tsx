@@ -1,5 +1,6 @@
 import { editProfileUser } from '@/utils/networks';
 import { EditProfileProps } from '@/utils/types/modal.types';
+import { EditProfileCompareProps } from '@/utils/types/user.types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Form, Input, message, Modal } from 'antd';
 import React from 'react';
@@ -40,16 +41,11 @@ const EditProfile: React.FC<EditProfileProps> = ({
     form.resetFields();
   };
 
-  type EditValue = {
-    username: string;
-    fullname: string;
-    description: string;
-  };
-
-  const onEdit = (values: EditValue) => {
+  const onEdit = (values: EditProfileProps) => {
     const updateData = Object.fromEntries(
       Object.entries(values).filter(
-        ([key, value]) => value !== initialValue[key as keyof EditValue]
+        ([key, value]) =>
+          value !== initialValue[key as keyof EditProfileCompareProps]
       )
     );
 
