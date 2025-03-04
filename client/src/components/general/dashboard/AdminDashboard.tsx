@@ -16,16 +16,19 @@ const AdminDashboard: React.FC = () => {
   const username = userState.name;
 
   const actions: React.ReactNode[] = [
-    <Tooltip title="Jenis Tempat">
+    <Tooltip title="Info Jenis Tempat">
       <HomeOutlined
         key="list-building"
+        onClick={() => navigate('/place-type-action')}
+      />
+    </Tooltip>,
+    <Tooltip title="Info Lokasi Tempat">
+      <CompassOutlined
+        key="list-place"
         onClick={() => navigate('/place-action')}
       />
     </Tooltip>,
-    <Tooltip title="Lokasi Tempat">
-      <CompassOutlined key="list-place" />
-    </Tooltip>,
-    <Tooltip title="Pengguna">
+    <Tooltip title="Info Pengguna">
       <TeamOutlined key="list-user" />
     </Tooltip>,
   ];
