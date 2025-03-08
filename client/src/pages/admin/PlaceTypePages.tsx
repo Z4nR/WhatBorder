@@ -1,13 +1,35 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Breadcrumb, Button, Col, Row, Typography } from 'antd';
+import { Breadcrumb, Button, Card, Col, Row, Tabs, Typography } from 'antd';
 import PlaceTypeList from '@/components/general/admin/place-type/PlaceTypeList';
-import PlaceTypeForm from '@/components/general/admin/place-type/PlaceTypeForm';
+import PlaceTypeCreate from '@/components/general/admin/place-type/form/PlaceTypeCreate';
+import PlaceTypeUpdate from '@/components/general/admin/place-type/form/PlaceTypeUpdate';
+import { useQuery } from '@tanstack/react-query';
+import { buildingFilter } from '@/utils/networks';
 
 const { Title } = Typography;
 
 const PlaceTypePages: React.FC = () => {
   const navigate = useNavigate();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['building-list'],
+    queryFn: async () => await buildingFilter(),
+  });
+
+  const menuItems = [
+    {
+      key: '1',
+      children: <PlaceTypeCreate />,
+      label: 'Tambah Jenis Tempat',
+    },
+    {
+      key: '2',
+      children: <PlaceTypeUpdate data={data} />,
+      label: 'Ubah Jenis Tempat',
+    },
+  ];
+
   return (
     <>
       <Breadcrumb
@@ -34,10 +56,19 @@ const PlaceTypePages: React.FC = () => {
       </div>
       <Row gutter={[16, 16]} wrap>
         <Col xs={24} md={12}>
-          <PlaceTypeForm />
+          <Card>
+            <Tabs
+              defaultActiveKey="1"
+              items={menuItems.map((item) => ({
+                key: item.key,
+                children: item.children,
+                label: item.label,
+              }))}
+            />
+          </Card>
         </Col>
         <Col xs={24} md={12}>
-          <PlaceTypeList />
+          <PlaceTypeList data={data} isLoading={isLoading} />
         </Col>
       </Row>
     </>
