@@ -53,6 +53,7 @@ export interface DashboardPlaceListProps {
 
 export interface DashboardChartProps {
   buildingName: string;
-  placeCount: number;
   color: string;
+  month: string;
+  placeCount: number;
 }

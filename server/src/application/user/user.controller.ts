@@ -23,7 +23,7 @@ export class UserController {
   async findAll(@Req() req: Request) {
     const user = req['user'];
     const userId = user.sub;
-    return await this.userService.findAll(userId);
+    return this.userService.findAll(userId);
   }
 
   @Roles(Role.USER, Role.ADMIN)
@@ -31,14 +31,14 @@ export class UserController {
   async findOne(@Param('id') id: string) {
     await this.userService.validateUserAccount(id);
 
-    return await this.userService.findOne(id);
+    return this.userService.findOne(id);
   }
   @Roles(Role.USER, Role.ADMIN)
   @Get(':id/detail')
   async findOther(@Param('id') id: string) {
     await this.userService.validateUserAccount(id);
 
-    return await this.userService.profile(id);
+    return this.userService.profile(id);
   }
 
   @Roles(Role.USER)
@@ -49,7 +49,7 @@ export class UserController {
 
     await this.userService.validateUserAccount(userId);
 
-    return await this.userService.profile(userId);
+    return this.userService.profile(userId);
   }
 
   @Roles(Role.USER)
@@ -60,10 +60,10 @@ export class UserController {
 
     await this.userService.validateUserAccount(userId);
 
-    return await this.userService.update(userId, updateUserDto);
+    return this.userService.update(userId, updateUserDto);
   }
 
-  @Roles(Role.USER, Role.ADMIN)
+  @Roles(Role.USER)
   @Delete('delete')
   async remove(@Req() req: Request, @Body() data: UserDelete) {
     const user = req['user'];
@@ -71,10 +71,6 @@ export class UserController {
 
     const findUser = await this.userService.validateUserAccount(userId);
 
-    return await this.userService.remove(
-      userId,
-      findUser.password,
-      data.password,
-    );
+    return this.userService.remove(userId, findUser.password, data.password);
   }
 }

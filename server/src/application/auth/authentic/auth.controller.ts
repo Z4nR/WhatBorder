@@ -57,7 +57,7 @@ export class AuthController {
       code: registDto.code,
     };
 
-    return await this.authService.register(registData);
+    return this.authService.register(registData);
   }
 
   @Public()
@@ -72,7 +72,7 @@ export class AuthController {
       password: parsePassword,
     };
 
-    return await this.authService.login(loginData);
+    return this.authService.login(loginData);
   }
 
   @Public()
@@ -82,6 +82,6 @@ export class AuthController {
     if (changePassDto.newpass !== changePassDto.verify)
       throw new BadRequestException('Verifikasi Password Tidak Sesuai');
 
-    return await this.authService.changePassword(changePassDto);
+    return this.authService.changePassword(changePassDto);
   }
 }

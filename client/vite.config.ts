@@ -9,5 +9,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  server: {
+    // For Development Only
+    // allowedHosts: ['childrens-lit-idea-promo.trycloudflare.com'],
+  },
   plugins: [react()],
 });

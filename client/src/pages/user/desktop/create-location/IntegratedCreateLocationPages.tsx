@@ -232,7 +232,7 @@ const IntegratedCreateLocationPages: React.FC = () => {
             <Form.Item>
               <Space style={{ width: '100%', justifyContent: 'end' }}>
                 <Button type="primary" htmlType="submit">
-                  Perbarui
+                  Tambahkan
                 </Button>
                 <Button htmlType="button" onClick={onReset}>
                   Ulangi

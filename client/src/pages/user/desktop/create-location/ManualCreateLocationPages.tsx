@@ -121,7 +121,7 @@ const ManualCreateLocationPages: React.FC = () => {
       placeDescription: values.placedesc,
       placeAddress: values.placeaddress,
       placeType: values.placetype,
-      placePoints: [values.placelat, values.placelong],
+      placePoints: centerPoint,
       placeGeojson: geoJsonData,
     };
     console.log(data);
@@ -195,7 +195,7 @@ const ManualCreateLocationPages: React.FC = () => {
             <Form.Item>
               <Space style={{ width: '100%', justifyContent: 'end' }}>
                 <Button type="primary" htmlType="submit">
-                  Perbarui
+                  Tambahkan
                 </Button>
                 <Button htmlType="button" onClick={onReset}>
                   Ulangi
