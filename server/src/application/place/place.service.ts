@@ -12,6 +12,94 @@ export class PlaceService {
     private helperService: HelperService,
   ) {}
 
+  // All Access
+  async findBuilding() {
+    try {
+      const buildings = await this.prisma.buildingType.findMany({
+        select: {
+          building_id: true,
+          name: true,
+          label: true,
+          color: true,
+        },
+      });
+
+      return buildings.map((building) => ({
+        ...building,
+        building_id: building.building_id.toString(),
+      }));
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async findAll() {
+    try {
+      return await this.prisma.placeData.findMany({
+        select: {
+          place_id: true,
+          place_name: true,
+          place_address: true,
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
+          created_by: true,
+          created_at: true,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async findOne(place_id: string) {
+    try {
+      return await this.prisma.placeData.findUnique({
+        select: {
+          place_name: true,
+          place_owner: true,
+          place_address: true,
+          place_description: true,
+          place_center_point: true,
+          created_by: true,
+          updated_at: true,
+          type: {
+            select: {
+              color: true,
+              label: true,
+              name: true,
+            },
+          },
+          place_map: {
+            select: {
+              place_geojson: true,
+            },
+          },
+          user: {
+            select: {
+              user_id: true,
+            },
+          },
+        },
+        where: {
+          place_id,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // User Access
   async validatePlaceExist(placeName: string, placeGeojson: GeoJson) {
     try {
       const place = await this.helperService.checkingPlaceName(placeName);
@@ -142,53 +230,6 @@ export class PlaceService {
     }
   }
 
-  async findBuilding() {
-    try {
-      const buildings = await this.prisma.buildingType.findMany({
-        select: {
-          building_id: true,
-          name: true,
-          label: true,
-          color: true,
-        },
-      });
-
-      return buildings.map((building) => ({
-        ...building,
-        building_id: building.building_id.toString(),
-      }));
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async findAll() {
-    try {
-      return await this.prisma.placeData.findMany({
-        select: {
-          place_id: true,
-          place_name: true,
-          place_address: true,
-          type: {
-            select: {
-              name: true,
-              label: true,
-            },
-          },
-          created_by: true,
-          created_at: true,
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
   async findPlace(user_id: string) {
     try {
       return await this.prisma.placeData.findMany({
@@ -223,46 +264,7 @@ export class PlaceService {
     }
   }
 
-  async findOne(place_id: string) {
-    try {
-      return await this.prisma.placeData.findUnique({
-        select: {
-          place_name: true,
-          place_owner: true,
-          place_address: true,
-          place_description: true,
-          place_center_point: true,
-          created_by: true,
-          updated_at: true,
-          type: {
-            select: {
-              color: true,
-              label: true,
-              name: true,
-            },
-          },
-          place_map: {
-            select: {
-              place_geojson: true,
-            },
-          },
-          user: {
-            select: {
-              user_id: true,
-            },
-          },
-        },
-        where: {
-          place_id,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async statistic(user_id: string) {
+  async statisticUser(user_id: string) {
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1); // First day of the month
     const endOfMonth = new Date(
@@ -440,6 +442,267 @@ export class PlaceService {
         });
       });
       return { message: 'Data tempat berhasil dihapus' };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  // Admin Access
+  async adminPlaceList() {
+    try {
+      const data = await this.prisma.placeData.findMany({
+        select: {
+          place_id: true,
+          place_owner: true,
+          place_description: true,
+          place_name: true,
+          place_address: true,
+          place_center_point: true,
+          created_by: true,
+          created_at: true,
+          updated_at: true,
+          type: {
+            select: {
+              name: true,
+              label: true,
+              color: true,
+            },
+          },
+          place_map: {
+            select: {
+              place_geojson: true,
+            },
+          },
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async adminRemove(place_id: string) {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        const mapId = await tx.placeData.findUnique({
+          select: {
+            map_id: true,
+          },
+          where: {
+            place_id,
+          },
+        });
+
+        await tx.placeMap.delete({
+          where: {
+            map_id: mapId.map_id,
+          },
+        });
+
+        await tx.placeData.delete({
+          where: {
+            place_id,
+          },
+        });
+      });
+      return { message: 'Data tempat berhasil dihapus' };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  private async buildingCountAdmin() {
+    try {
+      const now = new Date();
+      const twelveMonthsAgo = new Date();
+      twelveMonthsAgo.setMonth(now.getMonth() - 11); // 11 months ago to include the current month
+
+      // Fetch building data with associated places
+      const buildingData = await this.prisma.buildingType.findMany({
+        select: {
+          name: true,
+          color: true,
+          PlaceData: {
+            where: {
+              created_at: { gte: twelveMonthsAgo },
+            },
+            select: {
+              created_at: true,
+            },
+          },
+        },
+      });
+
+      // Helper function to generate month-year keys
+      const formatMonth = (date: Date) => {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
+      };
+
+      // Generate an array of last 12 months
+      const last12Months: string[] = Array.from({ length: 12 }, (_, i) => {
+        const date = new Date();
+        date.setMonth(now.getMonth() - i);
+        return formatMonth(date);
+      }).reverse(); // Ensure chronological order
+
+      // Process the results
+      const formattedData: {
+        buildingName: string;
+        color: string;
+        month: string;
+        placeCount: number;
+      }[] = [];
+
+      buildingData.forEach((building) => {
+        // Initialize monthly counts to 0
+        const monthlyCounts: Record<string, number> = last12Months.reduce(
+          (acc, month) => {
+            acc[month] = 0;
+            return acc;
+          },
+          {} as Record<string, number>,
+        );
+
+        // Count occurrences per month
+        building.PlaceData.forEach((place) => {
+          const monthKey = formatMonth(new Date(place.created_at));
+          if (monthKey in monthlyCounts) {
+            monthlyCounts[monthKey] = (monthlyCounts[monthKey] ?? 0) + 1;
+          }
+        });
+
+        // Convert data into the required array format (object, not array!)
+        Object.entries(monthlyCounts).forEach(([month, totalCount]) => {
+          formattedData.push({
+            buildingName: building.name,
+            color: building.color,
+            month,
+            placeCount: totalCount,
+          });
+        });
+      });
+
+      console.log(formattedData);
+      return formattedData;
+    } catch (error) {
+      console.error('Error in buildingCount:', error);
+      throw error;
+    }
+  }
+
+  async statisticAdmin() {
+    const now = new Date();
+    const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1); // First day of the month
+    const endOfThisMonth = new Date(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    ); // Last day of the month
+
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1); // First day of last month
+    const endOfLastMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0,
+      23,
+      59,
+      59,
+      999,
+    ); // Last day of last month
+
+    try {
+      const totalPlaceCount = await this.prisma.placeData.count();
+
+      const totalPlaceCountThisMonth = await this.prisma.placeData.count({
+        where: {
+          created_at: {
+            gte: startOfThisMonth,
+            lt: endOfThisMonth,
+          },
+        },
+      });
+
+      const totalPlaceCountLastMonth = await this.prisma.placeData.count({
+        where: {
+          created_at: {
+            gte: startOfLastMonth,
+            lt: endOfLastMonth,
+          },
+        },
+      });
+
+      const buildingCountData = await this.buildingCountAdmin();
+
+      const newestPlace = await this.prisma.placeData.findMany({
+        take: 10,
+        orderBy: {
+          created_at: 'desc',
+        },
+        select: {
+          place_name: true,
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
+          place_id: true,
+          created_at: true,
+        },
+      });
+
+      const newest = newestPlace.map((item) => ({
+        placeId: item.place_id,
+        placeName: item.place_name,
+        placeType: item.type,
+        createdAt: item.created_at,
+      }));
+
+      // Calculate percentage change
+      let percentageChange = 0;
+      if (totalPlaceCountLastMonth > 0) {
+        percentageChange =
+          ((totalPlaceCountThisMonth - totalPlaceCountLastMonth) /
+            totalPlaceCountLastMonth) *
+          100;
+      } else if (totalPlaceCountThisMonth > 0) {
+        percentageChange = 100;
+      } else {
+        percentageChange = 0;
+      }
+
+      const statusPercentage =
+        percentageChange === 0
+          ? 'stabil'
+          : percentageChange < 0
+            ? 'decrease'
+            : 'increase';
+      const formattedPercentage =
+        percentageChange < 0
+          ? percentageChange.toFixed(2) // Negative Value
+          : percentageChange.toFixed(2); // Positive Value
+
+      console.log(`Percentage change: ${formattedPercentage}`);
+
+      return {
+        total_place: totalPlaceCount,
+        total_place_this_month: totalPlaceCountThisMonth,
+        percentage_comparison: formattedPercentage,
+        status_percentage: statusPercentage,
+        detail: buildingCountData,
+        new_place: newest,
+      };
     } catch (error) {
       console.log(error);
       throw error;
