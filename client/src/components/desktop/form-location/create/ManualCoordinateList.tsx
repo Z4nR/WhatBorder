@@ -13,7 +13,6 @@ const ManualCoordinateList: React.FC<{ form: FormInstance }> = ({ form }) => {
     console.log('Longitude:', Number(values.longmanual));
     console.log('Latitude:', Number(values.latmanual));
 
-    // Make sure the `add` function expects an array of objects with the right structure
     if (addRef.current) {
       addRef.current([Number(values.longmanual), Number(values.latmanual)]);
     }

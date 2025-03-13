@@ -14,6 +14,7 @@ import {
   TableColumnType,
   TableProps,
   Tag,
+  Typography,
 } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
@@ -25,6 +26,8 @@ import EmptyData from '../../utils/EmptyData';
 type InputRef = GetRef<typeof Input>;
 
 type DataIndex = keyof AdminPlaceTableProps;
+
+const { Text } = Typography;
 
 const AdminPlaceList: React.FC = () => {
   const client = useQueryClient();
@@ -165,18 +168,36 @@ const AdminPlaceList: React.FC = () => {
       ...getColumnSearchProps('placeName'),
     },
     {
+      title: 'Tipe',
+      dataIndex: 'type',
+      key: 'place-type',
+      width: '150px',
+      responsive: ['md'],
+      render: (_, { type }) => {
+        return (
+          <Tag style={{ margin: '0' }} color={type.label}>
+            {type.name.toUpperCase()}
+          </Tag>
+        );
+      },
+    },
+    {
       title: 'Pembuat',
       dataIndex: 'createdBy',
       key: 'place-creator',
+      align: 'center',
       width: '150px',
       responsive: ['sm'],
       ...getColumnSearchProps('createdBy'),
+      render: (_, { createdBy }) => {
+        return <Text strong>{createdBy}</Text>;
+      },
     },
     {
-      title: 'Tindakan',
+      title: 'Aksi',
       key: 'place-action',
       align: 'center',
-      width: '150px',
+      width: '50px',
       render: (_, { placeId }) => {
         return (
           <Popconfirm
@@ -187,9 +208,7 @@ const AdminPlaceList: React.FC = () => {
             okText="Yakin"
             cancelText="Tidak Dulu"
           >
-            <Button danger>
-              <DeleteOutlined />
-            </Button>
+            <DeleteOutlined style={{ color: 'red' }} />
           </Popconfirm>
         );
       },
@@ -245,20 +264,11 @@ const AdminPlaceList: React.FC = () => {
                 },
                 {
                   key: '4',
-                  label: 'Jenis Tempat',
-                  children: (
-                    <Tag style={{ margin: '0' }} color={type.label}>
-                      {type.name.toUpperCase()}
-                    </Tag>
-                  ),
-                },
-                {
-                  key: '5',
                   label: 'Alamat Tempat',
                   children: placeAddress,
                 },
                 {
-                  key: '6',
+                  key: '5',
                   label: 'Penjelasan Tempat',
                   children: placeDescription ? placeDescription : '-',
                 },

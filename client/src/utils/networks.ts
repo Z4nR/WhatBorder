@@ -146,9 +146,9 @@ const placeDetail = async (id: any) => {
     });
 };
 
-const placeStatistic = async () => {
+const placeStatisticUser = async () => {
   return axios
-    .get(`/v1/place/statistic`, {
+    .get(`/v1/place/statistic/user`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -263,6 +263,45 @@ const myList = async () => {
     });
 };
 
+const adminPlaceAccess = async () => {
+  return axios
+    .get(`/v1/place/admin-access`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const adminRemoveAccess = async (id: any) => {
+  return axios
+    .delete(`/v1/place/${id}/remove`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
+const placeStatisticAdmin = async () => {
+  return axios
+    .get(`/v1/place/statistic/admin`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 export {
   registerAcc,
   loginAcc,
@@ -275,7 +314,7 @@ export {
   editPlace,
   placeList,
   placeDetail,
-  placeStatistic,
+  placeStatisticUser,
   placeDelete,
   userList,
   userResume,
@@ -284,4 +323,7 @@ export {
   compareList,
   buildingFilter,
   myList,
+  adminPlaceAccess,
+  adminRemoveAccess,
+  placeStatisticAdmin,
 };
