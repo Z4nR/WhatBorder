@@ -7,6 +7,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
+import { FeatureCollection } from './validator-geojson.dto';
 
 export interface GeoJson {
   [key: string]: any;
@@ -40,5 +41,5 @@ export class CreatePlaceDto {
 
   @IsObject({ message: 'Pastikan data yang dikirim berupa Javascript Object' })
   @IsNotEmpty({ message: 'Koordinat tempat tidak boleh kosong' })
-  placeGeojson: GeoJson;
+  placeGeojson: FeatureCollection;
 }

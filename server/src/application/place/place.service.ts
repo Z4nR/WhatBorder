@@ -4,6 +4,7 @@ import { UpdatePlaceDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
 import { HelperService } from '../helper-service/helper.service';
+import { instanceToPlain } from 'class-transformer';
 
 @Injectable()
 export class PlaceService {
@@ -122,11 +123,14 @@ export class PlaceService {
   }
 
   async create(user_id: string, name: string, createPlaceDto: CreatePlaceDto) {
+    const plainGeojson = instanceToPlain(createPlaceDto.placeGeojson);
+    console.log(plainGeojson);
+
     try {
       await this.prisma.$transaction(async (tx) => {
         const placeMap = await tx.placeMap.create({
           data: {
-            place_geojson: createPlaceDto.placeGeojson,
+            place_geojson: plainGeojson,
             created_by: name,
           },
           select: {
@@ -397,9 +401,12 @@ export class PlaceService {
         });
 
         if (updatePlaceDto.placeGeojson !== undefined) {
+          const plainGeojson = instanceToPlain(updatePlaceDto.placeGeojson);
+          console.log(plainGeojson);
+
           await tx.placeMap.update({
             data: {
-              place_geojson: updatePlaceDto.placeGeojson,
+              place_geojson: plainGeojson,
               updated_by: userName,
             },
             where: {
@@ -522,7 +529,7 @@ export class PlaceService {
     try {
       const now = new Date();
       const twelveMonthsAgo = new Date();
-      twelveMonthsAgo.setMonth(now.getMonth() - 11); // 11 months ago to include the current month
+      twelveMonthsAgo.setMonth(now.getMonth() - 6); // few months ago to include the current month
 
       // Fetch building data with associated places
       const buildingData = await this.prisma.buildingType.findMany({
@@ -546,7 +553,7 @@ export class PlaceService {
       };
 
       // Generate an array of last 12 months
-      const last12Months: string[] = Array.from({ length: 12 }, (_, i) => {
+      const last12Months: string[] = Array.from({ length: 6 }, (_, i) => {
         const date = new Date();
         date.setMonth(now.getMonth() - i);
         return formatMonth(date);
@@ -589,7 +596,6 @@ export class PlaceService {
         });
       });
 
-      console.log(formattedData);
       return formattedData;
     } catch (error) {
       console.error('Error in buildingCount:', error);
@@ -642,7 +648,25 @@ export class PlaceService {
         },
       });
 
-      const buildingCountData = await this.buildingCountAdmin();
+      const buildingCountInMonth = await this.buildingCountAdmin();
+
+      const buildingCountPlaceType = await this.prisma.buildingType.findMany({
+        select: {
+          name: true,
+          color: true,
+          _count: {
+            select: {
+              PlaceData: true,
+            },
+          },
+        },
+      });
+
+      const countPlaceType = buildingCountPlaceType.map((item) => ({
+        buildingName: item.name,
+        color: item.color,
+        placeCount: item._count.PlaceData,
+      }));
 
       const newestPlace = await this.prisma.placeData.findMany({
         take: 10,
@@ -700,7 +724,8 @@ export class PlaceService {
         total_place_this_month: totalPlaceCountThisMonth,
         percentage_comparison: formattedPercentage,
         status_percentage: statusPercentage,
-        detail: buildingCountData,
+        detail_in_month: buildingCountInMonth,
+        detail_in_type: countPlaceType,
         new_place: newest,
       };
     } catch (error) {
