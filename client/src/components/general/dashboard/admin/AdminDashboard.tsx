@@ -1,22 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { getGreeting } from '@/utils/helper';
 import useUserState from '@/utils/state/userState';
-import {
-  Card,
-  Col,
-  Flex,
-  Row,
-  Skeleton,
-  Statistic,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Card, Col, Flex, Row, Statistic, Tooltip, Typography } from 'antd';
 import { CompassOutlined, TeamOutlined, HomeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import { DashboardChartProps } from '@/utils/types/statistic.types';
 import { placeStatisticAdmin } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
-import { Chart } from '@antv/g2';
+import ChartTotalBuilding from './ChartTotalBuilding';
+import ChartCreateTime from './ChartCreateTime';
 
 const { Title } = Typography;
 
@@ -51,45 +42,6 @@ const AdminDashboard: React.FC = () => {
     queryFn: async () => await placeStatisticAdmin(),
   });
 
-  useEffect(() => {
-    if (!data) return;
-
-    const chart = new Chart({
-      container: 'statistic',
-      autoFit: true,
-    });
-
-    const chartData = data?.detail.map((item: DashboardChartProps) => ({
-      Jenis: item.buildingName,
-      Jumlah: item.placeCount,
-      Bulan: item.month,
-      color: item.color,
-    }));
-
-    // Extract unique colors from transformedData
-    const uniqueColors = [
-      ...new Set(chartData.map((item: DashboardChartProps) => item.color)),
-    ];
-
-    chart
-      .line()
-      .data(chartData)
-      .encode('x', 'Bulan')
-      .encode('y', 'Jumlah')
-      .encode('color', 'Jenis')
-      .scale('color', {
-        range: uniqueColors,
-      })
-      .style('minHeight', 10)
-      .animate('enter', { type: 'pathIn', duration: 1000 });
-
-    chart.render();
-
-    return () => {
-      chart.destroy();
-    };
-  }, [data]);
-
   return (
     <div style={{ minHeight: '100dvh' }}>
       <Row gutter={[16, 16]} wrap>
@@ -120,9 +72,10 @@ const AdminDashboard: React.FC = () => {
               />
             </Flex>
           </Card>
-          <Skeleton style={{ marginTop: '1rem' }} loading={isLoading} active>
-            <div id="statistic"></div>
-          </Skeleton>
+        </Col>
+        <Col xs={24} md={12}>
+          <ChartTotalBuilding data={data} loading={isLoading} />
+          <ChartCreateTime data={data} loading={isLoading} />
         </Col>
       </Row>
     </div>

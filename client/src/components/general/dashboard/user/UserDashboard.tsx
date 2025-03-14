@@ -19,7 +19,7 @@ import {
   Typography,
 } from 'antd';
 import { useQuery } from '@tanstack/react-query';
-import { placeStatistic } from '@/utils/networks';
+import { placeStatisticUser } from '@/utils/networks';
 import { dateFormatter, getGreeting, socketConnection } from '@/utils/helper';
 import useUserState from '@/utils/state/userState';
 import { useMediaQuery } from 'react-responsive';
@@ -28,7 +28,7 @@ import useSocketState from '@/utils/state/clientState';
 import { useNavigate } from 'react-router-dom';
 import { SocketProps } from '@/utils/types/client.types';
 import ClientList from '@/components/desktop/modal/ClientList';
-import EmptyData from '../utils/EmptyData';
+import EmptyData from '../../utils/EmptyData';
 import ConfirmTask from '@/components/client/modal/ConfirmTask';
 import {
   DashboardChartProps,
@@ -84,8 +84,8 @@ const UserDashboard: React.FC = () => {
   });
 
   const { data, isLoading } = useQuery({
-    queryKey: ['place-statistic'],
-    queryFn: async () => await placeStatistic(),
+    queryKey: ['place-statistic-user'],
+    queryFn: async () => await placeStatisticUser(),
   });
 
   useEffect(() => {
@@ -111,7 +111,9 @@ const UserDashboard: React.FC = () => {
       .style('minHeight', 10)
       .scale('color', {
         range: chartData.map((item: DashboardChartProps) => item.color),
-      });
+      })
+      .animate('enter', { type: 'scaleInY', duration: 1000 })
+      .animate('exit', { type: 'scaleOutY', duration: 2000 });
 
     chart.render();
 
@@ -300,7 +302,7 @@ const UserDashboard: React.FC = () => {
           <Flex vertical gap={'large'}>
             <div>
               <Text strong style={{ fontSize: '1rem' }}>
-                Data 10 Tempat Terbaru Ditambahkan
+                Data 10 Tempat Terbaru
               </Text>
               <Table
                 style={{

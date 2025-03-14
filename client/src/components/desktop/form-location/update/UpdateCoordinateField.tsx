@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Flex, Form, FormListFieldData, Input } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Flex, Form, FormInstance, FormListFieldData, Input } from 'antd';
 import { MinusCircleOutlined, LockOutlined } from '@ant-design/icons';
 
 const UpdateCoordinateField: React.FC<{
@@ -7,27 +7,35 @@ const UpdateCoordinateField: React.FC<{
   long: number;
   fields: FormListFieldData[];
   field: FormListFieldData;
-  remove: (index: number | number[]) => void;
-}> = ({ lat, long, fields, field, remove }) => {
+  remove: (index: number) => void;
+  form: FormInstance;
+}> = ({ lat, long, fields, field, remove, form }) => {
+  const [longitude, setLongitude] = useState(lat);
+  const [latitude, setLatitude] = useState(long);
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const toggleDisabled = () => {
-    setIsDisabled((prev) => !prev);
-  };
+  // Watch for changes in the form and update state
+  useEffect(() => {
+    const updatedLat = form.getFieldValue(['longlat', field.name, 'lat']);
+    const updatedLong = form.getFieldValue(['longlat', field.name, 'long']);
+
+    if (updatedLat !== latitude || updatedLong !== longitude) {
+      setLatitude(updatedLat);
+      setLongitude(updatedLong);
+    }
+  }, [form, field.name, latitude, longitude]); // Re-run when form values change
+
+  const toggleDisabled = () => setIsDisabled((prev) => !prev);
 
   return (
     <Form.Item style={{ marginBottom: 0 }} required={true} key={field.name}>
       <Flex gap={'middle'} style={{ width: '100%', marginTop: '0.5rem' }}>
         <Form.Item
           {...field}
-          initialValue={long}
-          name={[field.name, 0]} // First part of the coordinate
+          name={[field.name, 'long']}
           validateTrigger={['onChange', 'onBlur']}
           rules={[
-            {
-              required: true,
-              message: 'Harap masukkan nilai longitude.',
-            },
+            { required: true, message: 'Harap masukkan nilai longitude.' },
           ]}
           style={{ width: '100%', marginBottom: 0 }}
           key={`${field.key}-update-longitude`}
@@ -40,14 +48,10 @@ const UpdateCoordinateField: React.FC<{
         </Form.Item>
         <Form.Item
           {...field}
-          initialValue={lat}
-          name={[field.name, 1]} // Second part of the coordinate
+          name={[field.name, 'lat']}
           validateTrigger={['onChange', 'onBlur']}
           rules={[
-            {
-              required: true,
-              message: 'Harap masukkan nilai latitude.',
-            },
+            { required: true, message: 'Harap masukkan nilai latitude.' },
           ]}
           style={{ width: '100%', marginBottom: 0 }}
           key={`${field.key}-update-latitude`}
@@ -59,7 +63,7 @@ const UpdateCoordinateField: React.FC<{
           />
         </Form.Item>
 
-        {fields.length >= 1 ? (
+        {fields.length >= 1 && (
           <>
             <MinusCircleOutlined
               className="dynamic-delete-button"
@@ -67,11 +71,11 @@ const UpdateCoordinateField: React.FC<{
             />
             <LockOutlined
               className="dynamic-lock-button"
-              onClick={toggleDisabled} // Toggle the disabled state
+              onClick={toggleDisabled}
               style={{ color: isDisabled ? 'red' : 'green', cursor: 'pointer' }}
             />
           </>
-        ) : null}
+        )}
       </Flex>
     </Form.Item>
   );

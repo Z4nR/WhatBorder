@@ -9,18 +9,33 @@ const UpdateCoordinateList: React.FC<{
   form: FormInstance;
   initiateValue: [number, number][] | null;
 }> = ({ form, initiateValue }) => {
+  // Ensure initiateValue is only set once
+  const [initialData, setInitialData] = React.useState<
+    [number, number][] | null
+  >(null);
+
   const addRef = useRef<(fieldsValue?: any, index?: number) => void>();
+
+  useEffect(() => {
+    if (initiateValue) {
+      setInitialData(initiateValue);
+    }
+  }, [initiateValue]);
 
   // Set initial values for Form.List from initiateValue
   useEffect(() => {
-    if (initiateValue) {
-      const formattedValues = initiateValue.map(([long, lat]) => ({
+    if (initialData && initialData.length > 0) {
+      console.log('Initial Data:', initialData);
+
+      const formattedValues = initialData.map(([long, lat]) => ({
         long,
         lat,
       }));
+      console.log(formattedValues);
+
       form.setFieldsValue({ longlat: formattedValues });
     }
-  }, [initiateValue, form]);
+  }, [form, initialData]); // Remove initialData from dependencies to avoid re-running
 
   const handleRef = () => {
     const values = form.getFieldsValue(['longmanual', 'latmanual']);
@@ -95,6 +110,25 @@ const UpdateCoordinateList: React.FC<{
       >
         {(fields, { add, remove }) => {
           addRef.current = add;
+
+          const handleRemove = (indexValue: number) => {
+            console.log(indexValue);
+            remove(indexValue); // Remove field
+
+            const updatedList = form.getFieldValue('longlat') || [];
+            console.log('Updated List Before Formatting:', updatedList);
+
+            // Ensure only long and lat are extracted
+            const formattedList: [number, number][] = updatedList.map(
+              (item: any) => {
+                return [Number(item.long), Number(item.lat)];
+              }
+            );
+
+            console.log('Formatted List:', formattedList);
+            setInitialData(formattedList); // Update initialData state
+          };
+
           return (
             <>
               {fields.map((field) => (
@@ -102,9 +136,10 @@ const UpdateCoordinateList: React.FC<{
                   key={field.key}
                   fields={fields}
                   field={field}
-                  remove={remove}
+                  remove={handleRemove}
                   lat={form.getFieldValue(['longlat', field.name, 'lat'])}
                   long={form.getFieldValue(['longlat', field.name, 'long'])}
+                  form={form}
                 />
               ))}
             </>

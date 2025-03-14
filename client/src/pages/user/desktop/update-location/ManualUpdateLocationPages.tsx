@@ -33,6 +33,7 @@ import {
   geojsonDeconstructor,
 } from '@/utils/geojson.template';
 import FormData from '@/components/desktop/form-location/FormData';
+import { UpdateLocationProps } from '@/utils/types/map.types';
 
 const { Title, Text } = Typography;
 
@@ -154,44 +155,44 @@ const ManualUpdateLocationPages: React.FC = () => {
     },
   });
 
-  type CreateValue = {
-    placename: string;
-    placeowner: string;
-    placedesc: string;
-    placeaddress: string;
-    placetype: string;
-    placelat: number;
-    placelong: number;
-  };
+  const onUpdate = (values: UpdateLocationProps) => {
+    const updateData: { [key: string]: any } = {};
 
-  const onCreate = (values: CreateValue) => {
-    const updateData = Object.fromEntries(
-      Object.entries({
-        placeName:
-          values.placename !== data.placeName ? values.placename : null,
-        placeOwner:
-          values.placeowner !== data.placeOwner ? values.placeowner : null,
-        placeDescription:
-          values.placedesc !== data.placeDescription ? values.placedesc : null,
-        placeAddress:
-          values.placeaddress !== data.placeAddress
-            ? values.placeaddress
-            : null,
-        placeType:
-          values.placetype !== data.type?.name ? values.placetype : null,
-        placePoints:
-          values.placelat !== data.placeCenterPoint?.[0] ||
-          values.placelong !== data.placeCenterPoint?.[1]
-            ? [values.placelat, values.placelong]
-            : null,
-        placeGeojson:
-          JSON.stringify(geoJsonData) !==
-          JSON.stringify(data?.placeMap?.place_geojson)
-            ? geoJsonData
-            : null,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      }).filter(([_, value]) => value !== null) // Hapus nilai yang tidak berubah
-    );
+    if (values.placename && values.placename !== data.placeName) {
+      updateData.placeName = values.placename;
+    }
+
+    if (values.placeowner && values.placeowner !== data.placeOwner) {
+      updateData.placeOwner = values.placeowner;
+    }
+
+    if (values.placedesc && values.placedesc !== data.placeDescription) {
+      updateData.placeDescription = values.placedesc;
+    }
+
+    if (values.placeaddress && values.placeaddress !== data.placeAddress) {
+      updateData.placeAddress = values.placeaddress;
+    }
+
+    if (values.placetype && values.placetype !== data.type.name) {
+      updateData.placeType = values.placetype;
+    }
+
+    if (
+      values.placelat &&
+      values.placelat !== data.placeCenterPoint[0] &&
+      values.placelong &&
+      values.placelong !== data.placeCenterPoint[1]
+    ) {
+      updateData.placePoints = [values.placelat, values.placelong];
+    }
+
+    const stringifyMapFromApi = JSON.stringify(data?.placeMap.place_geojson);
+    const stringifyMapFromConstructor = JSON.stringify(geoJsonData);
+
+    if (stringifyMapFromConstructor !== stringifyMapFromApi) {
+      updateData.placeGeojson = geoJsonData;
+    }
 
     if (Object.keys(updateData).length === 0) {
       message.info('Tidak ada perubahan data');
@@ -245,7 +246,14 @@ const ManualUpdateLocationPages: React.FC = () => {
             onValuesChange={(allValues) => {
               if (allValues.longlat) {
                 console.log('Updated longlat array:', allValues.longlat);
-                setCoordinateList(allValues.longlat);
+                const formattedList: [number, number][] = allValues.longlat.map(
+                  (item: any) => {
+                    return [Number(item.long), Number(item.lat)];
+                  }
+                );
+
+                console.log('Formatted List:', formattedList);
+                setCoordinateList(formattedList);
               }
 
               if (allValues.placelat || allValues.placelong) {
@@ -270,7 +278,7 @@ const ManualUpdateLocationPages: React.FC = () => {
                 });
               }
             }}
-            onFinish={onCreate}
+            onFinish={onUpdate}
           >
             <Form.Item>
               <Space style={{ width: '100%', justifyContent: 'end' }}>
