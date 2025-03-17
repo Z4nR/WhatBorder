@@ -129,7 +129,7 @@ const AdminDashboard: React.FC = () => {
           />
         </Col>
       </Row>
-      <ChartGeoMap />
+      <ChartGeoMap data={data} loading={isLoading} />
     </div>
   );
 };

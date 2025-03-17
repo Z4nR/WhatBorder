@@ -16,7 +16,7 @@ const ChartTotalBuilding: React.FC<DashboardAdminChartProps> = ({
       autoFit: true,
     });
 
-    const chartData = data?.detailType.map((item: DashboardChartProps) => ({
+    const chartData = data?.chartType.map((item: DashboardChartProps) => ({
       Jenis: item.buildingName,
       Jumlah: item.placeCount,
       color: item.color,

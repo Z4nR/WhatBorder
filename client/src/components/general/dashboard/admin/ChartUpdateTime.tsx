@@ -16,7 +16,7 @@ const ChartUpdateTime: React.FC<DashboardAdminChartProps> = ({
       autoFit: true,
     });
 
-    const chartData = data?.detailUpdate.map((item: DashboardChartProps) => ({
+    const chartData = data?.chartUpdate.map((item: DashboardChartProps) => ({
       Jenis: item.buildingName,
       Jumlah: item.placeCount,
       Bulan: item.month,
