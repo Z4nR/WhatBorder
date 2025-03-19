@@ -18,6 +18,13 @@ html {
   z-index: 0;
 }
 
+.custom-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: white;
+}
+
 .demo-logo-vertical {
   height: 32px;
   margin: 16px;

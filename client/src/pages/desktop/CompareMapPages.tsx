@@ -222,7 +222,7 @@ const CompareList: React.FC = () => {
       },
     },
     {
-      title: 'Tindakan',
+      title: 'Aksi',
       key: 'place-action',
       align: 'center',
       width: '150px',
