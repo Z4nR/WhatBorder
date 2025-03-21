@@ -14,7 +14,10 @@ const geojsonConstructor = (
           coordinates: [[...latlong, latlong[0]]],
           type: 'Polygon',
         },
-        properties: {},
+        properties: {
+          copyright: 'WhatBorder Collection GeoJSON Data',
+          creator: 'WhatBorder',
+        },
         type: 'Feature',
       },
     ],
