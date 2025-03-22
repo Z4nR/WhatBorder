@@ -525,11 +525,11 @@ export class PlaceService {
     }
   }
 
-  private async buildingCountAdmin() {
+  private async buildingCountCreate() {
     try {
       const now = new Date();
-      const twelveMonthsAgo = new Date();
-      twelveMonthsAgo.setMonth(now.getMonth() - 6); // few months ago to include the current month
+      const someMonthsAgo = new Date();
+      someMonthsAgo.setMonth(now.getMonth() - 6); // few months ago to include the current month
 
       // Fetch building data with associated places
       const buildingData = await this.prisma.buildingType.findMany({
@@ -538,7 +538,7 @@ export class PlaceService {
           color: true,
           PlaceData: {
             where: {
-              created_at: { gte: twelveMonthsAgo },
+              created_at: { gte: someMonthsAgo },
             },
             select: {
               created_at: true,
@@ -547,16 +547,11 @@ export class PlaceService {
         },
       });
 
-      // Helper function to generate month-year keys
-      const formatMonth = (date: Date) => {
-        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
-      };
-
       // Generate an array of last 12 months
-      const last12Months: string[] = Array.from({ length: 6 }, (_, i) => {
+      const lastMonthsAgo: string[] = Array.from({ length: 6 }, (_, i) => {
         const date = new Date();
         date.setMonth(now.getMonth() - i);
-        return formatMonth(date);
+        return this.helperService.formatMonth(date);
       }).reverse(); // Ensure chronological order
 
       // Process the results
@@ -569,7 +564,7 @@ export class PlaceService {
 
       buildingData.forEach((building) => {
         // Initialize monthly counts to 0
-        const monthlyCounts: Record<string, number> = last12Months.reduce(
+        const monthlyCounts: Record<string, number> = lastMonthsAgo.reduce(
           (acc, month) => {
             acc[month] = 0;
             return acc;
@@ -579,7 +574,9 @@ export class PlaceService {
 
         // Count occurrences per month
         building.PlaceData.forEach((place) => {
-          const monthKey = formatMonth(new Date(place.created_at));
+          const monthKey = this.helperService.formatMonth(
+            new Date(place.created_at),
+          );
           if (monthKey in monthlyCounts) {
             monthlyCounts[monthKey] = (monthlyCounts[monthKey] ?? 0) + 1;
           }
@@ -599,6 +596,95 @@ export class PlaceService {
       return formattedData;
     } catch (error) {
       console.error('Error in buildingCount:', error);
+      throw error;
+    }
+  }
+
+  private async buildingCountUpdate() {
+    try {
+      const now = new Date();
+      const someMonthsAgo = new Date();
+      someMonthsAgo.setMonth(now.getMonth() - 4); // 3 months ago
+
+      // Fetch building data with associated places
+      const buildingData = await this.prisma.buildingType.findMany({
+        select: {
+          name: true,
+          color: true,
+          PlaceData: {
+            where: {
+              updated_at: { gte: someMonthsAgo },
+            },
+            select: {
+              created_at: true,
+              updated_at: true,
+            },
+          },
+        },
+      });
+
+      // Generate last 3 months' keys
+      const lastMonthsAgo: string[] = Array.from({ length: 4 }, (_, i) => {
+        const date = new Date();
+        date.setMonth(now.getMonth() - i);
+        return this.helperService.formatMonth(date);
+      }).reverse();
+
+      // Process the results
+      const formattedData: {
+        buildingName: string;
+        color: string;
+        month: string;
+        placeCount: number;
+      }[] = [];
+
+      buildingData.forEach((building) => {
+        // Initialize monthly counts
+        const monthlyCounts: Record<string, number> = Object.fromEntries(
+          lastMonthsAgo.map((month) => [month, 0]),
+        );
+
+        // Process only places where updated_at !== created_at
+        building.PlaceData.forEach((place) => {
+          if (place.updated_at !== place.created_at) {
+            const monthKey = this.helperService.formatMonth(
+              new Date(place.updated_at),
+            );
+            if (monthKey in monthlyCounts) {
+              monthlyCounts[monthKey]++;
+            }
+          }
+        });
+
+        // Convert data into the required format
+        Object.entries(monthlyCounts).forEach(([month, totalCount]) => {
+          formattedData.push({
+            buildingName: building.name,
+            color: building.color,
+            month,
+            placeCount: totalCount,
+          });
+        });
+      });
+
+      return formattedData;
+    } catch (error) {
+      console.error('Error in buildingCount:', error);
+      throw error;
+    }
+  }
+
+  private async buildingCountAdmin() {
+    try {
+      const created = await this.buildingCountCreate();
+      const updated = await this.buildingCountUpdate();
+
+      return {
+        create: created,
+        update: updated,
+      };
+    } catch (error) {
+      console.log(error);
       throw error;
     }
   }
@@ -668,6 +754,23 @@ export class PlaceService {
         placeCount: item._count.PlaceData,
       }));
 
+      const buildingCountPlaceArea = await this.prisma.placeData.findMany({
+        select: {
+          place_id: true,
+          place_name: true,
+          place_owner: true,
+          place_center_point: true,
+        },
+      });
+
+      const centerPointPlace = buildingCountPlaceArea.map((item) => ({
+        place_id: item.place_id,
+        place_name: item.place_name,
+        place_owner: item.place_owner,
+        place_center_long: item.place_center_point[0],
+        place_center_lat: item.place_center_point[1],
+      }));
+
       const newestPlace = await this.prisma.placeData.findMany({
         take: 10,
         orderBy: {
@@ -724,8 +827,10 @@ export class PlaceService {
         total_place_this_month: totalPlaceCountThisMonth,
         percentage_comparison: formattedPercentage,
         status_percentage: statusPercentage,
-        detail_in_month: buildingCountInMonth,
-        detail_in_type: countPlaceType,
+        chart_create: buildingCountInMonth.create,
+        chart_update: buildingCountInMonth.update,
+        chart_type: countPlaceType,
+        chart_area: centerPointPlace,
         new_place: newest,
       };
     } catch (error) {
