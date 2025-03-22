@@ -98,4 +98,8 @@ export class HelperService {
 
     return Math.round(rangeInMeters);
   }
+
+  formatMonth = (date: Date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // YYYY-MM
+  };
 }
