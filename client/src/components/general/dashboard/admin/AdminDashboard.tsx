@@ -44,7 +44,7 @@ const AdminDashboard: React.FC = () => {
       />
     </Tooltip>,
     <Tooltip title="Info Pengguna">
-      <TeamOutlined key="list-user" />
+      <TeamOutlined key="list-user" onClick={() => navigate('/user-action')} />
     </Tooltip>,
   ];
 
