@@ -22,6 +22,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import PlaceTypePages from './pages/admin/PlaceTypePages';
 import AddCoordinatePages from './pages/user/client/AddCoordinatePages';
 import PlaceAccessPages from './pages/admin/PlaceAccessPages';
+import UserRoleSettingPages from './pages/admin/UserRoleSettingPages';
 
 const queryClient = new QueryClient();
 
@@ -90,6 +91,11 @@ const App: React.FC = () => {
                 caseSensitive
                 path="/place-action"
                 element={<PlaceAccessPages />}
+              />
+              <Route
+                caseSensitive
+                path="/user-action"
+                element={<UserRoleSettingPages />}
               />
               <Route caseSensitive path="/location" element={<Outlet />}>
                 <Route
