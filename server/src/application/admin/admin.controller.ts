@@ -19,15 +19,20 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Post('building')
-  async create(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
+  create(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
     const user = req['user'].user;
 
     return this.adminService.addBuilding(buildingDto, user);
   }
 
   @Get()
-  async findAll() {
+  findAll() {
     return this.adminService.findAll();
+  }
+
+  @Get('user-only')
+  findUserOnly() {
+    return this.adminService.findUserOnly();
   }
 
   @Delete(':id/remove/place')
