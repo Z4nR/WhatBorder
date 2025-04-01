@@ -224,6 +224,19 @@ const adminUserList = async () => {
     });
 };
 
+const adminUserRoleList = async () => {
+  return axios
+    .get('/v1/admin/user-only', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 const compareList = async (id: any) => {
   return axios
     .get(`/v1/place/${id}/compare-list`, {
@@ -326,4 +339,5 @@ export {
   adminPlaceAccess,
   adminRemoveAccess,
   placeStatisticAdmin,
+  adminUserRoleList,
 };
