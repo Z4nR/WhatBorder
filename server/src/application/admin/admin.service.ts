@@ -55,6 +55,26 @@ export class AdminService {
     }
   }
 
+  async findUserOnly() {
+    try {
+      return await this.prisma.user.findMany({
+        where: {
+          ruler: false,
+          admin: false,
+        },
+        select: {
+          user_id: true,
+          user_name: true,
+          created_at: true,
+          admin: true,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async removePlace(id: string) {
     try {
       await this.prisma.$transaction(async (tx) => {
