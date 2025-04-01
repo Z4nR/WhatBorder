@@ -1,6 +1,6 @@
 # WhatBorder
 Still In Development
-FE 50% BE 90%
+FE 90% BE 90%
 
 ## Tech Stack
 ## Information
