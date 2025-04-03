@@ -1,4 +1,5 @@
 import { DashboardChartProps, PlaceListProps } from './statistic.types';
+import { FeatureCollection } from 'geojson';
 
 export interface PlaceTypeCreateProps {
   namecreate: string;
@@ -33,4 +34,29 @@ export interface DashboardAdminMapProps {
   place_owner: string;
   place_center_long: number;
   place_center_lat: number;
+}
+
+export interface AdminPlaceTableProps {
+  placeId: string;
+  placeOwner: string;
+  placeDescription: string;
+  placeName: string;
+  placeAddress: string;
+  placeCenterPoint: any;
+  placeMap: FeatureCollection;
+  type: {
+    name: string;
+    label: string;
+    color: string;
+  };
+  createdBy: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AdminUserOnlyTableProps {
+  userId: string;
+  userName: string;
+  createdAt: Date;
+  admin: boolean;
 }

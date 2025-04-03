@@ -60,24 +60,6 @@ export interface PlaceTableProps {
   updated_at: Date;
 }
 
-export interface AdminPlaceTableProps {
-  placeId: string;
-  placeOwner: string;
-  placeDescription: string;
-  placeName: string;
-  placeAddress: string;
-  placeCenterPoint: any;
-  placeMap: FeatureCollection;
-  type: {
-    name: string;
-    label: string;
-    color: string;
-  };
-  createdBy: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface MapInTableProps {
   place_id: string;
   place_center_point: any;
