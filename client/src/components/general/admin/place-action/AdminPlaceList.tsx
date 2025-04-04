@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import { adminPlaceAccess, adminRemoveAccess } from '@/utils/networks';
-import { AdminPlaceTableProps } from '@/utils/types/map.types';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -22,6 +21,7 @@ import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
 import MapInProfile from '../../map/MapInProfile';
 import { dateFormatter } from '@/utils/helper';
 import EmptyData from '../../utils/EmptyData';
+import { AdminPlaceTableProps } from '@/utils/types/admin.types';
 
 type InputRef = GetRef<typeof Input>;
 
