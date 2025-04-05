@@ -5,6 +5,7 @@ import {
   Button,
   GetRef,
   Input,
+  Popconfirm,
   Space,
   Table,
   TableColumnType,
@@ -123,12 +124,36 @@ const UserRoleList: React.FC = () => {
       ),
   });
 
+  const confirmDeleted = (id: string) => {
+    console.log(id);
+  };
+
   const columns: TableProps<AdminUserOnlyTableProps>['columns'] = [
     {
       title: 'Nama Pengguna',
       dataIndex: 'userName',
       key: 'user-name',
       ...getColumnSearchProps('userName'),
+    },
+    {
+      title: 'Aksi',
+      key: 'place-action',
+      align: 'center',
+      width: '50px',
+      render: (_, { userId }) => {
+        return (
+          <Popconfirm
+            placement="left"
+            title="Yakin nih mau dihapus?"
+            description="Semua data terkait tempat ini akan hilang"
+            onConfirm={() => confirmDeleted(userId)}
+            okText="Yakin"
+            cancelText="Tidak Dulu"
+          >
+            <DeleteOutlined style={{ color: 'red' }} />
+          </Popconfirm>
+        );
+      },
     },
   ];
 
