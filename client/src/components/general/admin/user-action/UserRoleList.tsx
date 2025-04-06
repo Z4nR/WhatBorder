@@ -10,12 +10,14 @@ import {
   Table,
   TableColumnType,
   TableProps,
+  Tag,
 } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { AdminUserOnlyTableProps } from '@/utils/types/admin.types';
 import EmptyData from '../../utils/EmptyData';
+import { dateFormatter } from '@/utils/helper';
 
 type InputRef = GetRef<typeof Input>;
 
@@ -134,6 +136,31 @@ const UserRoleList: React.FC = () => {
       dataIndex: 'userName',
       key: 'user-name',
       ...getColumnSearchProps('userName'),
+    },
+    {
+      title: 'Status Pengguna',
+      dataIndex: 'admin',
+      key: 'user-role',
+      render: (_, tag) => {
+        const color: string = tag.admin === false ? '#fa541c' : '#52c41a';
+        const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
+        return <Tag color={color}>{admin.toUpperCase()}</Tag>;
+      },
+    },
+    {
+      title: 'Ditambahkan Pada',
+      dataIndex: 'createdAt',
+      key: 'user-create',
+      align: 'center',
+      sorter: (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+      sortDirections: ['descend', 'ascend'],
+      defaultSortOrder: 'ascend',
+      responsive: ['md'],
+      render: (_, time) => {
+        const date = dateFormatter(time.createdAt);
+        return <p>{date}</p>;
+      },
     },
     {
       title: 'Aksi',
