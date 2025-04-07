@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Req,
+  Patch,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddBuildingDto } from './dto/create-admin.dto';
@@ -33,6 +34,18 @@ export class AdminController {
   @Get('user-only')
   findUserOnly() {
     return this.adminService.findUserOnly();
+  }
+
+  @Patch('user-only/:id')
+  async updateUserOnly(
+    @Param('id') id: string,
+    @Body() body: { admin: boolean },
+    @Req() req: Request,
+  ) {
+    const user = req['user'];
+    const userId = user.sub;
+
+    await this.adminService.validateUserAccount(userId);
   }
 
   @Delete(':id/remove/place')
