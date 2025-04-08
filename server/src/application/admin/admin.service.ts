@@ -28,6 +28,20 @@ export class AdminService {
     }
   }
 
+  async validateRulerAccount(id: string) {
+    try {
+      const userExist = await this.helperService.findByIdUser(id);
+      if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
+      if (!userExist.ruler)
+        throw new BadRequestException(
+          'Tidak Dapat Mengubah Status Pengguna Kecuali Pemilik Laman',
+        );
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async validatePlaceData(id: string) {
     try {
       const placeExist = await this.placeService.findOne(id);
