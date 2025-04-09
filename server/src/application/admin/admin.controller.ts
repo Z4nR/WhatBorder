@@ -36,7 +36,7 @@ export class AdminController {
     return this.adminService.findUserOnly();
   }
 
-  @Patch('user-only/:id')
+  @Patch('change-role/:id')
   async updateUserOnly(
     @Param('id') id: string,
     @Body() body: { admin: boolean },
@@ -45,7 +45,7 @@ export class AdminController {
     const user = req['user'];
     const userId = user.sub;
 
-    await this.adminService.validateUserAccount(userId);
+    await this.adminService.validateRulerAccount(userId);
   }
 
   @Delete(':id/remove/place')
