@@ -23,13 +23,13 @@ const UserRoleSettingPages: React.FC = () => {
             ),
           },
           {
-            title: 'Info Tempat',
+            title: 'Info Pengguna',
           },
         ]}
       />
       <div>
         <Title level={5} style={{ marginTop: '8px' }}>
-          Pengaturan Data Tempat
+          Pengaturan Data Pengguna
         </Title>
         <UserRoleList />
       </div>
