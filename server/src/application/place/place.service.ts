@@ -494,37 +494,6 @@ export class PlaceService {
     }
   }
 
-  async adminRemove(place_id: string) {
-    try {
-      await this.prisma.$transaction(async (tx) => {
-        const mapId = await tx.placeData.findUnique({
-          select: {
-            map_id: true,
-          },
-          where: {
-            place_id,
-          },
-        });
-
-        await tx.placeMap.delete({
-          where: {
-            map_id: mapId.map_id,
-          },
-        });
-
-        await tx.placeData.delete({
-          where: {
-            place_id,
-          },
-        });
-      });
-      return { message: 'Data tempat berhasil dihapus' };
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
   private async buildingCountCreate() {
     try {
       const now = new Date();
