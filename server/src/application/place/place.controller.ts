@@ -107,12 +107,6 @@ export class PlaceController {
   }
 
   @Roles(Role.ADMIN)
-  @Delete(':id/admin-remove')
-  async adminRemoveAccess(@Param('id') id: string) {
-    return this.placeService.adminRemove(id);
-  }
-
-  @Roles(Role.ADMIN)
   @Get('statistic/admin')
   async showStatisticAdmin() {
     return this.placeService.statisticAdmin();
