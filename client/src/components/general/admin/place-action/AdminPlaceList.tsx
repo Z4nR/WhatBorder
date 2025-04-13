@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { adminPlaceAccess, adminRemoveAccess } from '@/utils/networks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -22,6 +21,7 @@ import MapInProfile from '../../map/MapInProfile';
 import { dateFormatter } from '@/utils/helper';
 import EmptyData from '../../utils/EmptyData';
 import { AdminPlaceTableProps } from '@/utils/types/admin.types';
+import { adminPlaceList, adminRemovePlace } from '@/utils/networks';
 
 type InputRef = GetRef<typeof Input>;
 
@@ -34,12 +34,12 @@ const AdminPlaceList: React.FC = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-place-access'],
-    queryFn: async () => await adminPlaceAccess(),
+    queryFn: async () => await adminPlaceList(),
     staleTime: 5 * 60 * 1000,
   });
 
   const { mutate } = useMutation({
-    mutationFn: adminRemoveAccess,
+    mutationFn: adminRemovePlace,
     onSuccess: (data) => {
       client.invalidateQueries({
         queryKey: ['admin-place-access'],
