@@ -164,7 +164,7 @@ const UserRoleList: React.FC = () => {
     },
     {
       title: 'Aksi',
-      key: 'place-action',
+      key: 'role-action',
       align: 'center',
       width: '50px',
       render: (_, { userId }) => {
