@@ -172,7 +172,7 @@ const UserRoleList: React.FC = () => {
           <Popconfirm
             placement="left"
             title="Yakin nih mau dihapus?"
-            description="Semua data terkait tempat ini akan hilang"
+            description="Semua data terkait pengguna ini akan hilang"
             onConfirm={() => confirmDeleted(userId)}
             okText="Yakin"
             cancelText="Tidak Dulu"
