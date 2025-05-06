@@ -6,6 +6,7 @@ import {
   Delete,
   Req,
   Param,
+  Version,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -19,6 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Roles(Role.USER)
+  @Version('1')
   @Get()
   async findAll(@Req() req: Request) {
     const user = req['user'];
@@ -27,6 +29,7 @@ export class UserController {
   }
 
   @Roles(Role.USER, Role.ADMIN)
+  @Version('1')
   @Get(':id/resume')
   async findOne(@Param('id') id: string) {
     await this.userService.validateUserAccount(id);
@@ -34,6 +37,7 @@ export class UserController {
     return this.userService.findOne(id);
   }
   @Roles(Role.USER, Role.ADMIN)
+  @Version('1')
   @Get(':id/detail')
   async findOther(@Param('id') id: string) {
     await this.userService.validateUserAccount(id);
@@ -42,6 +46,7 @@ export class UserController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Get('profile')
   async findMe(@Req() req: Request) {
     const user = req['user'];
@@ -53,6 +58,7 @@ export class UserController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Patch('update')
   async update(@Req() req: Request, @Body() updateUserDto: UpdateUserDto) {
     const user = req['user'];
@@ -64,6 +70,7 @@ export class UserController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Delete('delete')
   async remove(@Req() req: Request, @Body() data: UserDelete) {
     const user = req['user'];
