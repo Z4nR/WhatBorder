@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Req,
+  Version,
 } from '@nestjs/common';
 import { PlaceService } from './place.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
@@ -21,18 +22,21 @@ export class PlaceController {
 
   // All Access
   @Roles(Role.USER, Role.ADMIN)
+  @Version('1')
   @Get('building-filter')
   async findAllBuilding() {
     return this.placeService.findBuilding();
   }
 
   @Roles(Role.USER, Role.ADMIN)
+  @Version('1')
   @Get()
   async findAll() {
     return this.placeService.findAll();
   }
 
   @Roles(Role.USER, Role.ADMIN)
+  @Version('1')
   @Get(':id/detail')
   async findOne(@Param('id') id: string) {
     return this.placeService.findOne(id);
@@ -40,6 +44,7 @@ export class PlaceController {
 
   // User Access
   @Roles(Role.USER)
+  @Version('1')
   @Post()
   async create(@Req() req: Request, @Body() createPlaceDto: CreatePlaceDto) {
     const user = req['user'];
@@ -55,6 +60,7 @@ export class PlaceController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Get('statistic/user')
   async showStatisticUser(@Req() req: Request) {
     const user = req['user'];
@@ -63,6 +69,7 @@ export class PlaceController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Get('my-list')
   async findMyPlace(@Req() req: Request) {
     const user = req['user'];
@@ -71,12 +78,14 @@ export class PlaceController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Get(':id/compare-list')
   async compareList(@Param('id') id: string) {
     return this.placeService.compareList(id);
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Patch(':id/update')
   async update(
     @Param('id') id: string,
@@ -91,6 +100,7 @@ export class PlaceController {
   }
 
   @Roles(Role.USER)
+  @Version('1')
   @Delete(':id/remove')
   async remove(@Param('id') id: string, @Req() req: Request) {
     const user = req['user'];
@@ -101,12 +111,14 @@ export class PlaceController {
 
   // Admin Access
   @Roles(Role.ADMIN)
+  @Version('1')
   @Get('admin-access')
   async adminPlaceData() {
     return this.placeService.adminPlaceList();
   }
 
   @Roles(Role.ADMIN)
+  @Version('1')
   @Get('statistic/admin')
   async showStatisticAdmin() {
     return this.placeService.statisticAdmin();
