@@ -8,6 +8,7 @@ import {
   BadRequestException,
   Get,
   Req,
+  Version,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
@@ -25,6 +26,7 @@ export class AuthController {
 
   @Roles(Role.USER, Role.ADMIN)
   @HttpCode(HttpStatus.OK)
+  @Version('1')
   @Get('me')
   async user(@Req() req: Request) {
     const user = req['user'];
@@ -39,6 +41,7 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
+  @Version('1')
   @Post('register')
   async regist(@Body() registDto: AuthRegistDto) {
     const password = registDto.password;
@@ -62,6 +65,7 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.ACCEPTED)
+  @Version('1')
   @Post('login')
   async login(@Body() loginDto: AuthLoginDto) {
     const password = loginDto.password;
@@ -77,6 +81,7 @@ export class AuthController {
 
   @Public()
   @HttpCode(HttpStatus.CREATED)
+  @Version('1')
   @Patch('change-pass')
   async changePass(@Body() changePassDto: ChangePasswordDto) {
     if (changePassDto.newpass !== changePassDto.verify)
