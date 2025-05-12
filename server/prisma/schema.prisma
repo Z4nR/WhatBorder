@@ -7,19 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Role {
+  role_id       String   @id @default(uuid())
+  role_name     String?  @db.String(30)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+  active_status Boolean  @default(true)
+  role_code     Int?     @unique
+  label         String?  @db.String(8)
+  User          User[]
+}
+
 model User {
   user_id      String      @id @default(uuid())
   user_name    String      @unique @db.String(10)
   full_name    String?     @db.String(30)
   password     String
-  admin        Boolean     @default(false)
   description  String?
   created_at   DateTime    @default(now())
   updated_at   DateTime    @updatedAt
   special_code String
   login_at     DateTime    @default(now())
-  ruler        Boolean     @default(false)
+  role_code    Int?        @default(3)
   place        PlaceData[]
+  role         Role?       @relation(fields: [role_code], references: [role_code], map: "FK_user_role_code")
 }
 
 model BuildingType {
