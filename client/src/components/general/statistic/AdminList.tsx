@@ -147,8 +147,8 @@ const AdminList: React.FC = () => {
       width: '150px',
       responsive: ['sm'],
       render: (_, tag) => {
-        const color: string = tag.admin === false ? '#fa541c' : '#52c41a';
-        const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
+        const color: string = tag.role.label;
+        const admin: string = tag.role.roleName;
         return <Tag color={color}>{admin.toUpperCase()}</Tag>;
       },
     },
@@ -169,11 +169,11 @@ const AdminList: React.FC = () => {
     },
     {
       title: 'Aksi',
-      key: 'user-action',
+      key: 'admin-action',
       width: '150px',
       align: 'center',
       render: (_, detail) => (
-        <Link to={`/${detail.userId}/info`}>Lihat Pengguna</Link>
+        <Link to={`/statistic/user/${detail.userId}`}>Lihat Pengguna</Link>
       ),
     },
   ];
