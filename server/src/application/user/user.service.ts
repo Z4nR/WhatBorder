@@ -38,7 +38,7 @@ export class UserService {
           created_at: true,
         },
         where: {
-          admin: false,
+          role_code: 3,
           NOT: {
             user_id: id,
           },
@@ -56,10 +56,10 @@ export class UserService {
         select: {
           full_name: true,
           user_name: true,
-          admin: true,
           description: true,
           created_at: true,
           login_at: true,
+          role_code: true,
           place: {
             select: {
               place_id: true,
