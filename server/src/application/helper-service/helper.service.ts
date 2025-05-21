@@ -50,6 +50,21 @@ export class HelperService {
       return await this.prisma.user.findUnique({
         where: {
           user_id: userId,
+          role: {
+            active_status: true,
+          },
+        },
+        select: {
+          user_id: true,
+          user_name: true,
+          full_name: true,
+          password: true,
+          description: true,
+          created_at: true,
+          updated_at: true,
+          special_code: true,
+          login_at: true,
+          role_code: true,
         },
       });
     } catch (error) {
