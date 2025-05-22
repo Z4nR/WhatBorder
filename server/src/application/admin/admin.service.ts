@@ -20,7 +20,7 @@ export class AdminService {
     try {
       const userExist = await this.helperService.findByIdUser(id);
       if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
-      if (userExist.admin)
+      if (![0, 1, 2].includes(userExist.role_code))
         throw new BadRequestException('Tidak Dapat Menghapus Sesama Admin');
     } catch (error) {
       console.log(error);
@@ -32,9 +32,9 @@ export class AdminService {
     try {
       const userExist = await this.helperService.findByIdUser(id);
       if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
-      if (!userExist.ruler)
+      if (![0, 1].includes(userExist.role_code))
         throw new BadRequestException(
-          'Tidak Dapat Mengubah Status Pengguna Kecuali Pemilik Laman',
+          'Tidak Dapat Mengubah Status Pengguna Kecuali Super Admin',
         );
     } catch (error) {
       console.log(error);
@@ -59,8 +59,13 @@ export class AdminService {
           user_id: true,
           user_name: true,
           description: true,
-          admin: true,
           created_at: true,
+          role: {
+            select: {
+              role_name: true,
+              label: true,
+            },
+          },
         },
       });
     } catch (error) {
@@ -73,14 +78,18 @@ export class AdminService {
     try {
       return await this.prisma.user.findMany({
         where: {
-          ruler: false,
-          admin: false,
+          role_code: 3,
         },
         select: {
           user_id: true,
           user_name: true,
           created_at: true,
-          admin: true,
+          role: {
+            select: {
+              role_name: true,
+              label: true,
+            },
+          },
         },
       });
     } catch (error) {
