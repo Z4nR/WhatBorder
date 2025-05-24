@@ -1,15 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Version,
+} from '@nestjs/common';
 import { AuthorizeService } from './authorize.service';
 import { CreateAuthorizeDto } from './dto/create-authorize.dto';
 import { UpdateAuthorizeDto } from './dto/update-authorize.dto';
+import { Public } from '../authentic/decorator/public.decorator';
 
-@Controller('authorize')
+@Public()
+@Controller('authz')
 export class AuthorizeController {
   constructor(private readonly authorizeService: AuthorizeService) {}
 
-  @Post()
+  @Version('1')
+  @Post('role')
   create(@Body() createAuthorizeDto: CreateAuthorizeDto) {
-    return this.authorizeService.create(createAuthorizeDto);
+    return this.authorizeService.createRole(createAuthorizeDto);
   }
 
   @Get()
@@ -23,7 +35,10 @@ export class AuthorizeController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthorizeDto: UpdateAuthorizeDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAuthorizeDto: UpdateAuthorizeDto,
+  ) {
     return this.authorizeService.update(+id, updateAuthorizeDto);
   }
 
