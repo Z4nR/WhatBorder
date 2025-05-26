@@ -5,13 +5,14 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { AuthLoginDto, AuthRegistDto } from './dto/create-auth.dto';
+import { ChangePasswordDto } from './dto/update-auth.dto';
+import { randomUUID } from 'crypto';
+import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/db/prisma.service';
+import { HelperService } from '../helper-service/helper.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { compare, hash } from 'bcrypt';
-import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
-import { HelperService } from '../../helper-service/helper.service';
-import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AuthService {
@@ -27,14 +28,14 @@ export class AuthService {
       const data = await this.prisma.user.findFirst({
         select: {
           user_name: true,
-          admin: true,
+          role_code: true,
         },
         where: {
           user_id: id,
         },
       });
 
-      return { username: data.user_name, role: data.admin };
+      return { username: data.user_name, role: data.role_code };
     } catch (error) {
       console.log(error);
       throw error;

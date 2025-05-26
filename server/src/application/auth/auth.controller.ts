@@ -1,21 +1,22 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
   Patch,
-  HttpStatus,
-  HttpCode,
-  BadRequestException,
-  Get,
-  Req,
   Version,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthLoginDto, AuthRegistDto, ChangePasswordDto } from './dto/auth.dto';
+import { AuthLoginDto, AuthRegistDto } from './dto/create-auth.dto';
+import { ChangePasswordDto } from './dto/update-auth.dto';
+import { Role } from './authorize/enum/role.enum';
+import { Roles } from './authorize/decorator/role.decorator';
+import { HelperService } from '../helper-service/helper.service';
 import { Public } from './decorator/public.decorator';
-import { HelperService } from 'src/application/helper-service/helper.service';
-import { Roles } from '../authorize/decorator/role.decorator';
-import { Role } from '../authorize/enum/role.enum';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,7 @@ export class AuthController {
     private readonly helperService: HelperService,
   ) {}
 
-  @Roles(Role.USER, Role.ADMIN)
+  @Roles(Role.USER, Role.ADMIN, Role.SUPER, Role.OWNER)
   @HttpCode(HttpStatus.OK)
   @Version('1')
   @Get('me')
