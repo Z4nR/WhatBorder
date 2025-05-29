@@ -5,6 +5,8 @@ import { Module } from '@nestjs/common';
 import { AdminModule } from './admin/admin.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { AuthorizeModule } from './auth/authorize/authorize.module';
+import { AuthzModule } from './authz/authz.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { AuthorizeModule } from './auth/authorize/authorize.module';
     UserModule,
     AdminModule,
     WebsocketModule,
+    AuthzModule,
   ],
 })
 export class VersionModule {}
