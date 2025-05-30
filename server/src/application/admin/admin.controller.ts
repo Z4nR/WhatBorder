@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddBuildingDto } from './dto/create-admin.dto';
-import { Roles } from '../auth/authorize/decorator/role.decorator';
-import { Role } from '../auth/authorize/enum/role.enum';
 import { Request } from 'express';
+import { Roles } from '../authz/decorator/role.decorator';
+import { Role } from '../authz/enum/role.enum';
 
 @Roles(Role.ADMIN)
 @Controller('admin')

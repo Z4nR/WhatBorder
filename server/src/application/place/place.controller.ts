@@ -12,9 +12,9 @@ import {
 import { PlaceService } from './place.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
-import { Roles } from '../auth/authorize/decorator/role.decorator';
-import { Role } from '../auth/authorize/enum/role.enum';
 import { Request } from 'express';
+import { Role } from '../authz/enum/role.enum';
+import { Roles } from '../authz/decorator/role.decorator';
 
 @Controller('place')
 export class PlaceController {

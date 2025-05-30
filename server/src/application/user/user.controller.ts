@@ -11,9 +11,9 @@ import {
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Request } from 'express';
-import { Roles } from '../auth/authorize/decorator/role.decorator';
-import { Role } from '../auth/authorize/enum/role.enum';
 import { UserDelete } from './entities/user.entity';
+import { Role } from '../authz/enum/role.enum';
+import { Roles } from '../authz/decorator/role.decorator';
 
 @Controller('user')
 export class UserController {
