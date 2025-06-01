@@ -1,11 +1,11 @@
 export interface UserProps {
-  role: boolean;
+  role: number;
   name: string;
   exp: number;
 }
 
 export interface UserState {
-  role: boolean;
+  role: number;
   name: string;
   exp: number;
   setUser: (state: UserProps) => void;
