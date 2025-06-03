@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { SocketProps, SocketState } from '../../types/client.types';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { SocketProps, SocketState } from '../types/client.types';
 
 const useSocketState = create<SocketState>()(
   persist(
