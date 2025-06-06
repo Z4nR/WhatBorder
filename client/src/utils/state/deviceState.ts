@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { DeviceProps, DeviceState } from '../../types/device.types';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { DeviceProps, DeviceState } from '../types/device.types';
 
 const useDeviceState = create<DeviceState>()(
   persist(
