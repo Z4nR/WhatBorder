@@ -29,11 +29,11 @@ export interface DashboardAdminChartProps {
 }
 
 export interface DashboardAdminMapProps {
-  place_id: string;
-  place_name: string;
-  place_owner: string;
-  place_center_long: number;
-  place_center_lat: number;
+  placeId: string;
+  placeName: string;
+  placeOwner: string;
+  placeCenterLong: number;
+  placeCenterLat: number;
 }
 
 export interface AdminPlaceTableProps {
@@ -43,7 +43,9 @@ export interface AdminPlaceTableProps {
   placeName: string;
   placeAddress: string;
   placeCenterPoint: any;
-  placeMap: FeatureCollection;
+  placeMap: {
+    placeGeojson: FeatureCollection;
+  };
   type: {
     name: string;
     label: string;
@@ -58,5 +60,8 @@ export interface AdminUserOnlyTableProps {
   userId: string;
   userName: string;
   createdAt: Date;
-  admin: boolean;
+  role: {
+    roleName: string;
+    label: string;
+  };
 }
