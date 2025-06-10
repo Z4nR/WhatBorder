@@ -14,7 +14,7 @@ export interface ComparePlaceProps {
   placeName: string;
   placeAddress: string;
   placeMap: {
-    place_geojson: FeatureCollection;
+    placeGeojson: FeatureCollection;
   };
   type: {
     name: string;
@@ -35,7 +35,7 @@ export interface UserPlaceProps {
   placeAddress: string;
   placeCenterPoint: any;
   placeMap: {
-    place_geojson: FeatureCollection;
+    placeGeojson: FeatureCollection;
   };
   type: {
     name: string;
