@@ -234,7 +234,7 @@ export class PlaceService {
     }
   }
 
-  async findPlace(user_id: string) {
+  async findPlaceUser(user_id: string) {
     try {
       return await this.prisma.placeData.findMany({
         select: {
@@ -257,6 +257,37 @@ export class PlaceService {
         },
         where: {
           user_id,
+        },
+        orderBy: {
+          created_at: 'desc',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async findPlaceAdmin() {
+    try {
+      return await this.prisma.placeData.findMany({
+        select: {
+          place_id: true,
+          place_name: true,
+          place_address: true,
+          place_center_point: true,
+          place_map: {
+            select: {
+              place_geojson: true,
+            },
+          },
+          type: {
+            select: {
+              name: true,
+              label: true,
+            },
+          },
+          created_at: true,
         },
         orderBy: {
           created_at: 'desc',
