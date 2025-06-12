@@ -42,6 +42,13 @@ export class PlaceController {
     return this.placeService.findOne(id);
   }
 
+  @Roles(Role.USER, Role.ADMIN)
+  @Version('1')
+  @Get(':id/compare-list')
+  async compareList(@Param('id') id: string) {
+    return this.placeService.compareList(id);
+  }
+
   // User Access
   @Roles(Role.USER)
   @Version('1')
@@ -74,14 +81,7 @@ export class PlaceController {
   async findMyPlace(@Req() req: Request) {
     const user = req['user'];
     const userId = user.sub;
-    return this.placeService.findPlace(userId);
-  }
-
-  @Roles(Role.USER)
-  @Version('1')
-  @Get(':id/compare-list')
-  async compareList(@Param('id') id: string) {
-    return this.placeService.compareList(id);
+    return this.placeService.findPlaceUser(userId);
   }
 
   @Roles(Role.USER)
@@ -122,5 +122,12 @@ export class PlaceController {
   @Get('statistic/admin')
   async showStatisticAdmin() {
     return this.placeService.statisticAdmin();
+  }
+
+  @Roles(Role.ADMIN)
+  @Version('1')
+  @Get('my-list')
+  async findAllPlace() {
+    return this.placeService.findPlaceAdmin();
   }
 }
