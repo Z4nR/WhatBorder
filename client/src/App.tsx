@@ -8,7 +8,6 @@ import useUserState from './utils/state/userState';
 import Loading from './components/general/utils/Loading';
 import LayoutPages from './layout/Layout';
 import DashboardPages from './pages/DashboardPages';
-import CompareMapPages from './pages/desktop/CompareMapPages';
 import VerifPages from './pages/VerifPages';
 import ProfilePages from './pages/ProfilePages';
 import StatisticPages from './pages/StatisticPages';
@@ -23,6 +22,7 @@ import PlaceTypePages from './pages/admin/PlaceTypePages';
 import AddCoordinatePages from './pages/user/client/AddCoordinatePages';
 import PlaceAccessPages from './pages/admin/PlaceAccessPages';
 import UserRoleSettingPages from './pages/admin/UserRoleSettingPages';
+import CompareUserMapPages from './pages/user/desktop/compare-map/CompareUserMapPages';
 
 const queryClient = new QueryClient();
 
@@ -135,7 +135,7 @@ const App: React.FC = () => {
               <Route
                 caseSensitive
                 path="/compare-map"
-                element={<CompareMapPages />}
+                element={<CompareUserMapPages />}
               />
             </Route>
           </Route>
