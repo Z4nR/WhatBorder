@@ -236,7 +236,7 @@ const CompareList: React.FC = () => {
               onClick={() => {
                 setUserId(placeId);
                 setPcc(placeCenterPoint);
-                const placeGeo = placeMap.place_geojson;
+                const placeGeo = placeMap.placeGeojson;
                 addNewPlaceMap({ placeId, placeGeo });
                 setUserPlace(placeId);
               }}
@@ -321,7 +321,7 @@ const CompareList: React.FC = () => {
           <Space size={'middle'}>
             <Link
               onClick={() => {
-                const placeGeo = placeMap.place_geojson;
+                const placeGeo = placeMap.placeGeojson;
                 addNewPlaceMap({ placeId, placeGeo });
               }}
               disabled={isInGeoJsonData}
