@@ -275,10 +275,10 @@ const AdminPlaceList: React.FC = () => {
               ]}
             />
             <MapInProfile
-              place_center_point={placeCenterPoint}
-              place_id={placeId}
+              placeCenterPoint={placeCenterPoint}
+              placeId={placeId}
               color={type.color}
-              place_map={placeMap}
+              placeMap={placeMap}
             />
           </div>
         ),
