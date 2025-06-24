@@ -142,8 +142,8 @@ const UserRoleList: React.FC = () => {
       dataIndex: 'admin',
       key: 'user-role',
       render: (_, tag) => {
-        const color: string = tag.admin === false ? '#fa541c' : '#52c41a';
-        const admin: string = tag.admin === false ? 'Pengguna' : 'Admin';
+        const color: string = tag.role.label;
+        const admin: string = tag.role.roleName;
         return <Tag color={color}>{admin.toUpperCase()}</Tag>;
       },
     },
