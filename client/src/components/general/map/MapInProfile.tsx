@@ -3,21 +3,21 @@ import { MapInTableProps } from '@/utils/types/map.types';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 
 const MapInProfile: React.FC<MapInTableProps> = ({
-  place_id,
-  place_center_point,
-  place_map,
+  placeId,
+  placeCenterPoint,
+  placeMap,
   color,
 }) => {
   return (
-    <MapContainer center={place_center_point} zoom={20} scrollWheelZoom={false}>
+    <MapContainer center={placeCenterPoint} zoom={20} scrollWheelZoom={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {place_map && (
+      {placeMap && (
         <GeoJSON
-          key={`detil-map-${place_id}`}
-          data={place_map?.place_geojson}
+          key={`detil-map-${placeId}`}
+          data={placeMap?.placeGeojson}
           style={{ color: color }}
         />
       )}
