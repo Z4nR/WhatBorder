@@ -22,9 +22,9 @@ const ChartGeoMap: React.FC<DashboardAdminChartProps> = ({ data, loading }) => {
           {data?.chartArea.map((item, index) => (
             <Marker
               key={index}
-              position={[item.place_center_long, item.place_center_lat]}
+              position={[item.placeCenterLong, item.placeCenterLat]}
             >
-              <Tooltip>{item.place_name}</Tooltip>
+              <Tooltip>{item.placeName}</Tooltip>
             </Marker>
           ))}
         </MarkerClusterGroup>
