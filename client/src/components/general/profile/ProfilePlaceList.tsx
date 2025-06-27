@@ -166,9 +166,9 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
   const columns: TableProps<PlaceTableProps>['columns'] = [
     {
       title: 'Nama Tempat',
-      dataIndex: 'place_name',
+      dataIndex: 'placeName',
       key: 'place-name',
-      ...getColumnSearchProps('place_name'),
+      ...getColumnSearchProps('placeName'),
     },
     {
       title: 'Tipe',
@@ -192,12 +192,12 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       key: 'place-action',
       align: 'center',
       width: '150px',
-      render: (_, { place_id }) => (
+      render: (_, { placeId }) => (
         <Space size="middle">
           <Tooltip title="Ubah Data Tempat" placement="bottom">
             <Button
               type="primary"
-              onClick={() => navigate(`/location/update/manual/${place_id}`)}
+              onClick={() => navigate(`/location/update/manual/${placeId}`)}
             >
               <EditOutlined />
             </Button>
@@ -206,7 +206,7 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
             placement="left"
             title="Yakin nih mau dihapus?"
             description="Semua data terkait tempat ini akan hilang"
-            onConfirm={() => confirmDeleted(place_id)}
+            onConfirm={() => confirmDeleted(placeId)}
             okText="Yakin"
             cancelText="Tidak Dulu"
           >
@@ -227,7 +227,7 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       loading={loading}
       columns={columns}
       dataSource={data}
-      rowKey={({ place_id }) => place_id}
+      rowKey={({ placeId }) => placeId}
       locale={{
         emptyText: (
           <EmptyData description="Anda Belum Menambahkan Data Tempat" />
@@ -235,15 +235,15 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
       }}
       expandable={{
         expandedRowRender: ({
-          place_id,
-          place_owner,
-          place_description,
-          place_map,
-          place_center_point,
-          place_address,
+          placeId,
+          placeOwner,
+          placeDescription,
+          placeMap,
+          placeCenterPoint,
+          placeAddress,
           type,
-          created_at,
-          updated_at,
+          createdAt,
+          updatedAt,
         }) => (
           <div style={{ paddingInline: '8px', paddingBottom: '8px' }}>
             <Descriptions
@@ -254,35 +254,35 @@ const ProfilePlaceList: React.FC<TablePlaceProps> = ({
                 {
                   key: '1',
                   label: 'Ditambahkan Pada',
-                  children: dateFormatter(created_at),
+                  children: dateFormatter(createdAt),
                 },
                 {
                   key: '2',
                   label: 'Diperbarui Pada',
-                  children: dateFormatter(updated_at),
+                  children: dateFormatter(updatedAt),
                 },
                 {
                   key: '3',
                   label: 'Pemilik Tempat',
-                  children: place_owner ? place_owner : '-',
+                  children: placeOwner ? placeOwner : '-',
                 },
                 {
                   key: '4',
                   label: 'Alamat Tempat',
-                  children: place_address,
+                  children: placeAddress,
                 },
                 {
                   key: '5',
                   label: 'Penjelasan Tempat',
-                  children: place_description ? place_description : '-',
+                  children: placeDescription ? placeDescription : '-',
                 },
               ]}
             />
             <MapInProfile
-              place_center_point={place_center_point}
-              place_id={place_id}
+              placeCenterPoint={placeCenterPoint}
+              placeId={placeId}
               color={type.color}
-              place_map={place_map}
+              placeMap={placeMap}
             />
           </div>
         ),
