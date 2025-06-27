@@ -172,9 +172,13 @@ const AdminList: React.FC = () => {
       key: 'admin-action',
       width: '150px',
       align: 'center',
-      render: (_, detail) => (
-        <Link to={`/statistic/user/${detail.userId}`}>Lihat Pengguna</Link>
-      ),
+      render: (_, detail) => {
+        if (detail.role.roleName === 'User') {
+          return (
+            <Link to={`/statistic/user/${detail.userId}`}>Lihat Pengguna</Link>
+          );
+        }
+      },
     },
   ];
 
