@@ -7,8 +7,6 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
 import { userList } from '@/utils/networks';
-import useUserState from '@/utils/state/userState';
-import AdminList from './AdminList';
 import EmptyData from '../utils/EmptyData';
 import { UserListProps } from '@/utils/types/statistic.types';
 import MiniStatisticProfile from '../modal/MiniStatisticProfile';
@@ -20,8 +18,6 @@ type DataIndex = keyof UserListProps;
 const UserList: React.FC = () => {
   const [profileModal, setProfileModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState('');
-
-  const user = useUserState().role;
 
   const { data, isLoading } = useQuery({
     queryKey: ['user-all'],
@@ -172,9 +168,7 @@ const UserList: React.FC = () => {
     },
   ];
 
-  return user ? (
-    <AdminList />
-  ) : (
+  return (
     <>
       {profileModal && (
         <MiniStatisticProfile
