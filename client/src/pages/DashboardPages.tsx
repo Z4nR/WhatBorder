@@ -4,8 +4,8 @@ import UserDashboard from '@/components/general/dashboard/user/UserDashboard';
 import useUserState from '@/utils/state/userState';
 
 const DashboardPages: React.FC = () => {
-  const user = useUserState().role;
-  return user ? <AdminDashboard /> : <UserDashboard />;
+  const role = useUserState().role;
+  return role === 3 ? <UserDashboard /> : <AdminDashboard />;
 };
 
 export default DashboardPages;
