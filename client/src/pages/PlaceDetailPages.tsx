@@ -20,7 +20,7 @@ const PlaceDetailPages: React.FC = () => {
 
   const placeMap = useMemo(() => {
     if (isPending) return null;
-    return data?.placeMap.place_geojson;
+    return data?.placeMap.placeGeojson;
   }, [data, isPending]);
 
   let position = null;

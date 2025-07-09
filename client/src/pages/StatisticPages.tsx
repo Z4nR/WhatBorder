@@ -1,9 +1,13 @@
+import AdminList from '@/components/general/statistic/AdminList';
 import PlaceList from '@/components/general/statistic/PlaceList';
 import UserList from '@/components/general/statistic/UserList';
+import useUserState from '@/utils/state/userState';
 import { Layout, Tabs } from 'antd';
 import React from 'react';
 
 const StatisticPages: React.FC = () => {
+  const role = useUserState().role;
+
   const menuItems = [
     {
       key: '1',
@@ -12,7 +16,7 @@ const StatisticPages: React.FC = () => {
     },
     {
       key: '2',
-      children: <UserList />,
+      children: role === 3 ? <UserList /> : <AdminList />,
       label: 'Daftar Pengguna',
     },
   ];
