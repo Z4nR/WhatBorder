@@ -22,7 +22,7 @@ import PlaceTypePages from './pages/admin/PlaceTypePages';
 import AddCoordinatePages from './pages/user/client/AddCoordinatePages';
 import PlaceAccessPages from './pages/admin/PlaceAccessPages';
 import UserRoleSettingPages from './pages/admin/UserRoleSettingPages';
-import CompareUserMapPages from './pages/user/desktop/compare-map/CompareUserMapPages';
+import CompareMapPages from './pages/desktop/CompareMapPages';
 
 const queryClient = new QueryClient();
 
@@ -135,7 +135,7 @@ const App: React.FC = () => {
               <Route
                 caseSensitive
                 path="/compare-map"
-                element={<CompareUserMapPages />}
+                element={<CompareMapPages />}
               />
             </Route>
           </Route>
