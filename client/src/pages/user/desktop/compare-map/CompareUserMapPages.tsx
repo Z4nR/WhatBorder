@@ -1,14 +1,13 @@
 import React, { useRef, useState } from 'react';
 import TransferList from '@/components/desktop/compare/TransferList';
-import UserPlaceToCompareList from '@/components/desktop/compare/UserPlaceToCompareList';
 import FlyMapTo from '@/components/general/map/FlyMapTo';
 import { colorTransferMap, dateFormatter, onEachFeature } from '@/utils/helper';
-import { compareList, myList } from '@/utils/networks';
+import { compareList, userComparePlaceList } from '@/utils/networks';
 import {
   ComparePlaceProps,
+  PlaceListToCompareProps,
   PlaceMapProps,
   TableTransferProps,
-  UserPlaceProps,
 } from '@/utils/types/compare.types';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -31,12 +30,13 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { useMediaQuery } from 'react-responsive';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import PlaceCompareList from '@/components/desktop/compare/PlaceCompareList';
 
 const { Link, Text } = Typography;
 
 type InputRef = GetRef<typeof Input>;
 
-type DataIndex = keyof UserPlaceProps;
+type DataIndex = keyof PlaceListToCompareProps;
 
 const filterOption = (input: string, item: ComparePlaceProps) =>
   item.placeName?.includes(input) ||
@@ -63,9 +63,9 @@ const CompareUserMapPages: React.FC = () => {
     setDisabled(checked);
   };
 
-  const my = useQuery({
-    queryKey: ['user-place'],
-    queryFn: async () => await myList(),
+  const userPlaceToCompare = useQuery({
+    queryKey: ['user-place-to-compare'],
+    queryFn: async () => await userComparePlaceList(),
   });
 
   const [searchText, setSearchText] = useState('');
@@ -89,7 +89,7 @@ const CompareUserMapPages: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<UserPlaceProps> => ({
+  ): TableColumnType<PlaceListToCompareProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -176,7 +176,7 @@ const CompareUserMapPages: React.FC = () => {
     );
   };
 
-  const columnsUser: TableProps<UserPlaceProps>['columns'] = [
+  const columnsUser: TableProps<PlaceListToCompareProps>['columns'] = [
     {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
@@ -360,9 +360,9 @@ const CompareUserMapPages: React.FC = () => {
 
   return (
     <Flex align="end" gap="middle" vertical>
-      <UserPlaceToCompareList
+      <PlaceCompareList
         rowKey={({ placeId }) => placeId}
-        dataSource={my.data}
+        dataSource={userPlaceToCompare.data}
         columns={columnsUser}
       />
       <TransferList
