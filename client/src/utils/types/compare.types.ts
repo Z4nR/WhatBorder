@@ -29,7 +29,7 @@ export interface TableTransferProps extends TransferProps<TransferItem> {
   rightColumns: TableColumnsType<ComparePlaceProps>;
 }
 
-export interface UserPlaceProps {
+export interface PlaceListToCompareProps {
   placeId: string;
   placeName: string;
   placeAddress: string;
@@ -44,7 +44,7 @@ export interface UserPlaceProps {
   createdAt: Date;
 }
 
-export interface TableUserProps extends TableProps<UserPlaceProps> {
-  dataSource: UserPlaceProps[];
-  columns: ColumnsType<UserPlaceProps>;
+export interface TableCompareProps extends TableProps<PlaceListToCompareProps> {
+  dataSource: PlaceListToCompareProps[];
+  columns: ColumnsType<PlaceListToCompareProps>;
 }
