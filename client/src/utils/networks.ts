@@ -237,9 +237,9 @@ const buildingFilter = async () => {
     });
 };
 
-const myList = async () => {
+const userComparePlaceList = async () => {
   return axios
-    .get(`/v1/place/my-list`, {
+    .get(`/v1/place/user-only`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -291,7 +291,7 @@ const placeStatisticAdmin = async () => {
 
 const adminPlaceList = async () => {
   return axios
-    .get(`/v1/place/admin-access`, {
+    .get(`/v1/place/admin-control`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -328,6 +328,19 @@ const adminRemoveUser = async (id: any) => {
     });
 };
 
+const adminComparePlaceList = async () => {
+  return axios
+    .get(`/v1/place/all-user`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 export {
   registerAcc,
   loginAcc,
@@ -347,11 +360,12 @@ export {
   userDetail,
   compareList,
   buildingFilter,
-  myList,
+  userComparePlaceList,
   adminUserList,
   placeStatisticAdmin,
   adminPlaceList,
   adminUserRoleList,
   adminRemovePlace,
   adminRemoveUser,
+  adminComparePlaceList,
 };
