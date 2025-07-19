@@ -235,6 +235,8 @@ export class PlaceService {
   }
 
   async findPlaceUser(user_id: string) {
+    console.log(user_id);
+
     try {
       return await this.prisma.placeData.findMany({
         select: {
