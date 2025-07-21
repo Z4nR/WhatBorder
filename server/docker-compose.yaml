@@ -1,0 +1,11 @@
+services:
+  whatborder-be:
+    build:
+      context: .
+      args:
+        DATABASE_URL: ${DATABASE_URL}
+    env_file: .env
+    ports:
+      - '5555:5555'
+    command: >
+      sh -c "npm run seed && npm run start:prod"
