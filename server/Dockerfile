@@ -1,9 +1,16 @@
-FROM node:18-alpine
+FROM node:18
 
 WORKDIR /app
 
 COPY package.json ./
-RUN npm i
+RUN npm install
 
 COPY . .
-CMD [ "npm", "start" ]
+
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
+RUN npx prisma generate
+RUN npm run build
+
+CMD ["npm", "run", "start:prod"]
