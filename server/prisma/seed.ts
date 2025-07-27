@@ -34,6 +34,33 @@ async function main() {
   }
 
   console.log('Roles seeded:', roles);
+
+  const buildings = [
+    { name: 'Bangunan', color: '#ad2102', label: '#fa541c' },
+    { name: 'Lahan Kosong', color: '#ad4e00', label: '#fa8c16' },
+    { name: 'Pertanian', color: '#5b8c00', label: '#a0d911' },
+    { name: 'Peternakan', color: '#10239e', label: '#2f54eb' },
+    { name: 'Tidak Diketahui', color: '#595959', label: '#bfbfbf' },
+  ];
+
+  for (const building of buildings) {
+    await prisma.buildingType.upsert({
+      where: { color: building.color },
+      update: {
+        name: building.name,
+        label: building.label,
+        active: true,
+      },
+      create: {
+        name: building.name,
+        label: building.label,
+        color: building.color,
+        active: true,
+      },
+    });
+  }
+
+  console.log('Building seeded:', buildings);
 }
 
 main()
