@@ -34,16 +34,17 @@ model User {
 }
 
 model BuildingType {
-  building_id BigInt      @id @default(autoincrement())
-  name        String
-  color       String      @unique(map: "buildingtype_color_idx")
-  active      Boolean     @default(true)
-  created_by  String?
-  created_at  DateTime    @default(now())
-  updated_by  String?
-  updated_at  DateTime    @updatedAt
-  label       String      @default("")
-  PlaceData   PlaceData[]
+  building_id   BigInt      @id @default(autoincrement())
+  name          String
+  color         String
+  active_status Boolean     @default(true)
+  created_by    String?
+  created_at    DateTime    @default(now())
+  updated_by    String?
+  updated_at    DateTime    @updatedAt
+  label         String      @default("")
+  build_code    Int?        @unique(map: "buildingtype_build_code_idx")
+  PlaceData     PlaceData[]
 }
 
 model PlaceData {
