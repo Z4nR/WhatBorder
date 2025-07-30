@@ -77,7 +77,7 @@ export class PlaceController {
 
   @Roles(Role.USER)
   @Version('1')
-  @Get('my-list')
+  @Get('user-only')
   async findMyPlace(@Req() req: Request) {
     const user = req['user'];
     const userId = user.sub;
@@ -112,7 +112,7 @@ export class PlaceController {
   // Admin Access
   @Roles(Role.ADMIN)
   @Version('1')
-  @Get('admin-access')
+  @Get('admin-control')
   async adminPlaceData() {
     return this.placeService.adminPlaceList();
   }
@@ -126,7 +126,7 @@ export class PlaceController {
 
   @Roles(Role.ADMIN)
   @Version('1')
-  @Get('my-list')
+  @Get('all-user')
   async findAllPlace() {
     return this.placeService.findPlaceAdmin();
   }
