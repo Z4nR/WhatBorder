@@ -7,8 +7,8 @@ RUN npm install
 
 COPY . .
 
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# Use dummy DATABASE_URL just for generate
+ENV DATABASE_URL="file:./dev.db"
 
 RUN npx prisma generate
 RUN npm run build
