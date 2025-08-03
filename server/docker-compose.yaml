@@ -1,10 +1,11 @@
 services:
-  whatborder-be:
+  backend:
     build:
       context: .
       args:
         DATABASE_URL: ${DATABASE_URL}
     env_file: .env
+    restart: always
     ports:
       - '5555:5555'
     command: >
