@@ -36,26 +36,33 @@ async function main() {
   console.log('Roles seeded:', roles);
 
   const buildings = [
-    { name: 'Bangunan', color: '#ad2102', label: '#fa541c' },
-    { name: 'Lahan Kosong', color: '#ad4e00', label: '#fa8c16' },
-    { name: 'Pertanian', color: '#5b8c00', label: '#a0d911' },
-    { name: 'Peternakan', color: '#10239e', label: '#2f54eb' },
-    { name: 'Tidak Diketahui', color: '#595959', label: '#bfbfbf' },
+    {
+      name: 'Tidak Diketahui',
+      color: '#595959',
+      label: '#bfbfbf',
+      build_code: 0,
+    },
+    { name: 'Lahan Kosong', color: '#ad4e00', label: '#fa8c16', build_code: 1 },
+    { name: 'Bangunan', color: '#ad2102', label: '#fa541c', build_code: 2 },
+    { name: 'Pertanian', color: '#5b8c00', label: '#a0d911', build_code: 3 },
+    { name: 'Peternakan', color: '#10239e', label: '#2f54eb', build_code: 4 },
   ];
 
   for (const building of buildings) {
     await prisma.buildingType.upsert({
-      where: { color: building.color },
+      where: { build_code: building.build_code },
       update: {
         name: building.name,
         label: building.label,
-        active: true,
+        active_status: true,
+        updated_by: 'Z4nR',
       },
       create: {
         name: building.name,
         label: building.label,
         color: building.color,
-        active: true,
+        active_status: true,
+        created_by: 'Z4nR',
       },
     });
   }
