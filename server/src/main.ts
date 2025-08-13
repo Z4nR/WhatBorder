@@ -17,6 +17,6 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  await app.listen(process.env.PORT);
+  await app.listen(5555);
 }
 bootstrap();

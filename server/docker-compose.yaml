@@ -11,6 +11,6 @@ services:
       USER: ${USER}
     restart: always
     ports:
-      - '5555:5555'
+      - '${PORT}:5555'
     command: >
       sh -c "npm run seed && npm run start:prod"
