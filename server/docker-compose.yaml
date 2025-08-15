@@ -13,4 +13,4 @@ services:
     ports:
       - '${PORT}:5555'
     command: >
-      sh -c "npm run seed && npm run start:prod"
+      sh -c "npm run seed:dist && npm run start:prod"
