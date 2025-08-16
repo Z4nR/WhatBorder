@@ -64,7 +64,6 @@ const socketConnection = () => {
     socket = io(Server_URL, {
       transports: ['websocket'],
     });
-    socket.connect();
   }
   return socket;
 };
