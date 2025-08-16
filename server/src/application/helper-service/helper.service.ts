@@ -11,6 +11,8 @@ export class HelperService {
   ) {}
 
   decryptPassword(password: string) {
+    console.log(password);
+
     const specialValue = this.configService.get('USER');
     console.log(specialValue);
 
