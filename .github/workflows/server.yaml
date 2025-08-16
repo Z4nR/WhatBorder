@@ -30,7 +30,7 @@ jobs:
           port: 22
           command: |
             git clone https://github.com/Z4nR/WhatBorder
-            cd ~/BorderLand
+            cd ~/WhatBorder
             git pull origin main
             cd server
             docker compose down --remove-orphans
