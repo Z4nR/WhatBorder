@@ -12,7 +12,10 @@ export class HelperService {
 
   decryptPassword(password: string) {
     const specialValue = this.configService.get('USER');
+    console.log(specialValue);
+
     const fullString = password.indexOf(specialValue);
+    console.log(fullString);
 
     if (fullString === -1) {
       throw new BadRequestException(

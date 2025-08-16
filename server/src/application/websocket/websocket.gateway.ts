@@ -11,7 +11,7 @@ import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'https://z4nr.github.io/WhatBorder/',
   },
   transports: ['websocket'],
 })
