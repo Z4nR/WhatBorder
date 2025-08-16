@@ -34,7 +34,7 @@ jobs:
       - name: Setup environment
         working-directory: ./client
         env:
-          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL }}
+          VITE_BACKEND: ${{ secrets.VITE_BACKEND }}
           VITE_SECRET: ${{ secrets.VITE_SECRET }}
           VITE_USER: ${{ secrets.VITE_USER }}
         run: |
