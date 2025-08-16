@@ -39,8 +39,8 @@ jobs:
           VITE_USER: ${{ secrets.VITE_USER }}
         run: |
           echo "VITE_BACKEND=${VITE_BACKEND}" > .env.production
-          echo "VITE_SECRET=${VITE_SECRET}" > .env.production
-          echo "VITE_USER=${VITE_USER}" > .env.production
+          echo "VITE_SECRET=${VITE_SECRET}" >> .env.production
+          echo "VITE_USER=${VITE_USER}" >> .env.production
 
       - name: Deploy Project
         working-directory: ./client
