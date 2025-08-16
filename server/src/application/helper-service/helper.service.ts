@@ -13,8 +13,8 @@ export class HelperService {
   decryptPassword(password: string) {
     console.log(password);
 
-    const specialValue = this.configService.get('USER');
-    console.log(specialValue);
+    const specialValue = this.configService.get('USER_CODE');
+    console.log('user code:', specialValue);
 
     const fullString = password.indexOf(specialValue);
     console.log(fullString);
