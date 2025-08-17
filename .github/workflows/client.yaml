@@ -35,10 +35,12 @@ jobs:
         working-directory: ./client
         env:
           VITE_BACKEND: ${{ secrets.VITE_BACKEND }}
+          VITE_WSS: ${{ secrets.VITE_WSS }}
           VITE_SECRET: ${{ secrets.VITE_SECRET }}
           VITE_USER: ${{ secrets.VITE_USER }}
         run: |
           echo "VITE_BACKEND=${VITE_BACKEND}" > .env.production
+          echo "VITE_WSS=${VITE_WSS}" >> .env.production
           echo "VITE_SECRET=${VITE_SECRET}" >> .env.production
           echo "VITE_USER=${VITE_USER}" >> .env.production
 
