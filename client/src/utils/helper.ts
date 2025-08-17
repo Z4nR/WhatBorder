@@ -59,9 +59,10 @@ const getGreeting = () => {
 
 let socket: Socket;
 const socketConnection = () => {
-  const Server_URL = import.meta.env.VITE_BACKEND;
+  const Server_URL = import.meta.env.VITE_WSS;
   if (!socket) {
     socket = io(Server_URL, {
+      path: '/socket.io/',
       transports: ['websocket'],
     });
   }
