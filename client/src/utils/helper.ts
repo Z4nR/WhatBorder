@@ -60,6 +60,8 @@ const getGreeting = () => {
 let socket: Socket;
 const socketConnection = () => {
   const Server_URL = import.meta.env.VITE_WSS;
+  console.log(`Connecting to WebSocket server at ${Server_URL}`);
+
   if (!socket) {
     socket = io(Server_URL, {
       path: '/socket.io/',
