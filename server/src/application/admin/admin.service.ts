@@ -6,19 +6,46 @@ import {
 import { AddBuildingDto } from './dto/create-admin.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { PlaceService } from '../place/place.service';
-import { HelperService } from '../helper-service/helper.service';
 
 @Injectable()
 export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly placeService: PlaceService,
-    private readonly helperService: HelperService,
   ) {}
+
+  // Check Data
+  private async findByIdUser(userId: string) {
+    try {
+      return await this.prisma.user.findUnique({
+        where: {
+          user_id: userId,
+          role: {
+            active_status: true,
+          },
+        },
+        select: {
+          user_id: true,
+          user_name: true,
+          full_name: true,
+          password: true,
+          description: true,
+          created_at: true,
+          updated_at: true,
+          special_code: true,
+          login_at: true,
+          role_code: true,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async validateUserAccount(id: string) {
     try {
-      const userExist = await this.helperService.findByIdUser(id);
+      const userExist = await this.findByIdUser(id);
       if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
       if (![0, 1, 2].includes(userExist.role_code))
         throw new BadRequestException('Tidak Dapat Menghapus Sesama Admin');
@@ -30,7 +57,7 @@ export class AdminService {
 
   async validateRulerAccount(id: string) {
     try {
-      const userExist = await this.helperService.findByIdUser(id);
+      const userExist = await this.findByIdUser(id);
       if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
       if (![0, 1].includes(userExist.role_code))
         throw new BadRequestException(
@@ -52,6 +79,7 @@ export class AdminService {
     }
   }
 
+  // Admin Service
   async findAll() {
     try {
       return await this.prisma.user.findMany({

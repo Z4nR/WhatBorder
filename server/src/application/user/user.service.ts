@@ -7,18 +7,59 @@ import {
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { compare } from 'bcrypt';
-import { HelperService } from '../helper-service/helper.service';
 
 @Injectable()
 export class UserService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly helperService: HelperService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
+
+  // Check Data
+  private async findByIdUser(userId: string) {
+    try {
+      return await this.prisma.user.findUnique({
+        where: {
+          user_id: userId,
+          role: {
+            active_status: true,
+          },
+        },
+        select: {
+          user_id: true,
+          user_name: true,
+          full_name: true,
+          password: true,
+          description: true,
+          created_at: true,
+          updated_at: true,
+          special_code: true,
+          login_at: true,
+          role_code: true,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  private async findByUsername(username: string) {
+    try {
+      const data = await this.prisma.user.findFirst({
+        where: {
+          user_name: username,
+        },
+      });
+
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async validateUserAccount(id: string) {
     try {
-      const userExist = await this.helperService.findByIdUser(id);
+      const userExist = await this.findByIdUser(id);
       if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
 
       return userExist;
@@ -28,6 +69,7 @@ export class UserService {
     }
   }
 
+  // User Service
   async findAll(id: string) {
     try {
       return await this.prisma.user.findMany({
@@ -131,7 +173,7 @@ export class UserService {
     console.log(dto.username);
 
     if (dto.username) {
-      const username = await this.helperService.findByUsername(dto.username);
+      const username = await this.findByUsername(dto.username);
       if (username)
         throw new ConflictException('Nama Pengguna sudah digunakan');
     }

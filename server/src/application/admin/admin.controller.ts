@@ -8,13 +8,17 @@ import {
   Req,
   Patch,
   Version,
+  UseGuards,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddBuildingDto } from './dto/create-admin.dto';
 import { Request } from 'express';
 import { Roles } from '../authz/decorator/role.decorator';
 import { Role } from '../authz/enum/role.enum';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../authz/authz.guard';
 
+@UseGuards(AuthGuard, RolesGuard)
 @Roles(Role.ADMIN)
 @Controller('admin')
 export class AdminController {

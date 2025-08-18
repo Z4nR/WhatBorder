@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   Version,
+  UseGuards,
 } from '@nestjs/common';
 import { PlaceService } from './place.service';
 import { CreatePlaceDto } from './dto/create-place.dto';
@@ -15,7 +16,10 @@ import { UpdatePlaceDto } from './dto/update-place.dto';
 import { Request } from 'express';
 import { Role } from '../authz/enum/role.enum';
 import { Roles } from '../authz/decorator/role.decorator';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../authz/authz.guard';
 
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('place')
 export class PlaceController {
   constructor(private readonly placeService: PlaceService) {}

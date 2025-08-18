@@ -1,14 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/db/prisma.service';
 import * as CryptoJS from 'crypto-js';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class HelperService {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly configService: ConfigService,
-  ) {}
+  constructor(private readonly configService: ConfigService) {}
 
   decryptPassword(password: string) {
     console.log(password);
@@ -32,70 +28,6 @@ export class HelperService {
     const parsePassword = bytes.toString(CryptoJS.enc.Utf8);
 
     return parsePassword;
-  }
-
-  async findByUsername(username: string) {
-    try {
-      const data = await this.prisma.user.findFirst({
-        where: {
-          user_name: username,
-        },
-      });
-
-      console.log(data);
-      return data;
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async findByIdUser(userId: string) {
-    try {
-      return await this.prisma.user.findUnique({
-        where: {
-          user_id: userId,
-          role: {
-            active_status: true,
-          },
-        },
-        select: {
-          user_id: true,
-          user_name: true,
-          full_name: true,
-          password: true,
-          description: true,
-          created_at: true,
-          updated_at: true,
-          special_code: true,
-          login_at: true,
-          role_code: true,
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async checkingPlaceName(name: string) {
-    return await this.prisma.placeData.findFirst({
-      where: {
-        place_name: {
-          equals: name,
-        },
-      },
-    });
-  }
-
-  async checkingPlaceMap(geojson: any) {
-    return await this.prisma.placeMap.findFirst({
-      where: {
-        place_geojson: {
-          equals: geojson,
-        },
-      },
-    });
   }
 
   rangeCount(lat1: number, lat2: number, long1: number, long2: number): number {

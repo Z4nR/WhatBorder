@@ -18,4 +18,29 @@ export class AuthzService {
       throw error;
     }
   }
+
+  async findUserRole(userId: string) {
+    try {
+      const data = await this.prisma.user.findUnique({
+        where: {
+          user_id: userId,
+          role: {
+            active_status: true,
+          },
+        },
+        select: {
+          role: {
+            select: {
+              role_name: true,
+            },
+          },
+        },
+      });
+
+      return { role_name: data.role.role_name };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

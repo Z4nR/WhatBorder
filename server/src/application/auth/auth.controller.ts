@@ -9,6 +9,7 @@ import {
   HttpStatus,
   BadRequestException,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthLoginDto, AuthRegistDto } from './dto/create-auth.dto';
@@ -17,7 +18,10 @@ import { HelperService } from '../helper-service/helper.service';
 import { Public } from './decorator/public.decorator';
 import { Role } from '../authz/enum/role.enum';
 import { Roles } from '../authz/decorator/role.decorator';
+import { AuthGuard } from './auth.guard';
+import { RolesGuard } from '../authz/authz.guard';
 
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('auth')
 export class AuthController {
   constructor(

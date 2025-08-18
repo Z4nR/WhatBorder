@@ -7,6 +7,7 @@ import {
   Req,
   Param,
   Version,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,7 +15,10 @@ import { Request } from 'express';
 import { UserDelete } from './entities/user.entity';
 import { Role } from '../authz/enum/role.enum';
 import { Roles } from '../authz/decorator/role.decorator';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from '../authz/authz.guard';
 
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

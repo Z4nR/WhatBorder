@@ -10,8 +10,29 @@ import { instanceToPlain } from 'class-transformer';
 export class PlaceService {
   constructor(
     private readonly prisma: PrismaService,
-    private helperService: HelperService,
+    private readonly helperService: HelperService,
   ) {}
+
+  // Check Data
+  async checkingPlaceName(name: string) {
+    return await this.prisma.placeData.findFirst({
+      where: {
+        place_name: {
+          equals: name,
+        },
+      },
+    });
+  }
+
+  async checkingPlaceMap(geojson: any) {
+    return await this.prisma.placeMap.findFirst({
+      where: {
+        place_geojson: {
+          equals: geojson,
+        },
+      },
+    });
+  }
 
   // All Access
   async findBuilding() {
@@ -103,8 +124,8 @@ export class PlaceService {
   // User Access
   async validatePlaceExist(placeName: string, placeGeojson: GeoJson) {
     try {
-      const place = await this.helperService.checkingPlaceName(placeName);
-      const map = await this.helperService.checkingPlaceMap(placeGeojson);
+      const place = await this.checkingPlaceName(placeName);
+      const map = await this.checkingPlaceMap(placeGeojson);
 
       if (place)
         throw new ConflictException(

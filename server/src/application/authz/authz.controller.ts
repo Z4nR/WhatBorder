@@ -1,7 +1,13 @@
-import { Controller, Post, Body, Version } from '@nestjs/common';
+import { Controller, Post, Body, Version, UseGuards } from '@nestjs/common';
 import { AuthzService } from './authz.service';
 import { CreateRoleDto } from './dto/create-authz.dto';
+import { AuthGuard } from '../auth/auth.guard';
+import { RolesGuard } from './authz.guard';
+import { Roles } from './decorator/role.decorator';
+import { Role } from './enum/role.enum';
 
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(Role.ADMIN, Role.SUPER, Role.OWNER)
 @Controller('authz')
 export class AuthzController {
   constructor(private readonly authzService: AuthzService) {}

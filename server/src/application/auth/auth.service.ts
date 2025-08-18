@@ -10,7 +10,6 @@ import { ChangePasswordDto } from './dto/update-auth.dto';
 import { randomUUID } from 'crypto';
 import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/db/prisma.service';
-import { HelperService } from '../helper-service/helper.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -18,10 +17,25 @@ import { ConfigService } from '@nestjs/config';
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
-    private helperService: HelperService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
+
+  private async findByUsername(username: string) {
+    try {
+      const data = await this.prisma.user.findFirst({
+        where: {
+          user_name: username,
+        },
+      });
+
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 
   async me(id: string) {
     try {
@@ -55,7 +69,7 @@ export class AuthService {
   }
 
   async changePassword(dto: ChangePasswordDto) {
-    const user = await this.helperService.findByUsername(dto.username);
+    const user = await this.findByUsername(dto.username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
     const code = await compare(dto.code, user.special_code);
@@ -80,7 +94,7 @@ export class AuthService {
   }
 
   async register(dto: AuthRegistDto) {
-    const username = await this.helperService.findByUsername(dto.username);
+    const username = await this.findByUsername(dto.username);
     if (username) throw new ConflictException('Nama Pengguna sudah digunakan');
 
     try {
@@ -103,7 +117,7 @@ export class AuthService {
   async login(dto: AuthLoginDto) {
     const date = new Date().toISOString();
 
-    const user = await this.helperService.findByUsername(dto.username);
+    const user = await this.findByUsername(dto.username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
     await this.prisma.user.update({
