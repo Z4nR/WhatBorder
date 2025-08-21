@@ -54,6 +54,19 @@ const getLogged = async () => {
     });
 };
 
+const getRoute = async () => {
+  return axios
+    .get('/v1/auth/me-route', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 const profileUser = async () => {
   return axios
     .get('/v1/user/profile', {
@@ -346,6 +359,7 @@ export {
   loginAcc,
   forgetPassword,
   getLogged,
+  getRoute,
   profileUser,
   editProfileUser,
   deleteAccount,
