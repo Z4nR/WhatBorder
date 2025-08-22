@@ -30,4 +30,3 @@ COPY --from=build /app/dist ./dist
 ENV DATABASE_URL="file:./dev.db"
 RUN npx prisma generate
 
-CMD ["node", "dist/main.js"]
