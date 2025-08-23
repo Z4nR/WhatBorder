@@ -10,7 +10,6 @@ const prisma = new PrismaClient({
 
 async function main() {
   const roles = [
-    { role_name: 'Owner', role_code: 0, label: '#108ee9' },
     { role_name: 'Super Admin', role_code: 1, label: '#ff5500' },
     { role_name: 'Admin', role_code: 2, label: '#fa541c' },
     { role_name: 'User', role_code: 3, label: '#52c41a' },
