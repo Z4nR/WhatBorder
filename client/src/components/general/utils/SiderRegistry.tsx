@@ -39,6 +39,12 @@ const pageRegistry: Record<
     parentKey: null,
     icon: null,
   },
+  statistic_admin: {
+    path: '/statistic',
+    aside: true,
+    parentKey: null,
+    icon: <FundViewOutlined />,
+  },
   compare_admin: {
     path: '/compare-map',
     aside: true,
