@@ -5,6 +5,7 @@ import { AdminModule } from './admin/admin.module';
 import { WebsocketModule } from './websocket/websocket.module';
 import { AuthzModule } from './authz/authz.module';
 import { AuthModule } from './auth/auth.module';
+import { SuperAdminModule } from './super-admin/super-admin.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     AdminModule,
     WebsocketModule,
+    SuperAdminModule,
   ],
 })
 export class VersionModule {}

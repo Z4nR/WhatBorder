@@ -15,14 +15,14 @@ import { CompassOutlined, TeamOutlined, HomeOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { placeStatisticAdmin } from '@/utils/networks';
 import { useQuery } from '@tanstack/react-query';
-import ChartTotalBuilding from './ChartTotalBuilding';
-import ChartCreateTime from './ChartCreateTime';
-import ChartGeoMap from './ChartGeoMap';
-import ChartUpdateTime from './ChartUpdateTime';
+import ChartTotalBuilding from '../../components/general/admin/dashboard/ChartTotalBuilding';
+import ChartCreateTime from '../../components/general/admin/dashboard/ChartCreateTime';
+import ChartGeoMap from '../../components/general/admin/dashboard/ChartGeoMap';
+import ChartUpdateTime from '../../components/general/admin/dashboard/ChartUpdateTime';
 
 const { Title } = Typography;
 
-const AdminDashboard: React.FC = () => {
+const AdminDashboardPages: React.FC = () => {
   const navigate = useNavigate();
   const greeting = getGreeting();
 
@@ -34,17 +34,14 @@ const AdminDashboard: React.FC = () => {
     <Tooltip title="Info Jenis Tempat">
       <HomeOutlined
         key="list-building"
-        onClick={() => navigate('/place-type-action')}
+        onClick={() => navigate('/place-type')}
       />
     </Tooltip>,
-    <Tooltip title="Info Lokasi Tempat">
-      <CompassOutlined
-        key="list-place"
-        onClick={() => navigate('/place-action')}
-      />
+    <Tooltip title="Daftar Lokasi Pengguna">
+      <CompassOutlined key="list-place" onClick={() => navigate('/place')} />
     </Tooltip>,
-    <Tooltip title="Info Pengguna">
-      <TeamOutlined key="list-user" onClick={() => navigate('/user-action')} />
+    <Tooltip title="Daftar Pengguna">
+      <TeamOutlined key="list-user" onClick={() => navigate('/user')} />
     </Tooltip>,
   ];
 
@@ -134,4 +131,4 @@ const AdminDashboard: React.FC = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminDashboardPages;

@@ -8,14 +8,39 @@ datasource db {
 }
 
 model Role {
-  role_id       String   @id @default(uuid())
-  role_name     String?  @db.String(30)
+  role_id       String      @id @default(uuid())
+  role_name     String?     @db.String(30)
+  created_at    DateTime    @default(now())
+  updated_at    DateTime    @updatedAt
+  active_status Boolean     @default(true)
+  role_code     Int?        @unique
+  label         String?     @db.String(8)
+  RoleRoute     RoleRoute[]
+  User          User[]
+}
+
+model Route {
+  route_id   String      @id @default(uuid())
+  route_name String      @db.String(30)
+  path       String?     @db.String(100)
+  parent_id  String?
+  order_path Int
+  path_key   String
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt
+  RoleRoute  RoleRoute[]
+  parent     Route?      @relation("RouteChildren", fields: [parent_id], references: [route_id])
+  children   Route[]     @relation("RouteChildren")
+}
+
+model RoleRoute {
+  role_route_id String   @id @default(uuid())
+  role_id       String
+  route_id      String
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
-  active_status Boolean  @default(true)
-  role_code     Int?     @unique
-  label         String?  @db.String(8)
-  User          User[]
+  role          Role     @relation(fields: [role_id], references: [role_id], map: "FK_role_route_role_id")
+  route         Route    @relation(fields: [route_id], references: [route_id], map: "FK_role_route_route_id")
 }
 
 model User {

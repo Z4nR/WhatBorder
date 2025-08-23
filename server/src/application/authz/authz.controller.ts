@@ -7,7 +7,7 @@ import { Roles } from './decorator/role.decorator';
 import { Role } from './enum/role.enum';
 
 @UseGuards(AuthGuard, RolesGuard)
-@Roles(Role.ADMIN, Role.SUPER, Role.OWNER)
+@Roles(Role.ADMIN, Role.SUPER)
 @Controller('authz')
 export class AuthzController {
   constructor(private readonly authzService: AuthzService) {}

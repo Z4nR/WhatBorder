@@ -28,17 +28,17 @@ import useSocketState from '@/utils/state/clientState';
 import { useNavigate } from 'react-router-dom';
 import { SocketProps } from '@/utils/types/client.types';
 import ClientList from '@/components/desktop/modal/ClientList';
-import EmptyData from '../../utils/EmptyData';
 import ConfirmTask from '@/components/client/modal/ConfirmTask';
 import {
   DashboardChartProps,
   DashboardPlaceListProps,
 } from '@/utils/types/statistic.types';
 import { DesktopConnectProps } from '@/utils/types/map.types';
+import EmptyData from '@/components/general/utils/EmptyData';
 
 const { Title, Text } = Typography;
 
-const UserDashboard: React.FC = () => {
+const UserDashboardPages: React.FC = () => {
   const navigate = useNavigate();
   const [clientModal, setClientModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState(false);
@@ -329,4 +329,4 @@ const UserDashboard: React.FC = () => {
   );
 };
 
-export default UserDashboard;
+export default UserDashboardPages;

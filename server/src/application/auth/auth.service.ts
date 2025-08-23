@@ -12,13 +12,15 @@ import { compare, hash } from 'bcrypt';
 import { PrismaService } from 'src/db/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { HelperService } from '../helper-service/helper.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
-    private jwtService: JwtService,
-    private configService: ConfigService,
+    private readonly helperService: HelperService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   private async findByUsername(username: string) {
@@ -37,6 +39,10 @@ export class AuthService {
     }
   }
 
+  decryptPassword(password: string) {
+    return this.helperService.decryptPassword(password);
+  }
+
   async me(id: string) {
     try {
       const data = await this.prisma.user.findFirst({
@@ -52,6 +58,80 @@ export class AuthService {
       return { username: data.user_name, role: data.role_code };
     } catch (error) {
       console.log(error);
+      throw error;
+    }
+  }
+
+  async myRole(id: number) {
+    try {
+      const role = await this.prisma.role.findFirst({
+        where: { role_code: id },
+        select: {
+          RoleRoute: {
+            select: {
+              route: {
+                select: {
+                  route_id: true,
+                  route_name: true,
+                  path: true,
+                  path_key: true,
+                  order_path: true,
+                  parent_id: true,
+                  parent: {
+                    select: {
+                      path_key: true,
+                    },
+                  },
+                  children: {
+                    select: {
+                      route_id: true,
+                      route_name: true,
+                      path: true,
+                      path_key: true,
+                      order_path: true,
+                      parent_id: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const routes =
+        role?.RoleRoute.map((rr) => ({
+          routeId: rr.route.route_id,
+          routeName: rr.route.route_name,
+          path: rr.route.path,
+          pathKey: rr.route.path_key,
+          orderPath: rr.route.order_path,
+          parentId: rr.route.parent_id,
+          parentKey: rr.route.parent?.path_key ?? null, // 👈 flattened
+          children: rr.route.children.map((c) => ({
+            routeId: c.route_id,
+            pathKey: c.path_key,
+          })),
+        })) ?? [];
+
+      // Build a lookup map for quick parent-child assignment
+      const map = new Map<string, any>();
+      routes.forEach((r) => {
+        map.set(r.routeId, { ...r, children: [] });
+      });
+
+      const treeRoute: any[] = [];
+      map.forEach((route) => {
+        if (route.parentId && map.has(route.parentId)) {
+          map.get(route.parentId).children.push(route);
+        } else {
+          treeRoute.push(route);
+        }
+      });
+
+      return treeRoute;
+    } catch (error) {
+      console.error(error);
       throw error;
     }
   }
