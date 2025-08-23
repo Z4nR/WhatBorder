@@ -9,6 +9,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import LayoutPages from './layout/Layout';
 import VerifPages from './pages/VerifPages';
+import Loading from './components/general/utils/Loading';
 // import DashboardPages from './pages/DashboardPages';
 // import ProfilePages from './pages/ProfilePages';
 // import StatisticPages from './pages/StatisticPages';
@@ -26,7 +27,6 @@ import { getLogged, getRoute } from './utils/networks';
 import useAuthState from './utils/state/authState';
 import useUserState from './utils/state/userState';
 import { message } from 'antd';
-import Loading from './components/general/utils/Loading';
 import buildRoutesFromRegistry from './components/general/utils/PagesRegistry';
 
 const queryClient = new QueryClient();
@@ -86,10 +86,8 @@ const AppRoutes = () => {
     queryFn: async () => await getRoute(),
     enabled: !!useAuthState().accessToken,
   });
-  console.log('Routes:', data);
 
   const routeData = data ? buildRoutesFromRegistry(data) : [];
-  console.log('Built Routes:', routeData);
 
   // const routes = [
   //   {
@@ -162,7 +160,7 @@ const AppRoutes = () => {
 
   const element = useRoutes(routes);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
 
   return element;
 };

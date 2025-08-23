@@ -1,14 +1,11 @@
-import { Link } from 'react-router-dom';
-import {
-  AppstoreOutlined,
-  BlockOutlined,
-  FundViewOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-} from '@ant-design/icons';
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
 import { useMediaQuery } from 'react-responsive';
 import { useState, CSSProperties } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getRoute } from '@/utils/networks';
+import useAuthState from '@/utils/state/authState';
+import buildSiderMenuItems from '@/components/general/utils/SiderRegistry';
 
 const { Sider } = Layout;
 
@@ -40,23 +37,15 @@ const Siders: React.FC = () => {
     ? { position: 'fixed', height: '100vh', zIndex: 100 }
     : {};
 
-  const menuItems = [
-    {
-      key: '1',
-      icon: <AppstoreOutlined />,
-      label: <Link to={'/'}>Beranda Anda</Link>,
-    },
-    {
-      key: '2',
-      icon: <FundViewOutlined />,
-      label: <Link to={'/statistic'}>Statistik Data</Link>,
-    },
-    {
-      key: '3',
-      icon: <BlockOutlined />,
-      label: <Link to={'/compare-map'}>Bandingkan Tempat</Link>,
-    },
-  ];
+  const { data } = useQuery({
+    queryKey: ['routes'],
+    queryFn: async () => await getRoute(),
+    enabled: !!useAuthState().accessToken,
+  });
+  console.log('Routes:', data);
+
+  const asideData = data ? buildSiderMenuItems(data) : [];
+  console.log('Built Sider Menu Items:', asideData);
 
   return (
     <>
@@ -75,15 +64,7 @@ const Siders: React.FC = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          items={menuItems.map((item) => ({
-            key: item.key,
-            icon: item.icon,
-            label: item.label,
-          }))}
-        />
+        <Menu theme="dark" mode="inline" items={asideData} />
       </Sider>
     </>
   );
