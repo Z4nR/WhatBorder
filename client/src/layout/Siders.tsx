@@ -42,10 +42,8 @@ const Siders: React.FC = () => {
     queryFn: async () => await getRoute(),
     enabled: !!useAuthState().accessToken,
   });
-  console.log('Routes:', data);
 
   const asideData = data ? buildSiderMenuItems(data) : [];
-  console.log('Built Sider Menu Items:', asideData);
 
   return (
     <>
@@ -64,7 +62,12 @@ const Siders: React.FC = () => {
         trigger={null}
       >
         <div className="demo-logo-vertical" />
-        <Menu theme="dark" mode="inline" items={asideData} />
+        <Menu
+          theme="dark"
+          mode="inline"
+          defaultSelectedKeys={['dashboard_admin', 'dashboard_user']}
+          items={asideData}
+        />
       </Sider>
     </>
   );

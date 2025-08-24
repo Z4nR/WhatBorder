@@ -1,27 +1,32 @@
-import React, { useRef, useState } from 'react';
-import { Button, GetRef, Input, Space, Table, TableColumnType } from 'antd';
+import {
+  Button,
+  GetRef,
+  Input,
+  Space,
+  Table,
+  TableColumnType,
+  Tag,
+} from 'antd';
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import React, { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { dateFormatter } from '@/utils/helper';
-import { userList } from '@/utils/networks';
-import EmptyData from '../utils/EmptyData';
-import { UserListProps } from '@/utils/types/statistic.types';
-import MiniStatisticProfile from '../modal/MiniStatisticProfile';
+import { adminUserList } from '@/utils/networks';
+import { AdminListProps } from '@/utils/types/statistic.types';
+import EmptyData from '@/components/general/utils/EmptyData';
 
 type InputRef = GetRef<typeof Input>;
 
-type DataIndex = keyof UserListProps;
+type DataIndex = keyof AdminListProps;
 
-const UserList: React.FC = () => {
-  const [profileModal, setProfileModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState('');
-
+const AdminListPages: React.FC = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ['user-all'],
-    queryFn: async () => await userList(),
+    queryKey: ['user-all-admin'],
+    queryFn: async () => await adminUserList(),
   });
 
   const [searchText, setSearchText] = useState('');
@@ -45,7 +50,7 @@ const UserList: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<UserListProps> => ({
+  ): TableColumnType<AdminListProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -121,7 +126,7 @@ const UserList: React.FC = () => {
       ),
   });
 
-  const columns: TableProps<UserListProps>['columns'] = [
+  const columns: TableProps<AdminListProps>['columns'] = [
     {
       title: 'Nama Pengguna',
       dataIndex: 'userName',
@@ -132,7 +137,20 @@ const UserList: React.FC = () => {
       title: 'Deskripsi Pengguna',
       dataIndex: 'description',
       key: 'user-desc',
-      responsive: ['md'],
+      responsive: ['lg'],
+    },
+    {
+      title: 'Tipe',
+      dataIndex: 'userType',
+      key: 'user-type',
+      align: 'center',
+      width: '150px',
+      responsive: ['sm'],
+      render: (_, tag) => {
+        const color: string = tag.role.label;
+        const admin: string = tag.role.roleName;
+        return <Tag color={color}>{admin.toUpperCase()}</Tag>;
+      },
     },
     {
       title: 'Ditambahkan Pada',
@@ -143,7 +161,7 @@ const UserList: React.FC = () => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
       defaultSortOrder: 'ascend',
-      responsive: ['sm'],
+      responsive: ['md'],
       render: (_, time) => {
         const date = dateFormatter(time.createdAt);
         return <p>{date}</p>;
@@ -151,45 +169,32 @@ const UserList: React.FC = () => {
     },
     {
       title: 'Aksi',
-      key: 'user-action',
+      key: 'admin-action',
       width: '150px',
       align: 'center',
-      render: (_, { userId }) => (
-        <Button
-          type="link"
-          onClick={() => {
-            setSelectedUserId(userId);
-            setProfileModal(true);
-          }}
-        >
-          Rincian
-        </Button>
-      ),
+      render: (_, detail) => {
+        if (detail.role.roleName === 'User') {
+          return (
+            <Link to={`/statistic/user/${detail.userId}`}>Lihat Pengguna</Link>
+          );
+        }
+      },
     },
   ];
 
   return (
-    <>
-      {profileModal && (
-        <MiniStatisticProfile
-          id={selectedUserId}
-          state={profileModal}
-          setState={setProfileModal}
-        />
-      )}
-      <Table
-        sticky
-        style={{ backgroundColor: 'transparent' }}
-        loading={isLoading}
-        columns={columns}
-        dataSource={data}
-        rowKey={({ userId }) => userId}
-        locale={{
-          emptyText: <EmptyData description="Data Pengguna Kosong" />,
-        }}
-      />
-    </>
+    <Table
+      sticky
+      style={{ backgroundColor: 'transparent' }}
+      loading={isLoading}
+      columns={columns}
+      dataSource={data}
+      rowKey={({ userId }) => userId}
+      locale={{
+        emptyText: <EmptyData description="Data Pengguna Kosong" />,
+      }}
+    />
   );
 };
 
-export default UserList;
+export default AdminListPages;

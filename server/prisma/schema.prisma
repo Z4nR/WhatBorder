@@ -22,12 +22,13 @@ model Role {
 model Route {
   route_id   String      @id @default(uuid())
   route_name String      @db.String(30)
-  path       String?     @db.String(100)
+  path_route String?     @db.String(100)
   parent_id  String?
   order_path Int
   path_key   String
   created_at DateTime    @default(now())
   updated_at DateTime    @updatedAt
+  path_side  String?     @db.String(100)
   RoleRoute  RoleRoute[]
   parent     Route?      @relation("RouteChildren", fields: [parent_id], references: [route_id])
   children   Route[]     @relation("RouteChildren")

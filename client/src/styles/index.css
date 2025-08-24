@@ -102,3 +102,12 @@ html {
 .color-palette-box:hover span:first-child {
   transform: translateY(-10px);
 }
+
+.ant-menu-dark .ant-menu-item a,
+.ant-menu-dark .ant-menu-submenu-title a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+  height: 100%;
+}

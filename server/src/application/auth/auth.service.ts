@@ -73,7 +73,8 @@ export class AuthService {
                 select: {
                   route_id: true,
                   route_name: true,
-                  path: true,
+                  path_route: true,
+                  path_side: true,
                   path_key: true,
                   order_path: true,
                   parent_id: true,
@@ -86,7 +87,8 @@ export class AuthService {
                     select: {
                       route_id: true,
                       route_name: true,
-                      path: true,
+                      path_route: true,
+                      path_side: true,
                       path_key: true,
                       order_path: true,
                       parent_id: true,
@@ -103,7 +105,8 @@ export class AuthService {
         role?.RoleRoute.map((rr) => ({
           routeId: rr.route.route_id,
           routeName: rr.route.route_name,
-          path: rr.route.path,
+          path: rr.route.path_route,
+          side: rr.route.path_side,
           pathKey: rr.route.path_key,
           orderPath: rr.route.order_path,
           parentId: rr.route.parent_id,

@@ -10,24 +10,12 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import LayoutPages from './layout/Layout';
 import VerifPages from './pages/VerifPages';
 import Loading from './components/general/utils/Loading';
-// import DashboardPages from './pages/DashboardPages';
-// import ProfilePages from './pages/ProfilePages';
-// import StatisticPages from './pages/StatisticPages';
-// import PlaceDetailPages from './pages/PlaceDetailPages';
-// import StatisticProfilePages from './pages/StatisticProfilePages';
-// import IntegratedCreateLocationPages from './pages/user/desktop/create-location/IntegratedCreateLocationPages';
-// import ManualCreateLocationPages from './pages/user/desktop/create-location/ManualCreateLocationPages';
-// import ManualUpdateLocationPages from './pages/user/desktop/update-location/ManualUpdateLocationPages';
-// import PlaceTypePages from './pages/admin/PlaceTypePages';
-// import AddCoordinatePages from './pages/user/client/AddCoordinatePages';
-// import PlaceAccessPages from './pages/admin/PlaceAccessPages';
-// import UserRoleSettingPages from './pages/admin/UserRoleSettingPages';
-// import CompareMapPages from './pages/desktop/CompareMapPages';
 import { getLogged, getRoute } from './utils/networks';
 import useAuthState from './utils/state/authState';
 import useUserState from './utils/state/userState';
 import { message } from 'antd';
 import buildRoutesFromRegistry from './components/general/utils/PagesRegistry';
+import NotFoundPages from './pages/NotFoundPages';
 
 const queryClient = new QueryClient();
 
@@ -89,54 +77,6 @@ const AppRoutes = () => {
 
   const routeData = data ? buildRoutesFromRegistry(data) : [];
 
-  // const routes = [
-  //   {
-  //     path: '/',
-  //     element: (
-  //       <PrivateRoute>
-  //         <LayoutPages />
-  //       </PrivateRoute>
-  //     ),
-  //     children: [
-  //       { index: true, element: <DashboardPages /> },
-  //       { path: 'profile', element: <ProfilePages /> },
-  //       { path: 'place-type-action', element: <PlaceTypePages /> },
-  //       { path: 'place-action', element: <PlaceAccessPages /> },
-  //       { path: 'user-action', element: <UserRoleSettingPages /> },
-  //       {
-  //         path: 'location',
-  //         children: [
-  //           { path: 'new/desktop', element: <IntegratedCreateLocationPages /> },
-  //           { path: 'new/client', element: <AddCoordinatePages /> },
-  //           { path: 'new/manual', element: <ManualCreateLocationPages /> },
-  //           {
-  //             path: 'update/manual/:id',
-  //             element: <ManualUpdateLocationPages />,
-  //           },
-  //         ],
-  //       },
-  //       {
-  //         path: 'statistic',
-  //         children: [
-  //           { index: true, element: <StatisticPages /> },
-  //           { path: 'user/:id', element: <StatisticProfilePages /> },
-  //           { path: 'place/:id', element: <PlaceDetailPages /> },
-  //         ],
-  //       },
-  //       { path: 'compare-map', element: <CompareMapPages /> },
-  //     ],
-  //   },
-  //   {
-  //     path: '/auth',
-  //     element: (
-  //       <PublicRoute>
-  //         <VerifPages />
-  //       </PublicRoute>
-  //     ),
-  //   },
-  //   { path: '*', element: <Navigate to="/" replace /> },
-  // ];
-
   const routes = [
     {
       path: '/',
@@ -155,7 +95,7 @@ const AppRoutes = () => {
         </PublicRoute>
       ),
     },
-    { path: '*', element: <Navigate to="/" replace /> },
+    { path: '*', element: <NotFoundPages /> },
   ];
 
   const element = useRoutes(routes);

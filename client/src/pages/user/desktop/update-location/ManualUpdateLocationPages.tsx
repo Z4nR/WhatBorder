@@ -62,7 +62,7 @@ const ManualUpdateLocationPages: React.FC = () => {
   const handleFetchData = (data: any) => {
     if (data) {
       const coordinate: [number, number][] = geojsonDeconstructor(
-        data?.placeMap.place_geojson
+        data?.placeMap.placeGeojson
       );
       console.log(coordinate);
 

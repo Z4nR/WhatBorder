@@ -16,14 +16,14 @@ import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { placeList } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
-import EmptyData from '../utils/EmptyData';
 import { PlaceListProps } from '@/utils/types/statistic.types';
+import EmptyData from '@/components/general/utils/EmptyData';
 
 type InputRef = GetRef<typeof Input>;
 
 type DataIndex = keyof PlaceListProps;
 
-const PlaceList: React.FC = () => {
+const PlaceStatisticPages: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['place-all'],
     queryFn: async () => await placeList(),
@@ -203,4 +203,4 @@ const PlaceList: React.FC = () => {
   );
 };
 
-export default PlaceList;
+export default PlaceStatisticPages;

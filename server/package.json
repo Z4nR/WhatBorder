@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate:sql": "npx prisma migrate diff / --from-empty / --to-schema-datamodel prisma/schema.prisma / --script > prisma/migrations/0_init/migration.sql"
+    "migrate:sql": "npx prisma migrate diff / --from-empty / --to-schema-datamodel prisma/schema.prisma / --script > prisma/migrations/structure/migration.sql"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.0",
