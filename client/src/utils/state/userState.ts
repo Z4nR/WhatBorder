@@ -5,7 +5,6 @@ import { UserProps, UserState } from '../types/user.types';
 const useUserState = create<UserState>()(
   persist(
     (set) => ({
-      role: 3,
       name: '',
       exp: 0,
       setUser: (state: UserProps) => set(() => ({ ...state })),

@@ -10,4 +10,8 @@ export class AddBuildingDto {
   @IsString()
   @IsNotEmpty()
   color: string;
+
+  @IsString()
+  @IsNotEmpty()
+  label: string;
 }

@@ -26,10 +26,10 @@ export class AdminController {
 
   @Version('1')
   @Post('building')
-  create(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
+  createBuilding(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
     const user = req['user'].user;
 
-    return this.adminService.addBuilding(buildingDto, user);
+    return this.adminService.createBuilding(buildingDto, user);
   }
 
   @Version('1')
@@ -45,37 +45,26 @@ export class AdminController {
   }
 
   @Version('1')
-  @Patch('change-role/:id')
-  async updateUserOnly(
-    @Param('id') id: string,
-    @Body() body: { admin: boolean },
-    @Req() req: Request,
-  ) {
-    const user = req['user'];
-    const userId = user.sub;
-
-    await this.adminService.validateRulerAccount(userId);
+  @Delete('building/:id')
+  removeBuilding(@Param('id') id: number) {
+    return this.adminService.removeBuilding(id);
   }
 
   @Version('1')
   @Delete(':id/remove/place')
-  async removePlace(@Param('id') id: string, @Req() req: Request) {
-    const user = req['user'];
-    const userId = user.sub;
-
-    await this.adminService.validateUserAccount(userId);
+  async removePlace(@Param('id') id: string) {
     await this.adminService.validatePlaceData(id);
 
-    return this.adminService.removePlace(id);
+    console.log(`Removing place with id: ${id}`);
+    // return this.adminService.removePlace(id);
   }
 
   @Version('1')
   @Delete(':id/remove/user')
-  async removeUser(@Param('id') id: string, @Req() req: Request) {
-    const user = req['user'];
-    const userId = user.sub;
+  async removeUser(@Param('id') id: string) {
+    await this.adminService.validateUserAccount(id);
 
-    await this.adminService.validateUserAccount(userId);
-    return this.adminService.removeUser(id);
+    console.log(`Removing user with id: ${id}`);
+    // return this.adminService.removeUser(id);
   }
 }

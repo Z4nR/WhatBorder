@@ -35,7 +35,7 @@ export class AuthController {
 
     const data = await this.authService.me(userId);
     return {
-      ...data,
+      username: data.username,
       exp: user.exp,
     };
   }

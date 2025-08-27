@@ -315,6 +315,19 @@ const adminPlaceList = async () => {
     });
 };
 
+const adminRemovePlaceType = async (id: any) => {
+  return axios
+    .delete(`/v1/admin/building/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const adminRemovePlace = async (id: any) => {
   return axios
     .delete(`/v1/admin/${id}/remove/place`, {
@@ -354,6 +367,19 @@ const adminComparePlaceList = async () => {
     });
 };
 
+const adminNewBuilding = async (data: any) => {
+  return axios
+    .post('/v1/admin/building', data, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 export {
   registerAcc,
   loginAcc,
@@ -379,7 +405,9 @@ export {
   placeStatisticAdmin,
   adminPlaceList,
   adminUserRoleList,
+  adminRemovePlaceType,
   adminRemovePlace,
   adminRemoveUser,
   adminComparePlaceList,
+  adminNewBuilding,
 };

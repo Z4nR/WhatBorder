@@ -36,7 +36,6 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   useEffect(() => {
     if (data) {
       userState.setUser({
-        role: data.role,
         name: data.username,
         exp: data.exp,
       });

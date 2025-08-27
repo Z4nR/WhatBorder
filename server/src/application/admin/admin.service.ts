@@ -47,22 +47,8 @@ export class AdminService {
     try {
       const userExist = await this.findByIdUser(id);
       if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
-      if (![0, 1, 2].includes(userExist.role_code))
+      if (userExist.role_code === 2)
         throw new BadRequestException('Tidak Dapat Menghapus Sesama Admin');
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async validateRulerAccount(id: string) {
-    try {
-      const userExist = await this.findByIdUser(id);
-      if (!userExist) throw new NotFoundException('Pengguna Tidak Ditemukan');
-      if (![0, 1].includes(userExist.role_code))
-        throw new BadRequestException(
-          'Tidak Dapat Mengubah Status Pengguna Kecuali Super Admin',
-        );
     } catch (error) {
       console.log(error);
       throw error;
@@ -210,7 +196,7 @@ export class AdminService {
     }
   }
 
-  async addBuilding(building: AddBuildingDto, user: string) {
+  async createBuilding(building: AddBuildingDto, user: string) {
     try {
       await this.prisma.buildingType.create({
         data: {
@@ -222,6 +208,27 @@ export class AdminService {
       return { message: 'Data Jenis Bangunan Berhasil Ditambahkan' };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async removeBuilding(id: number) {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        const existing = await tx.placeData.count({
+          where: { type_id: id },
+        });
+
+        if (existing < 1) {
+          await tx.buildingType.delete({
+            where: { building_id: id },
+          });
+        }
+      });
+
+      return { message: 'Data Jenis Bangunan Berhasil Dihapus' };
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 }
