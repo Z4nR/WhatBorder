@@ -315,6 +315,32 @@ const adminPlaceList = async () => {
     });
 };
 
+const adminNewPlaceType = async (data: any) => {
+  return axios
+    .post('/v1/admin/building', data, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
+const adminEditPlaceType = async (id: any, data: any) => {
+  return axios
+    .put(`/v1/admin/building/${id}`, data, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
+    });
+};
+
 const adminRemovePlaceType = async (id: any) => {
   return axios
     .delete(`/v1/admin/building/${id}`, {
@@ -367,19 +393,6 @@ const adminComparePlaceList = async () => {
     });
 };
 
-const adminNewBuilding = async (data: any) => {
-  return axios
-    .post('/v1/admin/building', data, {
-      headers: {
-        Authorization: `Bearer ${token()}`,
-      },
-    })
-    .then((res) => {
-      const { message } = res.data;
-      return message;
-    });
-};
-
 export {
   registerAcc,
   loginAcc,
@@ -405,9 +418,10 @@ export {
   placeStatisticAdmin,
   adminPlaceList,
   adminUserRoleList,
+  adminNewPlaceType,
+  adminEditPlaceType,
   adminRemovePlaceType,
   adminRemovePlace,
   adminRemoveUser,
   adminComparePlaceList,
-  adminNewBuilding,
 };

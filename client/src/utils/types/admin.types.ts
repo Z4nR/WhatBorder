@@ -8,6 +8,7 @@ export interface PlaceTypeCreateProps {
 }
 
 export interface PlaceTypeUpdateProps {
+  buildingid: number;
   nameupdate: string;
   labelupdate: string;
   colorupdate: string;
