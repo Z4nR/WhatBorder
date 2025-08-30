@@ -6,6 +6,7 @@ import {
 import { AddBuildingDto } from './dto/create-admin.dto';
 import { PrismaService } from 'src/db/prisma.service';
 import { PlaceService } from '../place/place.service';
+import { UpdateBuildingDto } from './dto/update-admin.dto';
 
 @Injectable()
 export class AdminService {
@@ -211,12 +212,46 @@ export class AdminService {
     }
   }
 
+  async updateBuilding(id: number, building: UpdateBuildingDto, user: string) {
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        const existing = await tx.buildingType.count({
+          where: { building_id: id },
+        });
+
+        if (existing < 1) {
+          throw new BadRequestException(
+            'Data Jenis Bangunan Tidak Dapat Dihapus, Karena Sedang Digunakan Pada Data Tempat',
+          );
+        }
+
+        await this.prisma.buildingType.update({
+          where: { building_id: id },
+          data: {
+            ...building,
+            updated_by: user,
+          },
+        });
+      });
+
+      return { message: 'Data Jenis Bangunan Berhasil Diperbarui' };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async removeBuilding(id: number) {
     try {
       await this.prisma.$transaction(async (tx) => {
         const existing = await tx.placeData.count({
           where: { type_id: id },
         });
+
+        if (existing >= 1) {
+          throw new BadRequestException(
+            'Data Jenis Bangunan Tidak Dapat Dihapus, Karena Sedang Digunakan Pada Data Tempat',
+          );
+        }
 
         if (existing < 1) {
           await tx.buildingType.delete({
