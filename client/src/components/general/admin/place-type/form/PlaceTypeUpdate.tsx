@@ -9,15 +9,20 @@ import {
   Form,
   Typography,
   Select,
+  message,
 } from 'antd';
 import { BuildingListProps } from '@/utils/types/utils.types';
 import { PlaceTypeUpdateProps } from '@/utils/types/admin.types';
 import { generateColorPalette } from '@/utils/helper';
+import { adminEditPlaceType } from '@/utils/networks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 const { Option } = Select;
 
 const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
+  const client = useQueryClient();
+
   const [form] = Form.useForm();
 
   const [generateColor, setGenerateColor] = useState('#1677ff');
@@ -59,8 +64,40 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
     }
   };
 
+  const { mutate } = useMutation({
+    mutationFn: (v: { id: any; data: any }) => adminEditPlaceType(v.id, v.data),
+    onSuccess: async (data) => {
+      await client.refetchQueries({ queryKey: ['building-list'] });
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
+
+      form.resetFields();
+      setSelectedLabelColor(null);
+      setSelectedMapColor(null);
+      setGenerateColor('#1677ff');
+    },
+    onError: (error: any) => {
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
+    },
+  });
+
   const onUpdate = (values: PlaceTypeUpdateProps) => {
     console.log(values);
+
+    const data = {
+      name: values.nameupdate,
+      color: values.colorupdate,
+      label: values.labelupdate,
+    };
+
+    mutate({ id: values.buildingid, data });
   };
 
   const onReset = () => {
@@ -80,18 +117,23 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
         name="place_type_update"
         onFinish={onUpdate}
       >
-        <Text>Pilih Jenis Tempat Yang Ingin Diubah : </Text>
-        <Select
-          style={{ marginBlock: 8, width: '100%' }}
-          placeholder="Pilih Jenis Tempat"
-          onChange={handleSelectChange}
+        <Form.Item
+          label="Pilih Jenis Tempat Yang Ingin Diubah"
+          name="buildingid"
+          rules={[{ required: true, message: 'Jenis tempat wajib dipilih' }]}
         >
-          {data?.map((item: BuildingListProps) => (
-            <Option key={item.buildingId} value={item.buildingId}>
-              {item.name}
-            </Option>
-          ))}
-        </Select>
+          <Select
+            style={{ marginBlock: 8, width: '100%' }}
+            placeholder="Pilih Jenis Tempat"
+            onChange={handleSelectChange}
+          >
+            {data?.map((item: BuildingListProps) => (
+              <Option key={item.buildingId} value={item.buildingId}>
+                {item.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
         <Form.Item
           label="Nama Tipe Tempat"
           name="nameupdate"
@@ -136,7 +178,7 @@ const PlaceTypeUpdate: React.FC<{ data: BuildingListProps[] }> = ({ data }) => {
                     fontWeight: index === 5 ? 'bold' : 'normal',
                     opacity: selectedMapColor === color ? 0.5 : 1, // Disable if already selected in Map
                     cursor:
-                      selectedLabelColor === color ? 'not-allowed' : 'pointer',
+                      selectedMapColor === color ? 'not-allowed' : 'pointer',
                   }}
                   onClick={() => handleLabelChange(color)}
                 >
