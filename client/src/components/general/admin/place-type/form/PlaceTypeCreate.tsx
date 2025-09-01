@@ -8,13 +8,18 @@ import {
   Flex,
   Button,
   Space,
+  message,
 } from 'antd';
 import { PlaceTypeCreateProps } from '@/utils/types/admin.types';
 import { generateColorPalette } from '@/utils/helper';
+import { adminNewPlaceType } from '@/utils/networks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const { Title } = Typography;
 
 const PlaceTypeCreate: React.FC = () => {
+  const client = useQueryClient();
+
   const [form] = Form.useForm();
 
   const [generateColor, setGenerateColor] = useState('#1677ff');
@@ -28,20 +33,50 @@ const PlaceTypeCreate: React.FC = () => {
 
   const handleLabelChange = (color: string) => {
     if (color) {
-      form.setFieldValue('labelupdate', color);
+      form.setFieldValue('labelcreate', color);
       setSelectedLabelColor(color);
     }
   };
 
   const handleMapChange = (color: string) => {
     if (color) {
-      form.setFieldValue('colorupdate', color);
+      form.setFieldValue('colorcreate', color);
       setSelectedMapColor(color);
     }
   };
 
+  const { mutate } = useMutation({
+    mutationFn: adminNewPlaceType,
+    onSuccess: (data) => {
+      client.invalidateQueries({ queryKey: ['building-list'] });
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
+
+      form.resetFields();
+      setSelectedLabelColor(null);
+      setSelectedMapColor(null);
+      setGenerateColor('#1677ff');
+    },
+    onError: (error: any) => {
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
+    },
+  });
+
   const onCreate = (values: PlaceTypeCreateProps) => {
-    console.log(values);
+    const data = {
+      name: values.namecreate,
+      color: values.colorcreate,
+      label: values.labelcreate,
+    };
+
+    mutate(data);
   };
 
   const onReset = () => {
