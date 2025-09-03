@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
-import { adminUserRoleList } from '@/utils/networks';
-import { useQuery } from '@tanstack/react-query';
+import { adminRemoveUser, adminUserRoleList } from '@/utils/networks';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   GetRef,
   Input,
+  message,
   Popconfirm,
   Space,
   Table,
@@ -24,9 +25,32 @@ type InputRef = GetRef<typeof Input>;
 type DataIndex = keyof AdminUserOnlyTableProps;
 
 const UserRoleList: React.FC = () => {
+  const client = useQueryClient();
+
   const { data, isLoading } = useQuery({
     queryKey: ['user-list', 'only'],
     queryFn: async () => await adminUserRoleList(),
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: adminRemoveUser,
+    onSuccess: (data) => {
+      client.invalidateQueries({
+        queryKey: ['admin-user-access'],
+      });
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
+    },
+    onError: (error: any) => {
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
+    },
   });
 
   const [searchText, setSearchText] = useState('');
@@ -127,7 +151,7 @@ const UserRoleList: React.FC = () => {
   });
 
   const confirmDeleted = (id: string) => {
-    console.log(id);
+    mutate(id);
   };
 
   const columns: TableProps<AdminUserOnlyTableProps>['columns'] = [
