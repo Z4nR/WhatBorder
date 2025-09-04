@@ -6,6 +6,7 @@ import {
   ColorPicker,
   GetRef,
   Input,
+  message,
   Popconfirm,
   Space,
   Table,
@@ -18,6 +19,8 @@ import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import EmptyData from '../../utils/EmptyData';
+import { adminRemovePlaceType } from '@/utils/networks';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const { Title } = Typography;
 
@@ -29,6 +32,8 @@ const PlaceTypeList: React.FC<{
   data: BuildingListProps[];
   isLoading: boolean;
 }> = ({ data, isLoading }) => {
+  const client = useQueryClient();
+
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
   const searchInput = useRef<InputRef>(null);
@@ -126,8 +131,27 @@ const PlaceTypeList: React.FC<{
       ),
   });
 
+  const { mutate } = useMutation({
+    mutationFn: adminRemovePlaceType,
+    onSuccess: (data) => {
+      client.invalidateQueries({ queryKey: ['building-list'] });
+      message.open({
+        type: 'success',
+        content: data,
+        duration: 3,
+      });
+    },
+    onError: (error: any) => {
+      message.open({
+        type: 'error',
+        content: error.response.data.message,
+        duration: 5,
+      });
+    },
+  });
+
   const confirmDeleted = (id: string) => {
-    console.log(id);
+    mutate(id);
   };
 
   const columns: TableProps<BuildingListProps>['columns'] = [
