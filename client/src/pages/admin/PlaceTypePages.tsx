@@ -15,6 +15,7 @@ const PlaceTypePages: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['building-list'],
     queryFn: async () => await buildingFilter(),
+    staleTime: 0,
   });
 
   const menuItems = [
@@ -25,7 +26,7 @@ const PlaceTypePages: React.FC = () => {
     },
     {
       key: '2',
-      children: <PlaceTypeUpdate data={data} />,
+      children: <PlaceTypeUpdate data={data ?? []} />,
       label: 'Ubah Jenis Tempat',
     },
   ];
@@ -68,7 +69,7 @@ const PlaceTypePages: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} md={12}>
-          <PlaceTypeList data={data} isLoading={isLoading} />
+          <PlaceTypeList data={data ?? []} isLoading={isLoading} />
         </Col>
       </Row>
     </>
