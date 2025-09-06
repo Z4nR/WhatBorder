@@ -121,7 +121,7 @@ export class PlaceController {
     return this.placeService.adminPlaceList();
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get('statistic/admin')
   async showStatisticAdmin() {
