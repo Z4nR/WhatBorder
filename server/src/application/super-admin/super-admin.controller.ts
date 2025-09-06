@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   Version,
+  Req,
 } from '@nestjs/common';
 import { SuperAdminService } from './super-admin.service';
 import {
@@ -38,26 +39,18 @@ export class SuperAdminController {
     return this.superAdminService.createRoleAccessMenu(createRoleAccessMenuDto);
   }
 
-  @Get()
-  findAll() {
-    return this.superAdminService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.superAdminService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
+  @Version('1')
+  @Patch('change-role/:id')
+  async updateUserOnly(
     @Param('id') id: string,
-    @Body() updateSuperAdminDto: UpdateSuperAdminDto,
+    @Body() body: { admin: boolean },
+    @Req() req: Request,
   ) {
-    return this.superAdminService.update(+id, updateSuperAdminDto);
-  }
+    const user = req['user'];
+    const userId = user.sub;
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.superAdminService.remove(+id);
+    await this.superAdminService.validateAdminStatus(userId);
+
+    return this.superAdminService.updateUserRole(id, body);
   }
 }
