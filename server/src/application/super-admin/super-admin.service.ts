@@ -59,36 +59,29 @@ export class SuperAdminService {
 
   async createMenuPath(data: CreateMenuPathDto) {
     try {
-      const res = await this.prisma.route.create({
-        data: {
-          route_name: data.routeName,
-          path_route: data.path,
-          path_key: data.pathKey,
-          order_path: data.orderPath,
-          parent_id: data.parentId,
-        },
+      await this.prisma.$transaction(async (tx) => {
+        const route = await tx.route.create({
+          data: {
+            route_name: data.routeName,
+            path_route: data.pathRoute,
+            path_side: data.pathSide,
+            path_key: data.pathKey,
+            order_path: data.orderPath,
+            parent_id: data.parentId,
+          },
+        });
+
+        await tx.roleRoute.create({
+          data: {
+            role_id: data.roleId,
+            route_id: route.route_id,
+          },
+        });
       });
 
       return {
         message: 'Menu berhasil ditambahkan',
-        route_id: res.route_id,
       };
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async createRoleAccessMenu(data: CreateRoleAccessMenuDto) {
-    try {
-      await this.prisma.roleRoute.create({
-        data: {
-          role_id: data.roleId,
-          route_id: data.routeId,
-        },
-      });
-
-      return { message: 'Menu berhasil ditambahkan ke role baru' };
     } catch (error) {
       console.log(error);
       throw error;

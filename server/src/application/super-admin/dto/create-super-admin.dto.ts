@@ -3,11 +3,19 @@ import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 export class CreateMenuPathDto {
   @IsNotEmpty()
   @IsString()
-  routeName: string;
+  roleId: string;
 
   @IsNotEmpty()
   @IsString()
-  path: string;
+  routeName: string;
+
+  @IsOptional()
+  @IsString()
+  pathRoute: string;
+
+  @IsOptional()
+  @IsString()
+  pathSide: string;
 
   @IsNotEmpty()
   @IsString()
