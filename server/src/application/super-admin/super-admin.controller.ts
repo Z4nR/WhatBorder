@@ -28,15 +28,15 @@ export class SuperAdminController {
   constructor(private readonly superAdminService: SuperAdminService) {}
 
   @Version('1')
-  @Post('menu-path')
+  @Post('menu-role')
   createMenuPath(@Body() createMenuPathDto: CreateMenuPathDto) {
     return this.superAdminService.createMenuPath(createMenuPathDto);
   }
 
   @Version('1')
-  @Post('menu-role')
-  createRoleMenu(@Body() createRoleAccessMenuDto: CreateRoleAccessMenuDto) {
-    return this.superAdminService.createRoleAccessMenu(createRoleAccessMenuDto);
+  @Get('role-list')
+  findAllRole() {
+    console.log('get all role data');
   }
 
   @Version('1')
