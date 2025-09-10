@@ -17,7 +17,7 @@ const Siders: React.FC = () => {
 
   const triggerStyle: CSSProperties = {
     position: 'fixed',
-    top: 50,
+    top: 64,
     left: collapsed ? 0 : 200,
     fontSize: 20,
     zIndex: 99,
@@ -61,11 +61,24 @@ const Siders: React.FC = () => {
         collapsed={isSideStyle ? collapsed : false}
         trigger={null}
       >
-        <div className="demo-logo-vertical" />
+        <div
+          style={{
+            height: '64px',
+            width: '100%',
+            backgroundColor: '#ffff',
+            padding: '10px',
+          }}
+        >
+          <div className="demo-logo-vertical" />
+        </div>
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={['dashboard_admin', 'dashboard_user']}
+          defaultSelectedKeys={[
+            'dashboard_super_admin',
+            'dashboard_admin',
+            'dashboard_user',
+          ]}
           items={asideData}
         />
       </Sider>
