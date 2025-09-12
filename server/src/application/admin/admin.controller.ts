@@ -24,14 +24,14 @@ import { UpdateBuildingDto } from './dto/update-admin.dto';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get()
   findAll() {
     return this.adminService.findAll();
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get('user-only')
   findUserOnly() {
