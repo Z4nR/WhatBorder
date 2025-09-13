@@ -25,14 +25,14 @@ export class PlaceController {
   constructor(private readonly placeService: PlaceService) {}
 
   // All Access
-  @Roles(Role.USER, Role.ADMIN)
+  @Roles(Role.USER, Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get('building-filter')
   async findAllBuilding() {
     return this.placeService.findBuilding();
   }
 
-  @Roles(Role.USER, Role.ADMIN)
+  @Roles(Role.USER, Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get()
   async findAll() {
@@ -114,7 +114,7 @@ export class PlaceController {
   }
 
   // Admin Access
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get('admin-control')
   async adminPlaceData() {
