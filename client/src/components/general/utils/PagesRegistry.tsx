@@ -25,6 +25,57 @@ const pageRegistry: Record<
     element: React.ReactNode;
   }
 > = {
+  // Super Admin
+  dashboard_super_admin: {
+    index: true,
+    parentKey: null,
+    element: <AdminDashboardPages />,
+  },
+  place_type_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <PlaceTypePages />,
+  },
+  place_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <PlaceAccessPages />,
+  },
+  user_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <UserRoleSettingPages />,
+  },
+  setup_web_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <Outlet />,
+  },
+  setup_web_menu_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <p>Comingsoon</p>,
+  },
+  setup_web_role_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <p>Comingsoon</p>,
+  },
+  statistic_super_admin: {
+    index: false,
+    parentKey: null,
+    element: <Outlet />,
+  },
+  statistic_place_super_admin: {
+    index: false,
+    parentKey: 'statistic_admin',
+    element: <PlaceStatisticPages />,
+  },
+  statistic_user_super_admin: {
+    index: false,
+    parentKey: 'statistic_admin',
+    element: <AdminListPages />,
+  },
   // Admin
   dashboard_admin: {
     index: true,
