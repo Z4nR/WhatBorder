@@ -6,6 +6,9 @@ import {
   FundViewOutlined,
   EnvironmentOutlined,
   TeamOutlined,
+  IdcardOutlined,
+  AppstoreAddOutlined,
+  GroupOutlined,
 } from '@ant-design/icons';
 
 const pageRegistry: Record<
@@ -16,6 +19,42 @@ const pageRegistry: Record<
     icon?: React.ReactNode | null;
   }
 > = {
+  // Super Admin
+  dashboard_super_admin: {
+    order: 1,
+    parentKey: null,
+    icon: <AppstoreOutlined />,
+  },
+  setup_web_super_admin: {
+    order: 2,
+    parentKey: null,
+    icon: <GroupOutlined />,
+  },
+  setup_web_menu_super_admin: {
+    order: 1,
+    parentKey: null,
+    icon: <AppstoreAddOutlined />,
+  },
+  setup_web_role_super_admin: {
+    order: 2,
+    parentKey: null,
+    icon: <IdcardOutlined />,
+  },
+  statistic_super_admin: {
+    order: 3,
+    parentKey: null,
+    icon: <FundViewOutlined />,
+  },
+  statistic_place_super_admin: {
+    order: 1,
+    parentKey: 'statistic_admin',
+    icon: <EnvironmentOutlined />,
+  },
+  statistic_user_super_admin: {
+    order: 2,
+    parentKey: 'statistic_admin',
+    icon: <TeamOutlined />,
+  },
   // Admin
   dashboard_admin: {
     order: 1,
