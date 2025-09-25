@@ -22,7 +22,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           # simpan private key dengan format utuh (multiline)
-          printf "%s" "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed2551
           chmod 600 ~/.ssh/id_ed25519
           # tambah known_hosts supaya ssh tidak prompt
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
