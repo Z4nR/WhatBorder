@@ -21,15 +21,13 @@ jobs:
       - name: Set up SSH key
         run: |
           mkdir -p ~/.ssh
-          # simpan private key dengan format utuh (multiline)
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          # tambah known_hosts supaya ssh tidak prompt
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_ed2551
+          chmod 600 ~/.ssh/id_ed2551
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         run: |
-          ssh -i ~/.ssh/id_ed25519 root@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -i ~/.ssh/id_ed2551 root@${{ secrets.SSH_HOST }} << 'EOF'
           if [ ! -d ~/WhatBorder ]; then
             git clone https://github.com/Z4nR/WhatBorder
           fi
