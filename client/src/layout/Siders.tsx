@@ -65,7 +65,6 @@ const Siders: React.FC = () => {
           style={{
             height: '64px',
             width: '100%',
-            backgroundColor: '#ffff',
             padding: '10px',
           }}
         >

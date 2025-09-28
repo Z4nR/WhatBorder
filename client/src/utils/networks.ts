@@ -276,9 +276,9 @@ const adminUserList = async () => {
     });
 };
 
-const adminUserRoleList = async () => {
+const adminUserActiveStatusList = async () => {
   return axios
-    .get('/v1/admin/user-only', {
+    .get('/v1/admin/user-status', {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -367,9 +367,9 @@ const adminRemovePlace = async (id: any) => {
     });
 };
 
-const adminRemoveUser = async (id: any) => {
+const adminInactiveUser = async (id: any) => {
   return axios
-    .delete(`/v1/admin/${id}/remove/user`, {
+    .delete(`/v1/admin/${id}/inactive/user`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -390,6 +390,32 @@ const adminComparePlaceList = async () => {
     .then((res) => {
       const { data } = res.data;
       return data;
+    });
+};
+
+const superUserRoleList = async () => {
+  return axios
+    .get('/v1/super-admin/user-role', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
+const superRemoveUser = async (id: any) => {
+  return axios
+    .delete(`/v1/super-admin/${id}/remove/user`, {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { message } = res.data;
+      return message;
     });
 };
 
@@ -417,11 +443,13 @@ export {
   adminUserList,
   placeStatisticAdmin,
   adminPlaceList,
-  adminUserRoleList,
+  adminUserActiveStatusList,
   adminNewPlaceType,
   adminEditPlaceType,
   adminRemovePlaceType,
   adminRemovePlace,
-  adminRemoveUser,
+  adminInactiveUser,
   adminComparePlaceList,
+  superUserRoleList,
+  superRemoveUser,
 };

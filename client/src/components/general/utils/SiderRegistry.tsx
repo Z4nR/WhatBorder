@@ -25,17 +25,17 @@ const pageRegistry: Record<
     parentKey: null,
     icon: <AppstoreOutlined />,
   },
-  setup_web_super_admin: {
+  access_super_admin: {
     order: 2,
     parentKey: null,
     icon: <GroupOutlined />,
   },
-  setup_web_menu_super_admin: {
+  access_menu_super_admin: {
     order: 1,
     parentKey: null,
     icon: <AppstoreAddOutlined />,
   },
-  setup_web_role_super_admin: {
+  access_role_super_admin: {
     order: 2,
     parentKey: null,
     icon: <IdcardOutlined />,

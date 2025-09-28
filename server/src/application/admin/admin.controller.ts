@@ -33,13 +33,6 @@ export class AdminController {
 
   @Roles(Role.ADMIN, Role.SUPER)
   @Version('1')
-  @Get('user-only')
-  findUserOnly() {
-    return this.adminService.findUserOnly();
-  }
-
-  @Roles(Role.ADMIN, Role.SUPER)
-  @Version('1')
   @Post('building')
   createBuilding(@Body() buildingDto: AddBuildingDto, @Req() req: Request) {
     const user = req['user'].user;
@@ -69,21 +62,24 @@ export class AdminController {
 
   @Roles(Role.ADMIN)
   @Version('1')
-  @Delete(':id/remove/place')
-  async removePlace(@Param('id') id: string) {
-    await this.adminService.validatePlaceData(id);
-
-    console.log(`Removing place with id: ${id}`);
-    // return this.adminService.removePlace(id);
+  @Get('user-status')
+  findUserStatus() {
+    return this.adminService.findUserStatus();
   }
 
   @Roles(Role.ADMIN)
   @Version('1')
-  @Delete(':id/remove/user')
-  async removeUser(@Param('id') id: string) {
-    await this.adminService.validateUserAccount(id);
+  @Delete(':id/remove/place')
+  async removePlace(@Param('id') id: string) {
+    console.log(`Removing place with id: ${id}`);
+    return this.adminService.removePlace(id);
+  }
 
-    console.log(`Removing user with id: ${id}`);
-    // return this.adminService.removeUser(id);
+  @Roles(Role.ADMIN)
+  @Version('1')
+  @Delete(':id/inactive/user')
+  async inactiveUser(@Param('id') id: string) {
+    console.log(`Inactivated user with id: ${id}`);
+    return this.adminService.inactiveUser(id);
   }
 }

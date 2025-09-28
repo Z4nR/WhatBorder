@@ -39,6 +39,13 @@ export class SuperAdminController {
     console.log('get all role data');
   }
 
+  @Roles(Role.SUPER)
+  @Version('1')
+  @Get('user-role')
+  findUserRole() {
+    return this.superAdminService.findUserRole();
+  }
+
   @Version('1')
   @Patch('change-role/:id')
   async updateUserOnly(
@@ -52,5 +59,13 @@ export class SuperAdminController {
     await this.superAdminService.validateAdminStatus(userId);
 
     return this.superAdminService.updateUserRole(id, body);
+  }
+
+  @Roles(Role.SUPER)
+  @Version('1')
+  @Delete(':id/remove/user')
+  async removeUser(@Param('id') id: string) {
+    console.log(`Removing user with id: ${id}`);
+    return this.superAdminService.removeUser(id);
   }
 }

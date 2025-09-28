@@ -43,6 +43,31 @@ export class SuperAdminService {
     }
   }
 
+  async findUserRole() {
+    try {
+      return await this.prisma.user.findMany({
+        where: {
+          NOT: [{ role_code: 1 }],
+        },
+        select: {
+          user_id: true,
+          user_name: true,
+          created_at: true,
+          active_status: true,
+          role: {
+            select: {
+              role_name: true,
+              label: true,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async validateAdminStatus(id: string) {
     try {
       const userExist = await this.findByIdUser(id);
@@ -128,6 +153,63 @@ export class SuperAdminService {
       }
     } catch (error) {
       console.log(error);
+      throw error;
+    }
+  }
+
+  async removeUser(id: string) {
+    try {
+      const userExist = await this.prisma.user.findFirst({
+        where: {
+          user_id: id,
+          role: {
+            active_status: true,
+            OR: [{ role_code: 2 }, { role_code: 3 }],
+          },
+        },
+        select: {
+          user_id: true,
+        },
+      });
+
+      if (!userExist) {
+        throw new NotFoundException('Pengguna Tidak Ditemukan');
+      }
+
+      await this.prisma.$transaction(async (tx) => {
+        const findPlaceId = await tx.user.findMany({
+          where: { user_id: id },
+          select: {
+            place: {
+              select: { map_id: true },
+            },
+          },
+        });
+
+        const flatPlaceId = findPlaceId.flatMap((user) =>
+          user.place.map((p) => p.map_id),
+        );
+
+        // if (flatPlaceId.length > 0) {
+        //   await tx.placeMap.deleteMany({
+        //     where: { map_id: { in: flatPlaceId } },
+        //   });
+        // }
+
+        // await tx.placeData.deleteMany({
+        //   where: { user_id: id },
+        // });
+
+        // await tx.user.delete({
+        //   where: { user_id: id },
+        // });
+      });
+
+      return {
+        message: 'Seluruh data pengguna berhasil dihapus oleh Super Admin',
+      };
+    } catch (error) {
+      console.error(error);
       throw error;
     }
   }

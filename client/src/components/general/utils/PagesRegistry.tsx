@@ -2,7 +2,7 @@ import { Outlet, RouteObject } from 'react-router-dom';
 import PlaceTypePages from '@/pages/admin/PlaceTypePages';
 import CompareAdminMapPages from '@/pages/admin/desktop/CompareAdminMapPages';
 import PlaceAccessPages from '@/pages/admin/PlaceAccessPages';
-import UserRoleSettingPages from '@/pages/admin/UserRoleSettingPages';
+import UserRoleSettingPages from '@/pages/super-admin/UserRoleSettingPages';
 import AdminDashboardPages from '@/pages/admin/AdminDashboardPages';
 import UserDashboardPages from '@/pages/user/UserDashboardPages';
 import PlaceDetailPages from '@/pages/PlaceDetailPages';
@@ -16,6 +16,10 @@ import ManualUpdateLocationPages from '@/pages/user/desktop/update-location/Manu
 import AdminListPages from '@/pages/admin/AdminListPages';
 import UserListPages from '@/pages/user/UserListPages';
 import PlaceStatisticPages from '@/pages/PlaceStatisticPages';
+import MenuSettingPages from '@/pages/super-admin/menu-setting/MenuSettingPages';
+import RoleAccessSettingPages from '@/pages/super-admin/role-setting/RoleAccessSettingPages';
+import SuperAdminDashboardPages from '@/pages/super-admin/SuperAdminDashboardPages';
+import UserActiveStatusSettingPages from '@/pages/admin/UserActiveStatusSettingPages';
 
 const pageRegistry: Record<
   string,
@@ -29,7 +33,7 @@ const pageRegistry: Record<
   dashboard_super_admin: {
     index: true,
     parentKey: null,
-    element: <AdminDashboardPages />,
+    element: <SuperAdminDashboardPages />,
   },
   place_type_super_admin: {
     index: false,
@@ -46,20 +50,20 @@ const pageRegistry: Record<
     parentKey: null,
     element: <UserRoleSettingPages />,
   },
-  setup_web_super_admin: {
+  access_super_admin: {
     index: false,
     parentKey: null,
     element: <Outlet />,
   },
-  setup_web_menu_super_admin: {
+  access_menu_super_admin: {
     index: false,
     parentKey: null,
-    element: <p>Comingsoon</p>,
+    element: <MenuSettingPages />,
   },
-  setup_web_role_super_admin: {
+  access_role_super_admin: {
     index: false,
     parentKey: null,
-    element: <p>Comingsoon</p>,
+    element: <RoleAccessSettingPages />,
   },
   statistic_super_admin: {
     index: false,
@@ -95,7 +99,7 @@ const pageRegistry: Record<
   user_admin: {
     index: false,
     parentKey: null,
-    element: <UserRoleSettingPages />,
+    element: <UserActiveStatusSettingPages />,
   },
   statistic_admin: {
     index: false,

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { adminRemoveUser, adminUserRoleList } from '@/utils/networks';
+import { adminInactiveUser, adminUserActiveStatusList } from '@/utils/networks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -24,19 +24,19 @@ type InputRef = GetRef<typeof Input>;
 
 type DataIndex = keyof AdminUserOnlyTableProps;
 
-const UserRoleList: React.FC = () => {
+const UserActiveList: React.FC = () => {
   const client = useQueryClient();
 
   const { data, isLoading } = useQuery({
-    queryKey: ['user-list', 'only'],
-    queryFn: async () => await adminUserRoleList(),
+    queryKey: ['user-list', 'active'],
+    queryFn: async () => await adminUserActiveStatusList(),
   });
 
   const { mutate } = useMutation({
-    mutationFn: adminRemoveUser,
+    mutationFn: adminInactiveUser,
     onSuccess: (data) => {
       client.invalidateQueries({
-        queryKey: ['admin-user-access'],
+        queryKey: ['user-list', 'active'],
       });
       message.open({
         type: 'success',
@@ -150,7 +150,7 @@ const UserRoleList: React.FC = () => {
       ),
   });
 
-  const confirmDeleted = (id: string) => {
+  const confirmInactive = (id: string) => {
     mutate(id);
   };
 
@@ -197,7 +197,7 @@ const UserRoleList: React.FC = () => {
             placement="left"
             title="Yakin nih mau dihapus?"
             description="Semua data terkait pengguna ini akan hilang"
-            onConfirm={() => confirmDeleted(userId)}
+            onConfirm={() => confirmInactive(userId)}
             okText="Yakin"
             cancelText="Tidak Dulu"
           >
@@ -226,4 +226,4 @@ const UserRoleList: React.FC = () => {
   );
 };
 
-export default UserRoleList;
+export default UserActiveList;

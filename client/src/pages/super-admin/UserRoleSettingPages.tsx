@@ -1,7 +1,7 @@
 import React from 'react';
 import { Breadcrumb, Button, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import UserRoleList from '@/components/general/admin/user-action/UserRoleList';
+import UserRoleList from '@/components/general/super-admin/UserRoleList';
 
 const { Title } = Typography;
 
