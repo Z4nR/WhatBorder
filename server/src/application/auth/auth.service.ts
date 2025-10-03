@@ -23,6 +23,29 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
+  private async findByUsernameActive(username: string) {
+    try {
+      const data = await this.prisma.user.findFirst({
+        where: {
+          user_name: username,
+          active_status: true,
+        },
+      });
+      console.log(data);
+
+      if (!data) {
+        throw new BadRequestException(
+          'Maaf Akun Anda Telah Dinonaktifkan Oleh Admin, Silahkan Hubungi Admin Untuk Mengaktifkan Akun Anda Kembali',
+        );
+      }
+
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   private async findByUsername(username: string) {
     try {
       const data = await this.prisma.user.findFirst({
@@ -31,8 +54,14 @@ export class AuthService {
           active_status: true,
         },
       });
-
       console.log(data);
+
+      if (!data) {
+        throw new BadRequestException(
+          'Maaf Akun Anda Telah Dinonaktifkan Oleh Admin, Silahkan Hubungi Admin Untuk Mengaktifkan Akun Anda Kembali',
+        );
+      }
+
       return data;
     } catch (error) {
       console.log(error);
@@ -153,7 +182,7 @@ export class AuthService {
   }
 
   async changePassword(dto: ChangePasswordDto) {
-    const user = await this.findByUsername(dto.username);
+    const user = await this.findByUsernameActive(dto.username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
     const code = await compare(dto.code, user.special_code);
@@ -201,7 +230,7 @@ export class AuthService {
   async login(dto: AuthLoginDto) {
     const date = new Date().toISOString();
 
-    const user = await this.findByUsername(dto.username);
+    const user = await this.findByUsernameActive(dto.username);
     if (!user) throw new NotFoundException('Nama Pengguna tidak diketahui');
 
     await this.prisma.user.update({
