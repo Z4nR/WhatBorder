@@ -78,17 +78,17 @@ export class AdminService {
           },
         });
 
-        // await tx.placeMap.delete({
-        //   where: {
-        //     map_id: mapId.map_id,
-        //   },
-        // });
+        await tx.placeMap.delete({
+          where: {
+            map_id: mapId.map_id,
+          },
+        });
 
-        // await tx.placeData.delete({
-        //   where: {
-        //     place_id: id,
-        //   },
-        // });
+        await tx.placeData.delete({
+          where: {
+            place_id: id,
+          },
+        });
       });
 
       return { message: 'Data tempat berhasil dihapus oleh admin' };
@@ -98,18 +98,18 @@ export class AdminService {
     }
   }
 
-  async inactiveUser(id: string) {
+  async activeStatusUser(id: string) {
     try {
       const userExist = await this.prisma.user.findFirst({
         where: {
           user_id: id,
           role: {
-            active_status: true,
             role_code: 3,
           },
         },
         select: {
           user_id: true,
+          active_status: true,
         },
       });
 
@@ -117,12 +117,15 @@ export class AdminService {
         throw new NotFoundException('Pengguna Tidak Ditemukan');
       }
 
+      const status = userExist.active_status === true ? false : true;
+      console.log(status);
+
       await this.prisma.user.update({
         where: {
-          user_id: id,
+          user_id: userExist.user_id,
         },
         data: {
-          active_status: false,
+          active_status: status,
         },
       });
 
