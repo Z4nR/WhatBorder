@@ -157,6 +157,41 @@ export class SuperAdminService {
     }
   }
 
+  async activeStatusUser(id: string) {
+    try {
+      const userExist = await this.prisma.user.findFirst({
+        where: {
+          user_id: id,
+        },
+        select: {
+          user_id: true,
+          active_status: true,
+        },
+      });
+
+      if (!userExist) {
+        throw new NotFoundException('Pengguna Tidak Ditemukan');
+      }
+
+      const status = userExist.active_status === true ? false : true;
+      console.log(status);
+
+      await this.prisma.user.update({
+        where: {
+          user_id: userExist.user_id,
+        },
+        data: {
+          active_status: status,
+        },
+      });
+
+      return { message: 'Akun pengguna berhasil dinonaktifkan oleh Admin' };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
   async removeUser(id: string) {
     try {
       const userExist = await this.prisma.user.findFirst({
