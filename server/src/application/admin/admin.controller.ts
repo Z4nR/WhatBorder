@@ -77,9 +77,9 @@ export class AdminController {
 
   @Roles(Role.ADMIN)
   @Version('1')
-  @Delete(':id/inactive/user')
+  @Delete(':id/active-status/user')
   async inactiveUser(@Param('id') id: string) {
-    console.log(`Inactivated user with id: ${id}`);
-    return this.adminService.inactiveUser(id);
+    console.log(`Change user active status with id: ${id}`);
+    return this.adminService.activeStatusUser(id);
   }
 }
