@@ -63,6 +63,14 @@ export class SuperAdminController {
 
   @Roles(Role.SUPER)
   @Version('1')
+  @Delete(':id/active-status/user')
+  async inactiveUser(@Param('id') id: string) {
+    console.log(`Change user active status with id: ${id}`);
+    return this.superAdminService.activeStatusUser(id);
+  }
+
+  @Roles(Role.SUPER)
+  @Version('1')
   @Delete(':id/remove/user')
   async removeUser(@Param('id') id: string) {
     console.log(`Removing user with id: ${id}`);
