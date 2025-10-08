@@ -1,20 +1,23 @@
 import React, { useRef, useState } from 'react';
-import { adminInactiveUser, adminUserActiveStatusList } from '@/utils/networks';
+import {
+  adminActiveStatusUser,
+  adminUserActiveStatusList,
+} from '@/utils/networks';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   GetRef,
   Input,
   message,
-  Popconfirm,
   Space,
+  Switch,
   Table,
   TableColumnType,
   TableProps,
   Tag,
 } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { AdminUserOnlyTableProps } from '@/utils/types/admin.types';
 import EmptyData from '../../utils/EmptyData';
@@ -32,8 +35,8 @@ const UserActiveList: React.FC = () => {
     queryFn: async () => await adminUserActiveStatusList(),
   });
 
-  const { mutate } = useMutation({
-    mutationFn: adminInactiveUser,
+  const { mutate, isPending } = useMutation({
+    mutationFn: adminActiveStatusUser,
     onSuccess: (data) => {
       client.invalidateQueries({
         queryKey: ['user-list', 'active'],
@@ -165,6 +168,8 @@ const UserActiveList: React.FC = () => {
       title: 'Status Pengguna',
       dataIndex: 'admin',
       key: 'user-role',
+      width: '150px',
+      responsive: ['sm'],
       render: (_, tag) => {
         const color: string = tag.role.label;
         const admin: string = tag.role.roleName;
@@ -190,19 +195,16 @@ const UserActiveList: React.FC = () => {
       title: 'Aksi',
       key: 'role-action',
       align: 'center',
-      width: '50px',
-      render: (_, { userId }) => {
+      width: '100px',
+      render: (_, { userId, activeStatus }) => {
         return (
-          <Popconfirm
-            placement="left"
-            title="Yakin nih mau dihapus?"
-            description="Semua data terkait pengguna ini akan hilang"
-            onConfirm={() => confirmInactive(userId)}
-            okText="Yakin"
-            cancelText="Tidak Dulu"
-          >
-            <DeleteOutlined style={{ color: 'red' }} />
-          </Popconfirm>
+          <Switch
+            checkedChildren="Aktif"
+            unCheckedChildren="Inaktif"
+            defaultChecked={activeStatus}
+            loading={isPending}
+            onClick={() => confirmInactive(userId)}
+          />
         );
       },
     },
