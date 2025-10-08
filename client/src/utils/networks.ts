@@ -367,9 +367,9 @@ const adminRemovePlace = async (id: any) => {
     });
 };
 
-const adminInactiveUser = async (id: any) => {
+const adminActiveStatusUser = async (id: any) => {
   return axios
-    .delete(`/v1/admin/${id}/inactive/user`, {
+    .delete(`/v1/admin/${id}/active-status/user`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
@@ -448,7 +448,7 @@ export {
   adminEditPlaceType,
   adminRemovePlaceType,
   adminRemovePlace,
-  adminInactiveUser,
+  adminActiveStatusUser,
   adminComparePlaceList,
   superUserRoleList,
   superRemoveUser,
