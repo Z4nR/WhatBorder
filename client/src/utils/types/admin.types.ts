@@ -60,6 +60,7 @@ export interface AdminPlaceTableProps {
 export interface AdminUserOnlyTableProps {
   userId: string;
   userName: string;
+  activeStatus: boolean;
   createdAt: Date;
   role: {
     roleName: string;
