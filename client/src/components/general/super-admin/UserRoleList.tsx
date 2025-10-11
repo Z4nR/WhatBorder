@@ -8,6 +8,7 @@ import {
   message,
   Popconfirm,
   Space,
+  Switch,
   Table,
   TableColumnType,
   TableProps,
@@ -165,6 +166,8 @@ const UserRoleList: React.FC = () => {
       title: 'Status Pengguna',
       dataIndex: 'admin',
       key: 'user-role',
+      width: '150px',
+      responsive: ['sm'],
       render: (_, tag) => {
         const color: string = tag.role.label;
         const admin: string = tag.role.roleName;
@@ -190,19 +193,36 @@ const UserRoleList: React.FC = () => {
       title: 'Aksi',
       key: 'role-action',
       align: 'center',
-      width: '50px',
-      render: (_, { userId }) => {
+      width: '200px',
+      render: (_, { userId, activeStatus }) => {
         return (
-          <Popconfirm
-            placement="left"
-            title="Yakin nih mau dihapus?"
-            description="Semua data terkait pengguna ini akan hilang"
-            onConfirm={() => confirmDeleted(userId)}
-            okText="Yakin"
-            cancelText="Tidak Dulu"
-          >
-            <DeleteOutlined style={{ color: 'red' }} />
-          </Popconfirm>
+          <Space>
+            <Switch
+              checkedChildren="Aktif"
+              unCheckedChildren="Inaktif"
+              defaultChecked={activeStatus}
+              // loading={isPending}
+              // onClick={() => confirmInactive(userId)}
+            />
+            <Popconfirm
+              placement="left"
+              title="Yakin nih mau dihapus?"
+              description="Semua data terkait pengguna ini akan hilang"
+              onConfirm={() => confirmDeleted(userId)}
+              okText="Yakin"
+              cancelText="Tidak Dulu"
+            >
+              <Button
+                shape="round"
+                icon={<DeleteOutlined />}
+                size="small"
+                color="danger"
+                variant="solid"
+              >
+                Hapus
+              </Button>
+            </Popconfirm>
+          </Space>
         );
       },
     },
