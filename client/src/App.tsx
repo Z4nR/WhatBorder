@@ -46,7 +46,6 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
     if (isError && !notified) {
       authState.deleteToken();
       userState.clearUser();
-
       message.error('Sesi Anda Telah Habis, Silahkan Masuk Kembali', 5);
       setNotified(true);
     }
@@ -59,33 +58,22 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
 
 const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const authState = useAuthState();
-
-  if (authState.accessToken) {
-    return <Navigate to="/" replace />;
-  }
-
-  return <>{children}</>;
+  return authState.accessToken ? <Navigate to="/" replace /> : <>{children}</>;
 };
 
-const AppRoutes = () => {
+const AppRoutes: React.FC = () => {
+  const authState = useAuthState();
+
   const { data, isLoading } = useQuery({
     queryKey: ['routes'],
-    queryFn: async () => await getRoute(),
-    enabled: !!useAuthState().accessToken,
+    queryFn: getRoute,
+    enabled: !!authState.accessToken,
   });
 
   const routeData = data ? buildRoutesFromRegistry(data) : [];
 
   const routes = [
-    {
-      path: '/',
-      element: (
-        <PrivateRoute>
-          <LayoutPages />
-        </PrivateRoute>
-      ),
-      children: routeData,
-    },
+    // Public route (always available)
     {
       path: '/auth',
       element: (
@@ -94,21 +82,38 @@ const AppRoutes = () => {
         </PublicRoute>
       ),
     },
+
+    // Private route
+    {
+      path: '/',
+      element: (
+        <PrivateRoute>
+          <LayoutPages />
+        </PrivateRoute>
+      ),
+      children: isLoading
+        ? [
+            // while registry is loading → catch everything with loader
+            { path: '*', element: <Loading /> },
+          ]
+        : [
+            ...routeData,
+            // only after registry loads → show real NotFound
+            { path: '*', element: <NotFoundPages /> },
+          ],
+    },
+
+    // Global fallback (for paths outside `/auth` or `/`)
     { path: '*', element: <NotFoundPages /> },
   ];
 
-  const element = useRoutes(routes);
-
-  if (isLoading) return <Loading />;
-
-  return element;
+  return useRoutes(routes);
 };
 
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools />
-
       <AppRoutes />
     </QueryClientProvider>
   );
