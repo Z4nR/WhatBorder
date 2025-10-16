@@ -64,7 +64,7 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const AppRoutes: React.FC = () => {
   const authState = useAuthState();
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['routes'],
     queryFn: getRoute,
     enabled: !!authState.accessToken,
@@ -91,16 +91,7 @@ const AppRoutes: React.FC = () => {
           <LayoutPages />
         </PrivateRoute>
       ),
-      children: isLoading
-        ? [
-            // while registry is loading → catch everything with loader
-            { path: '*', element: <Loading /> },
-          ]
-        : [
-            ...routeData,
-            // only after registry loads → show real NotFound
-            { path: '*', element: <NotFoundPages /> },
-          ],
+      children: routeData,
     },
 
     // Global fallback (for paths outside `/auth` or `/`)
