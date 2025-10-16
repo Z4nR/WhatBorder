@@ -3,11 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  CreateMenuPathDto,
-  CreateRoleAccessMenuDto,
-} from './dto/create-super-admin.dto';
-import { UpdateSuperAdminDto } from './dto/update-super-admin.dto';
+import { CreateMenuPathDto } from './dto/create-super-admin.dto';
 import { PrismaService } from 'src/db/prisma.service';
 
 @Injectable()
@@ -107,6 +103,28 @@ export class SuperAdminService {
       return {
         message: 'Menu berhasil ditambahkan',
       };
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async getAllRole() {
+    try {
+      return await this.prisma.role.findMany({
+        where: {
+          active_status: true,
+        },
+        select: {
+          role_id: true,
+          role_name: true,
+          label: true,
+          role_code: true,
+        },
+        orderBy: {
+          role_code: 'asc',
+        },
+      });
     } catch (error) {
       console.log(error);
       throw error;
