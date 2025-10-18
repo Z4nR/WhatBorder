@@ -65,21 +65,6 @@ const pageRegistry: Record<
     parentKey: null,
     element: <RoleAccessSettingPages />,
   },
-  statistic_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <Outlet />,
-  },
-  statistic_place_super_admin: {
-    index: false,
-    parentKey: 'statistic_admin',
-    element: <PlaceStatisticPages />,
-  },
-  statistic_user_super_admin: {
-    index: false,
-    parentKey: 'statistic_admin',
-    element: <AdminListPages />,
-  },
   // Admin
   dashboard_admin: {
     index: true,
@@ -100,31 +85,6 @@ const pageRegistry: Record<
     index: false,
     parentKey: null,
     element: <UserActiveStatusSettingPages />,
-  },
-  statistic_admin: {
-    index: false,
-    parentKey: null,
-    element: <Outlet />,
-  },
-  statistic_place_admin: {
-    index: false,
-    parentKey: 'statistic_admin',
-    element: <PlaceStatisticPages />,
-  },
-  statistic_place_id_admin: {
-    index: false,
-    parentKey: 'statistic_admin',
-    element: <PlaceDetailPages />,
-  },
-  statistic_user_admin: {
-    index: false,
-    parentKey: 'statistic_admin',
-    element: <AdminListPages />,
-  },
-  statistic_user_id_admin: {
-    index: false,
-    parentKey: 'statistic_admin',
-    element: <StatisticProfilePages />,
   },
   compare_admin: {
     index: false,
@@ -167,35 +127,66 @@ const pageRegistry: Record<
     parentKey: 'location_user',
     element: <ManualUpdateLocationPages />,
   },
-  statistic_user: {
-    index: false,
-    parentKey: null,
-    element: <Outlet />,
-  },
-  statistic_place_user: {
-    index: false,
-    parentKey: 'statistic_user',
-    element: <PlaceStatisticPages />,
-  },
-  statistic_place_id_user: {
-    index: false,
-    parentKey: 'statistic_user',
-    element: <PlaceDetailPages />,
-  },
-  statistic_user_user: {
-    index: false,
-    parentKey: 'statistic_user',
-    element: <UserListPages />,
-  },
-  statistic_user_id_user: {
-    index: false,
-    parentKey: 'statistic_user',
-    element: <StatisticProfilePages />,
-  },
   compare_user: {
     index: false,
     parentKey: null,
     element: <CompareUserMapPages />,
+  },
+  // General Statistic Path
+  statistic: {
+    index: false,
+    parentKey: null,
+    element: <Outlet />,
+  },
+  statistic_place_super_admin: {
+    index: false,
+    parentKey: 'statistic',
+    element: <PlaceStatisticPages />,
+  },
+  statistic_user_super_admin: {
+    index: false,
+    parentKey: 'statistic',
+    element: <AdminListPages />,
+  },
+  statistic_place_admin: {
+    index: false,
+    parentKey: 'statistic',
+    element: <PlaceStatisticPages />,
+  },
+  statistic_place_id_admin: {
+    index: false,
+    parentKey: 'statistic',
+    element: <PlaceDetailPages />,
+  },
+  statistic_user_admin: {
+    index: false,
+    parentKey: 'statistic',
+    element: <AdminListPages />,
+  },
+  statistic_user_id_admin: {
+    index: false,
+    parentKey: 'statistic',
+    element: <StatisticProfilePages />,
+  },
+  statistic_place_user: {
+    index: false,
+    parentKey: 'statistic',
+    element: <PlaceStatisticPages />,
+  },
+  statistic_place_id_user: {
+    index: false,
+    parentKey: 'statistic',
+    element: <PlaceDetailPages />,
+  },
+  statistic_user_user: {
+    index: false,
+    parentKey: 'statistic',
+    element: <UserListPages />,
+  },
+  statistic_user_id_user: {
+    index: false,
+    parentKey: 'statistic',
+    element: <StatisticProfilePages />,
   },
 };
 
