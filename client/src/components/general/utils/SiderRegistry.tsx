@@ -40,41 +40,11 @@ const pageRegistry: Record<
     parentKey: null,
     icon: <IdcardOutlined />,
   },
-  statistic_super_admin: {
-    order: 3,
-    parentKey: null,
-    icon: <FundViewOutlined />,
-  },
-  statistic_place_super_admin: {
-    order: 1,
-    parentKey: 'statistic_admin',
-    icon: <EnvironmentOutlined />,
-  },
-  statistic_user_super_admin: {
-    order: 2,
-    parentKey: 'statistic_admin',
-    icon: <TeamOutlined />,
-  },
   // Admin
   dashboard_admin: {
     order: 1,
     parentKey: null,
     icon: <AppstoreOutlined />,
-  },
-  statistic_admin: {
-    order: 2,
-    parentKey: null,
-    icon: <FundViewOutlined />,
-  },
-  statistic_place_admin: {
-    order: 1,
-    parentKey: 'statistic_admin',
-    icon: <EnvironmentOutlined />,
-  },
-  statistic_user_admin: {
-    order: 2,
-    parentKey: 'statistic_admin',
-    icon: <TeamOutlined />,
   },
   compare_admin: {
     order: 3,
@@ -87,25 +57,46 @@ const pageRegistry: Record<
     parentKey: null,
     icon: <AppstoreOutlined />,
   },
-  statistic_user: {
-    order: 2,
-    parentKey: null,
-    icon: <FundViewOutlined />,
-  },
-  statistic_place_user: {
-    order: 1,
-    parentKey: 'statistic_user',
-    icon: <EnvironmentOutlined />,
-  },
-  statistic_user_user: {
-    order: 2,
-    parentKey: 'statistic_user',
-    icon: <TeamOutlined />,
-  },
   compare_user: {
     order: 3,
     parentKey: null,
     icon: <BlockOutlined />,
+  },
+  // General Sidebar
+  statistic: {
+    order: 2,
+    parentKey: null,
+    icon: <FundViewOutlined />,
+  },
+  statistic_place_super_admin: {
+    order: 1,
+    parentKey: 'statistic',
+    icon: <EnvironmentOutlined />,
+  },
+  statistic_user_super_admin: {
+    order: 2,
+    parentKey: 'statistic',
+    icon: <TeamOutlined />,
+  },
+  statistic_place_admin: {
+    order: 1,
+    parentKey: 'statistic',
+    icon: <EnvironmentOutlined />,
+  },
+  statistic_user_admin: {
+    order: 2,
+    parentKey: 'statistic',
+    icon: <TeamOutlined />,
+  },
+  statistic_place_user: {
+    order: 1,
+    parentKey: 'statistic',
+    icon: <EnvironmentOutlined />,
+  },
+  statistic_user_user: {
+    order: 2,
+    parentKey: 'statistic',
+    icon: <TeamOutlined />,
   },
 };
 
