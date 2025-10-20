@@ -35,16 +35,6 @@ const pageRegistry: Record<
     parentKey: null,
     element: <SuperAdminDashboardPages />,
   },
-  place_type_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <PlaceTypePages />,
-  },
-  place_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <PlaceAccessPages />,
-  },
   user_super_admin: {
     index: false,
     parentKey: null,
@@ -70,16 +60,6 @@ const pageRegistry: Record<
     index: true,
     parentKey: null,
     element: <AdminDashboardPages />,
-  },
-  place_type_admin: {
-    index: false,
-    parentKey: null,
-    element: <PlaceTypePages />,
-  },
-  place_admin: {
-    index: false,
-    parentKey: null,
-    element: <PlaceAccessPages />,
   },
   user_admin: {
     index: false,
@@ -132,28 +112,29 @@ const pageRegistry: Record<
     parentKey: null,
     element: <CompareUserMapPages />,
   },
+  // General Place Path
+  place_type_admin: {
+    index: false,
+    parentKey: null,
+    element: <PlaceTypePages />,
+  },
+  place_admin: {
+    index: false,
+    parentKey: null,
+    element: <PlaceAccessPages />,
+  },
   // General Statistic Path
   statistic: {
     index: false,
     parentKey: null,
     element: <Outlet />,
   },
-  statistic_place_super_admin: {
+  statistic_place: {
     index: false,
     parentKey: 'statistic',
     element: <PlaceStatisticPages />,
   },
-  statistic_user_super_admin: {
-    index: false,
-    parentKey: 'statistic',
-    element: <AdminListPages />,
-  },
-  statistic_place_admin: {
-    index: false,
-    parentKey: 'statistic',
-    element: <PlaceStatisticPages />,
-  },
-  statistic_place_id_admin: {
+  statistic_place_detail: {
     index: false,
     parentKey: 'statistic',
     element: <PlaceDetailPages />,
@@ -163,27 +144,12 @@ const pageRegistry: Record<
     parentKey: 'statistic',
     element: <AdminListPages />,
   },
-  statistic_user_id_admin: {
-    index: false,
-    parentKey: 'statistic',
-    element: <StatisticProfilePages />,
-  },
-  statistic_place_user: {
-    index: false,
-    parentKey: 'statistic',
-    element: <PlaceStatisticPages />,
-  },
-  statistic_place_id_user: {
-    index: false,
-    parentKey: 'statistic',
-    element: <PlaceDetailPages />,
-  },
   statistic_user_user: {
     index: false,
     parentKey: 'statistic',
     element: <UserListPages />,
   },
-  statistic_user_id_user: {
+  statistic_user_detail: {
     index: false,
     parentKey: 'statistic',
     element: <StatisticProfilePages />,
