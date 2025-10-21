@@ -34,12 +34,17 @@ export class SuperAdminController {
   }
 
   @Version('1')
-  @Get('role-list')
-  findAllRole() {
-    console.log('get all role data');
+  @Get('menu-list')
+  findAllMenu() {
+    // return this.superAdminService.getAllRole();
   }
 
-  @Roles(Role.SUPER)
+  @Version('1')
+  @Get('role-list')
+  findAllRole() {
+    return this.superAdminService.getAllRole();
+  }
+
   @Version('1')
   @Get('user-role')
   findUserRole() {
@@ -61,7 +66,6 @@ export class SuperAdminController {
     return this.superAdminService.updateUserRole(id, body);
   }
 
-  @Roles(Role.SUPER)
   @Version('1')
   @Delete(':id/active-status/user')
   async inactiveUser(@Param('id') id: string) {
@@ -69,7 +73,6 @@ export class SuperAdminController {
     return this.superAdminService.activeStatusUser(id);
   }
 
-  @Roles(Role.SUPER)
   @Version('1')
   @Delete(':id/remove/user')
   async removeUser(@Param('id') id: string) {
