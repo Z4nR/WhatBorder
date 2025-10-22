@@ -109,6 +109,28 @@ export class SuperAdminService {
     }
   }
 
+  async getAllMenu() {
+    try {
+      return await this.prisma.route.findMany({
+        select: {
+          route_id: true,
+          route_name: true,
+          path_route: true,
+          path_side: true,
+          path_key: true,
+          order_path: true,
+          parent_id: true,
+        },
+        orderBy: {
+          order_path: 'asc',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async getAllRole() {
     try {
       return await this.prisma.role.findMany({
@@ -119,7 +141,6 @@ export class SuperAdminService {
           role_id: true,
           role_name: true,
           label: true,
-          role_code: true,
         },
         orderBy: {
           role_code: 'asc',
