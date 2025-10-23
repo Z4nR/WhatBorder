@@ -64,7 +64,7 @@ const PublicRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 const AppRoutes: React.FC = () => {
   const authState = useAuthState();
 
-  const { data } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ['routes'],
     queryFn: getRoute,
     enabled: !!authState.accessToken,
@@ -91,7 +91,9 @@ const AppRoutes: React.FC = () => {
           <LayoutPages />
         </PrivateRoute>
       ),
-      children: routeData,
+      children: isFetching
+        ? [{ path: '*', element: <Loading /> }]
+        : [...routeData, { path: '*', element: <NotFoundPages /> }],
     },
 
     // Global fallback (for paths outside `/auth` or `/`)
