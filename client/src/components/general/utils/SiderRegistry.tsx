@@ -68,17 +68,7 @@ const pageRegistry: Record<
     parentKey: null,
     icon: <FundViewOutlined />,
   },
-  statistic_place_super_admin: {
-    order: 1,
-    parentKey: 'statistic',
-    icon: <EnvironmentOutlined />,
-  },
-  statistic_user_super_admin: {
-    order: 2,
-    parentKey: 'statistic',
-    icon: <TeamOutlined />,
-  },
-  statistic_place_admin: {
+  statistic_place: {
     order: 1,
     parentKey: 'statistic',
     icon: <EnvironmentOutlined />,
@@ -87,11 +77,6 @@ const pageRegistry: Record<
     order: 2,
     parentKey: 'statistic',
     icon: <TeamOutlined />,
-  },
-  statistic_place_user: {
-    order: 1,
-    parentKey: 'statistic',
-    icon: <EnvironmentOutlined />,
   },
   statistic_user_user: {
     order: 2,
