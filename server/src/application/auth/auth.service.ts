@@ -162,6 +162,15 @@ export class AuthService {
         }
       });
 
+      const sortRoutes = (nodes: any[]) => {
+        nodes.sort((a, b) => (a.orderPath ?? 0) - (b.orderPath ?? 0));
+        nodes.forEach((node) => {
+          if (node.children?.length) sortRoutes(node.children);
+        });
+      };
+
+      sortRoutes(treeRoute);
+
       return treeRoute;
     } catch (error) {
       console.error(error);
