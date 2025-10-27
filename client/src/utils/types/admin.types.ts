@@ -67,3 +67,9 @@ export interface AdminUserOnlyTableProps {
     label: string;
   };
 }
+
+export interface SuperRoleListProps {
+  roleId: string;
+  roleName: string;
+  label: string;
+}
