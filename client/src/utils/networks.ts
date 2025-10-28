@@ -393,6 +393,19 @@ const adminComparePlaceList = async () => {
     });
 };
 
+const superRoleList = async () => {
+  return axios
+    .get('/v1/super-admin/role-list', {
+      headers: {
+        Authorization: `Bearer ${token()}`,
+      },
+    })
+    .then((res) => {
+      const { data } = res.data;
+      return data;
+    });
+};
+
 const superUserRoleList = async () => {
   return axios
     .get('/v1/super-admin/user-role', {
@@ -450,6 +463,7 @@ export {
   adminRemovePlace,
   adminActiveStatusUser,
   adminComparePlaceList,
+  superRoleList,
   superUserRoleList,
   superRemoveUser,
 };
