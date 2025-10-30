@@ -36,7 +36,7 @@ export class SuperAdminController {
   @Version('1')
   @Get('menu-list')
   findAllMenu() {
-    // return this.superAdminService.getAllRole();
+    return this.superAdminService.getAllMenu();
   }
 
   @Version('1')
