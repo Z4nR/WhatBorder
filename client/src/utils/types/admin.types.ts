@@ -73,3 +73,11 @@ export interface SuperRoleListProps {
   roleName: string;
   label: string;
 }
+
+export interface SuperRouteListProps {
+  routeId: string;
+  routeName: string;
+  pathRoute: string;
+  pathSide: string;
+  orderPath: number;
+}
