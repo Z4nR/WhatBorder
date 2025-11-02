@@ -46,6 +46,12 @@ export class SuperAdminController {
   }
 
   @Version('1')
+  @Get('role-route-list')
+  findAllRouteForRole() {
+    return this.superAdminService.getAllRole();
+  }
+
+  @Version('1')
   @Get('user-role')
   findUserRole() {
     return this.superAdminService.findUserRole();
