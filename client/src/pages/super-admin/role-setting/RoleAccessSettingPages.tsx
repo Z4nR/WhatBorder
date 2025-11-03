@@ -25,20 +25,36 @@ const RoleAccessSettingPages: React.FC = () => {
   ];
 
   return (
-    <Table
-      size="small"
-      sticky
-      style={{ backgroundColor: 'transparent' }}
-      loading={isLoading}
-      columns={columns}
-      dataSource={data}
-      rowKey={({ roleId }) => roleId}
-      locale={{
-        emptyText: (
-          <EmptyData description="Anda Belum Menambahkan Data Tempat" />
-        ),
-      }}
-    />
+    <>
+      <Table
+        size="small"
+        sticky
+        style={{ backgroundColor: 'transparent' }}
+        loading={isLoading}
+        columns={columns}
+        dataSource={data}
+        rowKey={({ roleId }) => roleId}
+        locale={{
+          emptyText: (
+            <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+          ),
+        }}
+      />
+      <Table
+        size="small"
+        sticky
+        style={{ backgroundColor: 'transparent' }}
+        loading={isLoading}
+        columns={columns}
+        dataSource={data}
+        rowKey={({ roleId }) => roleId}
+        locale={{
+          emptyText: (
+            <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+          ),
+        }}
+      />
+    </>
   );
 };
 
