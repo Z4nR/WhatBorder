@@ -2,8 +2,10 @@ import EmptyData from '@/components/general/utils/EmptyData';
 import { superRoleList } from '@/utils/networks';
 import { SuperRoleListProps } from '@/utils/types/admin.types';
 import { useQuery } from '@tanstack/react-query';
-import { Table, TableProps, Tag } from 'antd';
+import { Button, Flex, Table, TableProps, Tag, Typography } from 'antd';
 import React from 'react';
+
+const { Title } = Typography;
 
 const RoleAccessSettingPages: React.FC = () => {
   const { data, isLoading } = useQuery({
@@ -26,6 +28,7 @@ const RoleAccessSettingPages: React.FC = () => {
 
   return (
     <>
+      <Title level={4}>Daftar Role</Title>
       <Table
         size="small"
         sticky
@@ -40,20 +43,26 @@ const RoleAccessSettingPages: React.FC = () => {
           ),
         }}
       />
-      <Table
-        size="small"
-        sticky
-        style={{ backgroundColor: 'transparent' }}
-        loading={isLoading}
-        columns={columns}
-        dataSource={data}
-        rowKey={({ roleId }) => roleId}
-        locale={{
-          emptyText: (
-            <EmptyData description="Anda Belum Menambahkan Data Tempat" />
-          ),
-        }}
-      />
+      <div style={{ marginBlock: '1rem' }}>
+        <Title level={4}>Pengaturan Akses Role</Title>
+        <Flex justify="flex-end" style={{ marginBlock: '0.5rem' }}>
+          <Button>Tambah Akses</Button>
+        </Flex>
+        <Table
+          size="small"
+          sticky
+          style={{ backgroundColor: 'transparent' }}
+          loading={isLoading}
+          columns={columns}
+          dataSource={data}
+          rowKey={({ roleId }) => roleId}
+          locale={{
+            emptyText: (
+              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+            ),
+          }}
+        />
+      </div>
     </>
   );
 };
