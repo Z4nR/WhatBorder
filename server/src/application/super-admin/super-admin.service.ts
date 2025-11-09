@@ -152,6 +152,20 @@ export class SuperAdminService {
     }
   }
 
+  async getRoleRouteList() {
+    try {
+      return await this.prisma.roleRoute.findMany({
+        select: {
+          role_id: true,
+          route_id: true,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async updateUserRole(id: string, body: { admin: boolean }) {
     try {
       const userExist = await this.findByIdUser(id);
