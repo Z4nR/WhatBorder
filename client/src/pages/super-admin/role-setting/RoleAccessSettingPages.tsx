@@ -27,22 +27,24 @@ const RoleAccessSettingPages: React.FC = () => {
   ];
 
   return (
-    <>
-      <Title level={4}>Daftar Role</Title>
-      <Table
-        size="small"
-        sticky
-        style={{ backgroundColor: 'transparent' }}
-        loading={isLoading}
-        columns={columns}
-        dataSource={data}
-        rowKey={({ roleId }) => roleId}
-        locale={{
-          emptyText: (
-            <EmptyData description="Anda Belum Menambahkan Data Tempat" />
-          ),
-        }}
-      />
+    <Flex gap="1rem">
+      <div style={{ marginBlock: '1rem' }}>
+        <Title level={4}>Daftar Role</Title>
+        <Table
+          size="small"
+          sticky
+          style={{ backgroundColor: 'transparent' }}
+          loading={isLoading}
+          columns={columns}
+          dataSource={data}
+          rowKey={({ roleId }) => roleId}
+          locale={{
+            emptyText: (
+              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+            ),
+          }}
+        />
+      </div>
       <div style={{ marginBlock: '1rem' }}>
         <Title level={4}>Pengaturan Akses Role</Title>
         <Flex justify="flex-end" style={{ marginBlock: '0.5rem' }}>
@@ -63,7 +65,7 @@ const RoleAccessSettingPages: React.FC = () => {
           }}
         />
       </div>
-    </>
+    </Flex>
   );
 };
 
