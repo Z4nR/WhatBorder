@@ -2,10 +2,8 @@ import EmptyData from '@/components/general/utils/EmptyData';
 import { superRoleList } from '@/utils/networks';
 import { SuperRoleListProps } from '@/utils/types/admin.types';
 import { useQuery } from '@tanstack/react-query';
-import { Button, Flex, Table, TableProps, Tag, Typography } from 'antd';
+import { Button, Card, Flex, Table, TableProps, Tag } from 'antd';
 import React from 'react';
-
-const { Title } = Typography;
 
 const RoleAccessSettingPages: React.FC = () => {
   const { data, isLoading } = useQuery({
@@ -27,9 +25,8 @@ const RoleAccessSettingPages: React.FC = () => {
   ];
 
   return (
-    <Flex gap="1rem">
-      <div style={{ marginBlock: '1rem' }}>
-        <Title level={4}>Daftar Role</Title>
+    <Flex gap="1rem" align="start">
+      <Card title="Daftar Role">
         <Table
           size="small"
           sticky
@@ -44,12 +41,8 @@ const RoleAccessSettingPages: React.FC = () => {
             ),
           }}
         />
-      </div>
-      <div style={{ marginBlock: '1rem' }}>
-        <Title level={4}>Pengaturan Akses Role</Title>
-        <Flex justify="flex-end" style={{ marginBlock: '0.5rem' }}>
-          <Button>Tambah Akses</Button>
-        </Flex>
+      </Card>
+      <Card title="Pengaturan Akses Role" extra={<Button>Tambah Akses</Button>}>
         <Table
           size="small"
           sticky
@@ -64,7 +57,7 @@ const RoleAccessSettingPages: React.FC = () => {
             ),
           }}
         />
-      </div>
+      </Card>
     </Flex>
   );
 };
