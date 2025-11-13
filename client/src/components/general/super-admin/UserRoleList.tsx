@@ -33,7 +33,7 @@ const UserRoleList: React.FC = () => {
     queryFn: async () => await superUserRoleList(),
   });
 
-  const { mutate } = useMutation({
+  const removeUser = useMutation({
     mutationFn: superRemoveUser,
     onSuccess: (data) => {
       client.invalidateQueries({
@@ -151,8 +151,12 @@ const UserRoleList: React.FC = () => {
       ),
   });
 
+  const confirmInactive = (id: string) => {
+    console.log(id);
+  };
+
   const confirmDeleted = (id: string) => {
-    mutate(id);
+    removeUser.mutate(id);
   };
 
   const columns: TableProps<AdminUserOnlyTableProps>['columns'] = [
@@ -201,8 +205,8 @@ const UserRoleList: React.FC = () => {
               checkedChildren="Aktif"
               unCheckedChildren="Inaktif"
               defaultChecked={activeStatus}
-              // loading={isPending}
-              // onClick={() => confirmInactive(userId)}
+              loading={isLoading}
+              onClick={() => confirmInactive(userId)}
             />
             <Popconfirm
               placement="left"
