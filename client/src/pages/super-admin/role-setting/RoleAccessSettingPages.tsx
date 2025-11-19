@@ -6,7 +6,7 @@ import { Button, Card, Flex, Table, TableProps, Tag } from 'antd';
 import React from 'react';
 
 const RoleAccessSettingPages: React.FC = () => {
-  const { data, isLoading } = useQuery({
+  const roleList = useQuery({
     queryKey: ['role-access-list'],
     queryFn: async () => await superRoleList(),
   });
@@ -24,6 +24,11 @@ const RoleAccessSettingPages: React.FC = () => {
     },
   ];
 
+  const menuList = useQuery({
+    queryKey: ['menu-access-list'],
+    queryFn: async () => await superRoleList(),
+  });
+
   return (
     <>
       <Flex gap="1rem" align="start">
@@ -32,9 +37,9 @@ const RoleAccessSettingPages: React.FC = () => {
             size="small"
             sticky
             style={{ backgroundColor: 'transparent' }}
-            loading={isLoading}
+            loading={roleList.isLoading}
             columns={columns}
-            dataSource={data}
+            dataSource={roleList.data}
             rowKey={({ roleId }) => roleId}
             locale={{
               emptyText: (
@@ -51,9 +56,9 @@ const RoleAccessSettingPages: React.FC = () => {
             size="small"
             sticky
             style={{ backgroundColor: 'transparent' }}
-            loading={isLoading}
+            loading={menuList.isLoading}
             columns={columns}
-            dataSource={data}
+            dataSource={menuList.data}
             rowKey={({ roleId }) => roleId}
             locale={{
               emptyText: (
@@ -63,7 +68,22 @@ const RoleAccessSettingPages: React.FC = () => {
           />
         </Card>
       </Flex>
-      <p>Comingsoon</p>
+      <Card title="Daftar Akses Pengguna" extra={<Button>Tambah Akses</Button>}>
+        <Table
+          size="small"
+          sticky
+          style={{ backgroundColor: 'transparent' }}
+          loading={menuList.isLoading}
+          columns={columns}
+          dataSource={menuList.data}
+          rowKey={({ roleId }) => roleId}
+          locale={{
+            emptyText: (
+              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+            ),
+          }}
+        />
+      </Card>
     </>
   );
 };
