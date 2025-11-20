@@ -56,9 +56,9 @@ const RoleAccessSettingPages: React.FC = () => {
             size="small"
             sticky
             style={{ backgroundColor: 'transparent' }}
-            loading={menuList.isLoading}
+            loading={roleList.isLoading}
             columns={columns}
-            dataSource={menuList.data}
+            dataSource={roleList.data}
             rowKey={({ roleId }) => roleId}
             locale={{
               emptyText: (
@@ -73,9 +73,9 @@ const RoleAccessSettingPages: React.FC = () => {
           size="small"
           sticky
           style={{ backgroundColor: 'transparent' }}
-          loading={menuList.isLoading}
+          loading={roleList.isLoading}
           columns={columns}
-          dataSource={menuList.data}
+          dataSource={roleList.data}
           rowKey={({ roleId }) => roleId}
           locale={{
             emptyText: (
