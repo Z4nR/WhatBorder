@@ -25,40 +25,46 @@ const RoleAccessSettingPages: React.FC = () => {
   ];
 
   return (
-    <Flex gap="1rem" align="start">
-      <Card title="Daftar Role">
-        <Table
-          size="small"
-          sticky
-          style={{ backgroundColor: 'transparent' }}
-          loading={isLoading}
-          columns={columns}
-          dataSource={data}
-          rowKey={({ roleId }) => roleId}
-          locale={{
-            emptyText: (
-              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
-            ),
-          }}
-        />
-      </Card>
-      <Card title="Pengaturan Akses Role" extra={<Button>Tambah Akses</Button>}>
-        <Table
-          size="small"
-          sticky
-          style={{ backgroundColor: 'transparent' }}
-          loading={isLoading}
-          columns={columns}
-          dataSource={data}
-          rowKey={({ roleId }) => roleId}
-          locale={{
-            emptyText: (
-              <EmptyData description="Anda Belum Menambahkan Data Tempat" />
-            ),
-          }}
-        />
-      </Card>
-    </Flex>
+    <>
+      <Flex gap="1rem" align="start">
+        <Card title="Daftar Role">
+          <Table
+            size="small"
+            sticky
+            style={{ backgroundColor: 'transparent' }}
+            loading={isLoading}
+            columns={columns}
+            dataSource={data}
+            rowKey={({ roleId }) => roleId}
+            locale={{
+              emptyText: (
+                <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+              ),
+            }}
+          />
+        </Card>
+        <Card
+          title="Pengaturan Akses Role"
+          extra={<Button>Tambah Akses</Button>}
+        >
+          <Table
+            size="small"
+            sticky
+            style={{ backgroundColor: 'transparent' }}
+            loading={isLoading}
+            columns={columns}
+            dataSource={data}
+            rowKey={({ roleId }) => roleId}
+            locale={{
+              emptyText: (
+                <EmptyData description="Anda Belum Menambahkan Data Tempat" />
+              ),
+            }}
+          />
+        </Card>
+      </Flex>
+      <p>Comingsoon</p>
+    </>
   );
 };
 
