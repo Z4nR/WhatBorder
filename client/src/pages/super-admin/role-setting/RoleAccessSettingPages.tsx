@@ -25,7 +25,7 @@ const RoleAccessSettingPages: React.FC = () => {
   ];
 
   const menuList = useQuery({
-    queryKey: ['menu-access-list'],
+    queryKey: ['menu-list'],
     queryFn: async () => await superRoleList(),
   });
 
