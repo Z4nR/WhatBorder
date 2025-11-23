@@ -2,8 +2,10 @@ import EmptyData from '@/components/general/utils/EmptyData';
 import { superMenuList } from '@/utils/networks';
 import { SuperRouteListProps } from '@/utils/types/admin.types';
 import { useQuery } from '@tanstack/react-query';
-import { Table, TableProps, Tag } from 'antd';
+import { Table, TableProps, Tag, Typography } from 'antd';
 import React from 'react';
+
+const { Text } = Typography;
 
 const MenuSettingPages: React.FC = () => {
   const { data, isLoading } = useQuery({
@@ -17,7 +19,15 @@ const MenuSettingPages: React.FC = () => {
       dataIndex: 'routeName',
       key: 'route-name',
       render: (_, route) => {
-        return <Tag>{route.routeName.toUpperCase()}</Tag>;
+        return <Text strong>{route.routeName.toUpperCase()}</Text>;
+      },
+    },
+    {
+      title: 'Path Route',
+      dataIndex: 'pathRoute',
+      key: 'path-route',
+      render: (_, route) => {
+        return <Tag>{route.pathRoute.toUpperCase()}</Tag>;
       },
     },
   ];
