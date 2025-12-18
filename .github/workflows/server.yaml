@@ -38,5 +38,4 @@ jobs:
           cd server
           docker compose down --remove-orphans
           docker compose --project-name placeborder up --build -d
-          docker image prune -a -f
           EOF
