@@ -56,7 +56,7 @@ const RoleAccessSettingPages: React.FC = () => {
             size="small"
             sticky
             style={{ backgroundColor: 'transparent' }}
-            loading={roleList.isLoading}
+            loading={menuList.isLoading}
             columns={columns}
             dataSource={roleList.data}
             rowKey={({ roleId }) => roleId}
