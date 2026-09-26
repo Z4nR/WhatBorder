@@ -8,6 +8,7 @@ import { HelperService } from './application/helper-service/helper.service';
 import { PrismaService } from './db/prisma.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DisableLogOnSuccessInterceptor } from './utils/interceptors/log.interceptor';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { AppService } from './app.service';
       useClass: ValidationPipe,
     },
     { provide: APP_INTERCEPTOR, useClass: ResponseTransformInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: DisableLogOnSuccessInterceptor },
   ],
 })
 export class AppModule {}

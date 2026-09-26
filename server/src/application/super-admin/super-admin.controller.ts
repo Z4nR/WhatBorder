@@ -9,13 +9,10 @@ import {
   UseGuards,
   Version,
   Req,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { SuperAdminService } from './super-admin.service';
-import {
-  CreateMenuPathDto,
-  CreateRoleAccessMenuDto,
-} from './dto/create-super-admin.dto';
-import { UpdateSuperAdminDto } from './dto/update-super-admin.dto';
+import { CreateMenuPathDto } from './dto/create-super-admin.dto';
 import { AuthGuard } from '../auth/auth.guard';
 import { RolesGuard } from '../authz/authz.guard';
 import { Roles } from '../authz/decorator/role.decorator';
@@ -40,15 +37,18 @@ export class SuperAdminController {
   }
 
   @Version('1')
-  @Get('role-list')
-  findAllRole() {
-    return this.superAdminService.getAllRole();
+  @Get('menu-list/:role')
+  findAllRouteForRole(@Param('role', ParseIntPipe) role: number) {
+    const roleData = role ? role : null;
+    console.log('checkRole', role, roleData);
+
+    return this.superAdminService.getRoleRouteList(roleData);
   }
 
   @Version('1')
-  @Get('role-route-list')
-  findAllRouteForRole() {
-    return this.superAdminService.getRoleRouteList();
+  @Get('role-list')
+  findAllRole() {
+    return this.superAdminService.getAllRole();
   }
 
   @Version('1')

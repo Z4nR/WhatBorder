@@ -111,7 +111,8 @@ export class SuperAdminService {
 
   async getAllMenu() {
     try {
-      return await this.prisma.route.findMany({
+      const data = await this.prisma.route.findMany({
+        where: { parent_id: null },
         select: {
           route_id: true,
           route_name: true,
@@ -120,11 +121,28 @@ export class SuperAdminService {
           path_key: true,
           order_path: true,
           parent_id: true,
+          children: {
+            select: {
+              route_id: true,
+              route_name: true,
+              path_route: true,
+              path_side: true,
+              path_key: true,
+              order_path: true,
+              parent_id: true,
+            },
+            orderBy: {
+              order_path: 'asc',
+            },
+          },
         },
         orderBy: {
-          order_path: 'asc',
+          path_route: 'asc',
         },
       });
+      console.log(data);
+
+      return data;
     } catch (error) {
       console.log(error);
       throw error;
@@ -133,18 +151,24 @@ export class SuperAdminService {
 
   async getAllRole() {
     try {
-      return await this.prisma.role.findMany({
+      const data = await this.prisma.role.findMany({
         where: {
           active_status: true,
         },
         select: {
-          role_id: true,
+          role_code: true,
           role_name: true,
-          label: true,
         },
         orderBy: {
           role_code: 'asc',
         },
+      });
+
+      return data.map((item) => {
+        return {
+          value: item.role_code,
+          label: item.role_name,
+        };
       });
     } catch (error) {
       console.log(error);
@@ -152,14 +176,51 @@ export class SuperAdminService {
     }
   }
 
-  async getRoleRouteList() {
+  async getRoleRouteList(id: number | null) {
     try {
-      return await this.prisma.roleRoute.findMany({
-        select: {
-          role_id: true,
-          route_id: true,
-        },
-      });
+      const dataMenu = await this.getAllMenu();
+
+      let dataRole: {
+        RoleRoute: {
+          route_id: string;
+        }[];
+        role_code: number;
+        role_name: string;
+      } | null;
+
+      if (id) {
+        dataRole = await this.prisma.role.findUnique({
+          where: { role_code: id },
+          select: {
+            role_code: true,
+            role_name: true,
+            RoleRoute: {
+              select: {
+                route_id: true,
+              },
+            },
+          },
+        });
+      }
+      console.log(dataRole);
+
+      const addRoleCode = (route: any): any => {
+        const roleRoute = dataRole?.RoleRoute.some(
+          (item) => item.route_id === route.route_id,
+        );
+
+        return {
+          ...route,
+          roleCode: roleRoute ? dataRole?.role_code : null,
+          roleName: roleRoute ? dataRole?.role_name : null,
+          children: route.children?.map(addRoleCode) ?? [],
+        };
+      };
+
+      const result = dataMenu.map(addRoleCode);
+      console.log(result);
+
+      return result;
     } catch (error) {
       console.log(error);
       throw error;
@@ -278,19 +339,19 @@ export class SuperAdminService {
           user.place.map((p) => p.map_id),
         );
 
-        // if (flatPlaceId.length > 0) {
-        //   await tx.placeMap.deleteMany({
-        //     where: { map_id: { in: flatPlaceId } },
-        //   });
-        // }
+        if (flatPlaceId.length > 0) {
+          await tx.placeMap.deleteMany({
+            where: { map_id: { in: flatPlaceId } },
+          });
+        }
 
-        // await tx.placeData.deleteMany({
-        //   where: { user_id: id },
-        // });
+        await tx.placeData.deleteMany({
+          where: { user_id: id },
+        });
 
-        // await tx.user.delete({
-        //   where: { user_id: id },
-        // });
+        await tx.user.delete({
+          where: { user_id: id },
+        });
       });
 
       return {

@@ -3,8 +3,15 @@ name: WhatBorder Backend
 on:
   push:
     branches: ['main']
+    paths:
+      - 'server/**'
+      - 'server.yaml'
+
   pull_request:
     branches: ['main']
+    paths:
+      - 'server/**'
+      - 'server.yaml'
 
 jobs:
   build:
