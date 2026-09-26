@@ -15,7 +15,7 @@ import {
   Tag,
 } from 'antd';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { AdminUserOnlyTableProps } from '@/utils/types/admin.types';
 import EmptyData from '../utils/EmptyData';
@@ -32,6 +32,7 @@ const UserRoleList: React.FC = () => {
     queryKey: ['user-list', 'role'],
     queryFn: async () => await superUserRoleList(),
   });
+  console.log(data);
 
   const removeUser = useMutation({
     mutationFn: superRemoveUser,
@@ -61,7 +62,7 @@ const UserRoleList: React.FC = () => {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ) => {
     confirm({ closeDropdown: true });
     setSearchText(selectedKeys[0]);
@@ -74,7 +75,7 @@ const UserRoleList: React.FC = () => {
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<AdminUserOnlyTableProps> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -88,29 +89,37 @@ const UserRoleList: React.FC = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          style={{ marginBottom: 8, display: 'block' }}
+          onChange={(e) => {
+            setSelectedKeys(e.target.value ? [e.target.value] : []);
+          }}
+          onPressEnter={() => {
+            handleSearch(selectedKeys as string[], confirm, dataIndex);
+          }}
+          style={{
+            marginBottom: 8,
+            display: 'block',
+          }}
         />
+
         <Space>
           <Button
             type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
+            onClick={() => {
+              handleSearch(selectedKeys as string[], confirm, dataIndex);
+            }}
             icon={<SearchOutlined />}
             size="small"
             style={{ width: 90 }}
           >
             Cari
           </Button>
+
           <Button
             onClick={() => {
-              clearFilters && handleReset(clearFilters);
+              if (clearFilters) {
+                handleReset(clearFilters);
+              }
+
               confirm({ closeDropdown: true });
             }}
             size="small"
@@ -118,6 +127,7 @@ const UserRoleList: React.FC = () => {
           >
             Hapus
           </Button>
+
           <Button
             type="link"
             size="small"
@@ -130,18 +140,27 @@ const UserRoleList: React.FC = () => {
         </Space>
       </div>
     ),
+
     filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+      <SearchOutlined
+        style={{
+          color: filtered ? '#1677ff' : undefined,
+        }}
+      />
     ),
+
     onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
+      String(record[dataIndex] ?? '')
         .toLowerCase()
-        .includes((value as string).toLowerCase()),
+        .includes(String(value).toLowerCase()),
+
     render: (text) =>
       searchedColumn === dataIndex ? (
         <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          highlightStyle={{
+            backgroundColor: '#ffc069',
+            padding: 0,
+          }}
           searchWords={[searchText]}
           autoEscape
           textToHighlight={text ? text.toString() : ''}
@@ -194,39 +213,44 @@ const UserRoleList: React.FC = () => {
       },
     },
     {
-      title: 'Aksi',
-      key: 'role-action',
+      title: 'Status Aktif',
+      key: 'active-status',
       align: 'center',
       width: '200px',
       render: (_, { userId, activeStatus }) => {
+        const activeUser = activeStatus ? 'Aktif' : 'Tidak Aktif';
+
         return (
           <Space>
+            <Tag>{activeUser}</Tag>
             <Switch
-              checkedChildren="Aktif"
-              unCheckedChildren="Inaktif"
               defaultChecked={activeStatus}
               loading={isLoading}
               onClick={() => confirmInactive(userId)}
             />
-            <Popconfirm
-              placement="left"
-              title="Yakin nih mau dihapus?"
-              description="Semua data terkait pengguna ini akan hilang"
-              onConfirm={() => confirmDeleted(userId)}
-              okText="Yakin"
-              cancelText="Tidak Dulu"
-            >
-              <Button
-                shape="round"
-                icon={<DeleteOutlined />}
-                size="small"
-                color="danger"
-                variant="solid"
-              >
-                Hapus
-              </Button>
-            </Popconfirm>
           </Space>
+        );
+      },
+    },
+    {
+      title: 'Aksi',
+      key: 'user-action',
+      align: 'center',
+      width: '100px',
+      render: (_, { userId }) => {
+        return (
+          <Popconfirm
+            placement="left"
+            title="Yakin nih mau dihapus?"
+            description="Semua data terkait pengguna ini akan hilang"
+            onConfirm={() => confirmDeleted(userId)}
+            okText="Yakin"
+            cancelText="Tidak Dulu"
+          >
+            <Button color="danger" variant="link">
+              Hapus
+            </Button>
+          </Popconfirm>
         );
       },
     },

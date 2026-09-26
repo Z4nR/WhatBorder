@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, FormInstance, Input, Typography } from 'antd';
 import UpdateCoordinateField from './UpdateCoordinateField';
@@ -10,9 +10,9 @@ const UpdateCoordinateList: React.FC<{
   initiateValue: [number, number][] | null;
 }> = ({ form, initiateValue }) => {
   // Ensure initiateValue is only set once
-  const [initialData, setInitialData] = React.useState<
-    [number, number][] | null
-  >(null);
+  const [initialData, setInitialData] = useState<[number, number][] | null>(
+    null,
+  );
 
   const addRef = useRef<(fieldsValue?: any, index?: number) => void>();
 
@@ -101,7 +101,7 @@ const UpdateCoordinateList: React.FC<{
             validator: async (_, longlat) => {
               if (!longlat || longlat.length < 3) {
                 return Promise.reject(
-                  new Error('Setidaknya Masukkan Tiga Titik Koordinat')
+                  new Error('Setidaknya Masukkan Tiga Titik Koordinat'),
                 );
               }
             },
@@ -122,7 +122,7 @@ const UpdateCoordinateList: React.FC<{
             const formattedList: [number, number][] = updatedList.map(
               (item: any) => {
                 return [Number(item.long), Number(item.lat)];
-              }
+              },
             );
 
             console.log('Formatted List:', formattedList);

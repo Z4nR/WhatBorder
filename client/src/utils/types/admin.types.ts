@@ -74,10 +74,44 @@ export interface SuperRoleListProps {
   label: string;
 }
 
+export interface ChildrenSuperRouteListProps {
+  routeId: string;
+  routeName: string;
+  pathRoute: string;
+  pathSide: string;
+  pathKey: string;
+  orderPath: number;
+}
+
 export interface SuperRouteListProps {
   routeId: string;
   routeName: string;
   pathRoute: string;
   pathSide: string;
+  pathKey: string;
   orderPath: number;
+  children: ChildrenSuperRouteListProps[];
+}
+
+export interface ChildrenSuperRoleRouteListProps {
+  roleCode: number;
+  roleName: string;
+  routeId: string;
+  routeName: string;
+  pathRoute: string;
+  pathSide: string;
+  pathKey: string;
+  orderPath: number;
+}
+
+export interface SuperRoleRouteListProps {
+  roleCode: number;
+  roleName: string;
+  routeId: string;
+  routeName: string;
+  pathRoute: string;
+  pathSide: string;
+  pathKey: string;
+  orderPath: number;
+  children: ChildrenSuperRouteListProps[];
 }

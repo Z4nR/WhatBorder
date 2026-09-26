@@ -16,7 +16,7 @@ import {
 } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { FilterDropdownProps } from 'antd/es/table/interface';
-import { SearchOutlined, DeleteOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 import MapInProfile from '../../map/MapInProfile';
 import { dateFormatter } from '@/utils/helper';
 import EmptyData from '../../utils/EmptyData';
@@ -66,7 +66,7 @@ const AdminPlaceList: React.FC = () => {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ) => {
     confirm({ closeDropdown: true });
     setSearchText(selectedKeys[0]);
@@ -79,7 +79,7 @@ const AdminPlaceList: React.FC = () => {
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<AdminPlaceTableProps> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -113,9 +113,13 @@ const AdminPlaceList: React.FC = () => {
           >
             Cari
           </Button>
+
           <Button
             onClick={() => {
-              clearFilters && handleReset(clearFilters);
+              if (clearFilters) {
+                handleReset(clearFilters);
+              }
+
               confirm({ closeDropdown: true });
             }}
             size="small"
@@ -165,6 +169,7 @@ const AdminPlaceList: React.FC = () => {
       title: 'Nama Tempat',
       dataIndex: 'placeName',
       key: 'place-name',
+      width: '300px',
       ...getColumnSearchProps('placeName'),
     },
     {
@@ -208,7 +213,9 @@ const AdminPlaceList: React.FC = () => {
             okText="Yakin"
             cancelText="Tidak Dulu"
           >
-            <DeleteOutlined style={{ color: 'red' }} />
+            <Button variant="link" color="red" size="small">
+              Hapus
+            </Button>
           </Popconfirm>
         );
       },

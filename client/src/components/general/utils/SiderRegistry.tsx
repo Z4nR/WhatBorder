@@ -91,6 +91,8 @@ const buildSiderMenuItems = (routeData: any[]): MenuItem[] => {
   const siderMapping: (MenuItem & { order: number })[] = routeData
     .map((route) => {
       const registryEntry = pageRegistry[route.pathKey];
+      console.log(registryEntry);
+
       if (!registryEntry) return null;
 
       const children: (MenuItem & { order: number })[] | undefined =
@@ -103,7 +105,7 @@ const buildSiderMenuItems = (routeData: any[]): MenuItem[] => {
               key: child.pathKey,
               label: <Link to={child.side}>{child.routeName}</Link>,
               icon: childRegistry.icon ?? undefined,
-              order: childRegistry.order ?? Number.MAX_SAFE_INTEGER,
+              order: child.order_path,
             } as MenuItem & { order: number };
           })
           .filter(Boolean) as (MenuItem & { order: number })[];
@@ -119,7 +121,7 @@ const buildSiderMenuItems = (routeData: any[]): MenuItem[] => {
         label: <Link to={route.side}>{route.routeName}</Link>,
         icon: registryEntry.icon ?? undefined,
         children: sortedChildren,
-        order: registryEntry.order ?? Number.MAX_SAFE_INTEGER,
+        order: registryEntry.order,
       } as MenuItem & { order: number };
     })
     .filter(Boolean) as (MenuItem & { order: number })[];

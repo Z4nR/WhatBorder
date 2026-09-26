@@ -419,15 +419,17 @@ const superRoleList = async () => {
     });
 };
 
-const superRouteRoleList = async () => {
+const superRouteRoleList = async (id: any) => {
   return axios
-    .get('/v1/super-admin/role-route-list', {
+    .get(`/v1/super-admin/menu-list/${id}`, {
       headers: {
         Authorization: `Bearer ${token()}`,
       },
     })
     .then((res) => {
       const { data } = res.data;
+      console.log(data);
+
       return data;
     });
 };

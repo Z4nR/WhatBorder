@@ -183,6 +183,8 @@ const buildRoutesFromRegistry = (routeData: any[]): RouteObject[] => {
     })
     .filter(Boolean) as RouteObject[];
 
+  console.log(routeMapping);
+
   return routeMapping;
 };
 

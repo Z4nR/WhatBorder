@@ -32,7 +32,7 @@ import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import PlaceCompareList from '@/components/desktop/compare/PlaceCompareList';
 import TransferList from '@/components/desktop/compare/TransferList';
 
-const { Link, Text } = Typography;
+const { Text } = Typography;
 
 type InputRef = GetRef<typeof Input>;
 
@@ -75,7 +75,7 @@ const CompareAdminMapPages: React.FC = () => {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ) => {
     confirm({ closeDropdown: true });
     setSearchText(selectedKeys[0]);
@@ -88,7 +88,7 @@ const CompareAdminMapPages: React.FC = () => {
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<PlaceListToCompareProps> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -124,7 +124,10 @@ const CompareAdminMapPages: React.FC = () => {
           </Button>
           <Button
             onClick={() => {
-              clearFilters && handleReset(clearFilters);
+              if (clearFilters) {
+                handleReset(clearFilters);
+              }
+
               confirm({ closeDropdown: true });
             }}
             size="small"
@@ -172,7 +175,7 @@ const CompareAdminMapPages: React.FC = () => {
 
   const deletePlaceById = (placeId: string) => {
     setGeoJsonData((prevData) =>
-      prevData.filter((item) => item.placeId !== placeId)
+      prevData.filter((item) => item.placeId !== placeId),
     );
   };
 
@@ -229,7 +232,9 @@ const CompareAdminMapPages: React.FC = () => {
 
         return (
           <Space>
-            <Link
+            <Button
+              variant="link"
+              color="blue"
               disabled={userPlaceSelected || geoJsonData.length !== 0}
               onClick={() => {
                 setPlaceId(placeId);
@@ -240,8 +245,10 @@ const CompareAdminMapPages: React.FC = () => {
               }}
             >
               Pilih Tempat
-            </Link>
-            <Link
+            </Button>
+            <Button
+              variant="link"
+              color="red"
               disabled={!userPlaceSelected}
               onClick={() => {
                 setGeoJsonData([]);
@@ -251,7 +258,7 @@ const CompareAdminMapPages: React.FC = () => {
               }}
             >
               Reset Tempat
-            </Link>
+            </Button>
           </Space>
         );
       },
@@ -309,12 +316,14 @@ const CompareAdminMapPages: React.FC = () => {
       width: '150px',
       render: (_, { placeId, placeMap }) => {
         const isInGeoJsonData = geoJsonData.some(
-          (item) => item.placeId === placeId
+          (item) => item.placeId === placeId,
         );
 
         return (
           <Space size={'middle'}>
-            <Link
+            <Button
+              variant="link"
+              color="blue"
               onClick={() => {
                 const placeGeo = placeMap.placeGeojson;
                 addNewPlaceMap({ placeId, placeGeo });
@@ -322,16 +331,17 @@ const CompareAdminMapPages: React.FC = () => {
               disabled={isInGeoJsonData}
             >
               Tampil
-            </Link>
-            <Link
-              type="danger"
+            </Button>
+            <Button
+              variant="link"
+              color="danger"
               onClick={() => {
                 deletePlaceById(placeId);
               }}
               disabled={!isInGeoJsonData}
             >
               Hapus
-            </Link>
+            </Button>
           </Space>
         );
       },

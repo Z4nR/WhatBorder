@@ -36,7 +36,7 @@ const PlaceStatisticPages: React.FC = () => {
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps['confirm'],
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ) => {
     confirm({ closeDropdown: true });
     setSearchText(selectedKeys[0]);
@@ -49,7 +49,7 @@ const PlaceStatisticPages: React.FC = () => {
   };
 
   const getColumnSearchProps = (
-    dataIndex: DataIndex
+    dataIndex: DataIndex,
   ): TableColumnType<PlaceListProps> => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -85,7 +85,10 @@ const PlaceStatisticPages: React.FC = () => {
           </Button>
           <Button
             onClick={() => {
-              clearFilters && handleReset(clearFilters);
+              if (clearFilters) {
+                handleReset(clearFilters);
+              }
+
               confirm({ closeDropdown: true });
             }}
             size="small"
