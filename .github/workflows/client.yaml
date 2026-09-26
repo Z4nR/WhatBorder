@@ -6,8 +6,15 @@ name: WhatBorder Frontend
 on:
   push:
     branches: ['main']
+    paths:
+      - 'client/**'
+      - 'client.yaml'
+
   pull_request:
     branches: ['main']
+    paths:
+      - 'client/**'
+      - 'client.yaml'
 
 jobs:
   build:
