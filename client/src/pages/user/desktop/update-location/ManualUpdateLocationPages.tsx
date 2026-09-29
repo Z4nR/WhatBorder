@@ -62,7 +62,7 @@ const ManualUpdateLocationPages: React.FC = () => {
   const handleFetchData = (data: any) => {
     if (data) {
       const coordinate: [number, number][] = geojsonDeconstructor(
-        data?.placeMap.placeGeojson
+        data?.placeMap.placeGeojson,
       );
       console.log(coordinate);
 
@@ -244,12 +244,18 @@ const ManualUpdateLocationPages: React.FC = () => {
             layout="vertical"
             name="create_place"
             onValuesChange={(allValues) => {
-              if (allValues.longlat) {
-                console.log('Updated longlat array:', allValues.longlat);
-                const formattedList: [number, number][] = allValues.longlat.map(
+              const longlat = (
+                allValues as Partial<UpdateLocationProps> & {
+                  longlat?: { long?: number | string; lat?: number | string }[];
+                }
+              ).longlat;
+
+              if (longlat) {
+                console.log('Updated longlat array:', longlat);
+                const formattedList: [number, number][] = longlat.map(
                   (item: any) => {
                     return [Number(item.long), Number(item.lat)];
-                  }
+                  },
                 );
 
                 console.log('Formatted List:', formattedList);
