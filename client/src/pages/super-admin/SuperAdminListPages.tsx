@@ -10,7 +10,6 @@ import {
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import React, { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
@@ -23,7 +22,7 @@ type InputRef = GetRef<typeof Input>;
 
 type DataIndex = keyof AdminListProps;
 
-const AdminListPages: React.FC = () => {
+const SuperAdminListPages: React.FC = () => {
   const { data, isLoading } = useQuery({
     queryKey: ['user-data', 'admin'],
     queryFn: async () => await adminUserList(),
@@ -170,19 +169,6 @@ const AdminListPages: React.FC = () => {
         return <p>{date}</p>;
       },
     },
-    {
-      title: 'Aksi',
-      key: 'admin-action',
-      width: '150px',
-      align: 'center',
-      render: (_, detail) => {
-        if (detail.role.roleName === 'User') {
-          return (
-            <Link to={`/statistic/user/${detail.userId}`}>Lihat Pengguna</Link>
-          );
-        }
-      },
-    },
   ];
 
   return (
@@ -200,4 +186,4 @@ const AdminListPages: React.FC = () => {
   );
 };
 
-export default AdminListPages;
+export default SuperAdminListPages;

@@ -190,6 +190,7 @@ const CompareAdminMapPages: React.FC = () => {
       title: 'Alamat',
       dataIndex: 'placeAddress',
       key: 'place-address',
+      width: '250px',
       responsive: ['lg'],
     },
     {
@@ -211,7 +212,6 @@ const CompareAdminMapPages: React.FC = () => {
       dataIndex: 'createdAt',
       key: 'place-create',
       align: 'center',
-      width: '150px',
       responsive: ['md'],
       sorter: (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -226,13 +226,14 @@ const CompareAdminMapPages: React.FC = () => {
       title: 'Aksi',
       key: 'place-action',
       align: 'center',
-      width: '150px',
+      width: '250px',
       render: (_, { placeId, placeMap, placeCenterPoint }) => {
         const userPlaceSelected = userPlace === placeId ? true : false;
 
         return (
           <Space>
             <Button
+              size="small"
               variant="link"
               color="blue"
               disabled={userPlaceSelected || geoJsonData.length !== 0}
@@ -247,6 +248,7 @@ const CompareAdminMapPages: React.FC = () => {
               Pilih Tempat
             </Button>
             <Button
+              size="small"
               variant="link"
               color="red"
               disabled={!userPlaceSelected}
@@ -270,6 +272,7 @@ const CompareAdminMapPages: React.FC = () => {
     queryFn: async () => await compareList(placeId),
     enabled: placeId != null,
   });
+  console.log(compare.data);
 
   const columnsSource: TableColumnsType<ComparePlaceProps> = [
     {

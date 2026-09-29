@@ -70,7 +70,8 @@ const AppRoutes: React.FC = () => {
     enabled: !!authState.accessToken,
   });
 
-  const routeData = data ? buildRoutesFromRegistry(data) : [];
+  const routeData = data ? buildRoutesFromRegistry(data.code, data.route) : [];
+  console.log(routeData);
 
   const routes = [
     // Public route (always available)

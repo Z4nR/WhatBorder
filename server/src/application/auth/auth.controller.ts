@@ -49,7 +49,7 @@ export class AuthController {
     const userId = user.sub;
 
     const data = await this.authService.me(userId);
-    return await this.authService.myRole(data.role);
+    return await this.authService.myRoute(data.role);
   }
 
   @Public()

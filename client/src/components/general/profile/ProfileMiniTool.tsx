@@ -24,6 +24,7 @@ const ProfileMiniTool: React.FC<MiniToolProps> = ({
       <Tooltip title="Perbarui Profil">
         <Button
           className="icon-profile"
+          style={{ paddingBlock: '5px' }}
           icon={<EditOutlined />}
           onClick={() => setEdit(true)}
         />
@@ -31,6 +32,7 @@ const ProfileMiniTool: React.FC<MiniToolProps> = ({
       <Tooltip title="Bagikan Profil">
         <Button
           className="icon-profile"
+          style={{ paddingBlock: '5px' }}
           icon={<ShareAltOutlined />}
           onClick={() => shareProfile()}
         />
@@ -38,6 +40,7 @@ const ProfileMiniTool: React.FC<MiniToolProps> = ({
       <Tooltip title="Hapus Profil">
         <Button
           className="icon-profile-danger"
+          style={{ paddingBlock: '5px' }}
           icon={<DeleteOutlined />}
           onClick={() => setDelete(true)}
         />

@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   Button,
   Card,
+  Listy,
   Popconfirm,
   Select,
   Space,
@@ -24,19 +25,15 @@ const RoleAccessSettingPages: React.FC = () => {
     queryKey: ['role-list'],
     queryFn: async () => await superRoleList(),
   });
-  console.log(roleList);
+  console.log(roleList.data);
 
   const roleRouteList = useQuery({
     queryKey: ['route-list', getIdRole],
     queryFn: async () => await superRouteRoleList(Number(getIdRole)),
   });
-  console.log(roleRouteList);
+  console.log(roleRouteList.data);
 
   const confirmUpdated = (roleCode: number, routeId: string) => {
-    console.log(roleCode, routeId);
-  };
-
-  const confirmDeleted = (roleCode: number, routeId: string) => {
     console.log(roleCode, routeId);
   };
 
@@ -91,7 +88,22 @@ const RoleAccessSettingPages: React.FC = () => {
       key: 'role-name',
       width: '150px',
       render: (_, route) => {
-        return <Tag>{route.roleName}</Tag>;
+        const roles = route.roleName;
+
+        if (Array.isArray(roles)) {
+          return (
+            <Listy
+              items={roles.map((role, index) => ({
+                key: `${route.routeId}-${index}`,
+                role,
+              }))}
+              rowKey="key"
+              itemRender={(item) => <Tag>{item.role}</Tag>}
+            />
+          );
+        }
+
+        return <Tag>{roles}</Tag>;
       },
     },
     {
@@ -101,36 +113,18 @@ const RoleAccessSettingPages: React.FC = () => {
       width: '100px',
       render: (_, route) => {
         return (
-          <Space>
-            {!route.roleCode && getIdRole && (
-              <Popconfirm
-                placement="left"
-                title="Yakin nih mau diupdate?"
-                description="Harap lakukan penyesuaian agar tidak terjadi error"
-                onConfirm={() => confirmUpdated(Number(getIdRole), route.routeId)}
-                okText="Yakin"
-                cancelText="Tidak Dulu"
-              >
-                <Button variant="link" color="blue">
-                  Tambah
-                </Button>
-              </Popconfirm>
-            )}
-            {route.roleCode && (
-              <Popconfirm
-                placement="left"
-                title="Yakin nih mau dihapus?"
-                description="Semua data terkait pengguna ini akan hilang"
-                onConfirm={() => confirmDeleted(route.roleCode, route.routeId)}
-                okText="Yakin"
-                cancelText="Tidak Dulu"
-              >
-                <Button variant="link" color="red" size="small">
-                  Hapus
-                </Button>
-              </Popconfirm>
-            )}
-          </Space>
+          <Popconfirm
+            placement="left"
+            title="Yakin nih mau diupdate?"
+            description="Harap lakukan penyesuaian agar tidak terjadi error"
+            onConfirm={() => confirmUpdated(Number(getIdRole), route.routeId)}
+            okText="Yakin"
+            cancelText="Tidak Dulu"
+          >
+            <Button variant="link" color="blue">
+              Perbarui
+            </Button>
+          </Popconfirm>
         );
       },
     },

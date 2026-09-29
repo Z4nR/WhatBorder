@@ -92,7 +92,7 @@ export class AuthService {
     }
   }
 
-  async myRole(id: number) {
+  async myRoute(id: number) {
     try {
       const role = await this.prisma.role.findFirst({
         where: { role_code: id },
@@ -140,7 +140,7 @@ export class AuthService {
           pathKey: rr.route.path_key,
           orderPath: rr.route.order_path,
           parentId: rr.route.parent_id,
-          parentKey: rr.route.parent?.path_key ?? null, // 👈 flattened
+          parentKey: rr.route.parent?.path_key ?? null,
           children: rr.route.children.map((c) => ({
             routeId: c.route_id,
             pathKey: c.path_key,
@@ -152,6 +152,8 @@ export class AuthService {
       routes.forEach((r) => {
         map.set(r.routeId, { ...r, children: [] });
       });
+
+      console.log(map);
 
       const treeRoute: any[] = [];
       map.forEach((route) => {
@@ -171,7 +173,7 @@ export class AuthService {
 
       sortRoutes(treeRoute);
 
-      return treeRoute;
+      return { code: id, route: treeRoute };
     } catch (error) {
       console.error(error);
       throw error;

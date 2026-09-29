@@ -10,23 +10,22 @@ import {
 import type { TableProps } from 'antd/es/table';
 import { SearchOutlined } from '@ant-design/icons';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
 import React, { useRef, useState } from 'react';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
+import { placeList } from '@/utils/networks';
 import { dateFormatter } from '@/utils/helper';
-import { adminUserList } from '@/utils/networks';
-import { AdminListProps } from '@/utils/types/statistic.types';
+import { PlaceListProps } from '@/utils/types/statistic.types';
 import EmptyData from '@/components/general/utils/EmptyData';
 
 type InputRef = GetRef<typeof Input>;
 
-type DataIndex = keyof AdminListProps;
+type DataIndex = keyof PlaceListProps;
 
-const AdminListPages: React.FC = () => {
+const SuperAdminPlaceStatisticPages: React.FC = () => {
   const { data, isLoading } = useQuery({
-    queryKey: ['user-data', 'admin'],
-    queryFn: async () => await adminUserList(),
+    queryKey: ['place-data'],
+    queryFn: async () => await placeList(),
   });
 
   const [searchText, setSearchText] = useState('');
@@ -50,7 +49,7 @@ const AdminListPages: React.FC = () => {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex,
-  ): TableColumnType<AdminListProps> => ({
+  ): TableColumnType<PlaceListProps> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -129,58 +128,55 @@ const AdminListPages: React.FC = () => {
       ),
   });
 
-  const columns: TableProps<AdminListProps>['columns'] = [
+  const columns: TableProps<PlaceListProps>['columns'] = [
     {
-      title: 'Nama Pengguna',
-      dataIndex: 'userName',
-      key: 'user-name',
-      ...getColumnSearchProps('userName'),
+      title: 'Nama Tempat',
+      dataIndex: 'placeName',
+      key: 'place-name',
+      ...getColumnSearchProps('placeName'),
     },
     {
-      title: 'Deskripsi Pengguna',
-      dataIndex: 'description',
-      key: 'user-desc',
-      responsive: ['lg'],
+      title: 'Alamat',
+      dataIndex: 'placeAddress',
+      key: 'place-address',
+      responsive: ['xl'],
     },
     {
       title: 'Tipe',
-      dataIndex: 'userType',
-      key: 'user-type',
-      align: 'center',
+      dataIndex: 'placeType',
+      key: 'place-type',
       width: '150px',
       responsive: ['sm'],
-      render: (_, tag) => {
-        const color: string = tag.role.label;
-        const admin: string = tag.role.roleName;
-        return <Tag color={color}>{admin.toUpperCase()}</Tag>;
+      render: (_, { type }) => {
+        return (
+          <Tag style={{ margin: '0' }} color={type.label}>
+            {type.name.toUpperCase()}
+          </Tag>
+        );
       },
+    },
+    {
+      title: 'Oleh',
+      dataIndex: 'createdBy',
+      key: 'place-creator',
+      align: 'center',
+      width: '150px',
+      responsive: ['md'],
     },
     {
       title: 'Ditambahkan Pada',
       dataIndex: 'createdAt',
-      key: 'user-create',
+      key: 'place-create',
       align: 'center',
+      width: '150px',
+      responsive: ['md'],
       sorter: (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       sortDirections: ['descend', 'ascend'],
       defaultSortOrder: 'ascend',
-      responsive: ['md'],
-      render: (_, time) => {
-        const date = dateFormatter(time.createdAt);
+      render: (_, { createdAt }) => {
+        const date = dateFormatter(createdAt);
         return <p>{date}</p>;
-      },
-    },
-    {
-      title: 'Aksi',
-      key: 'admin-action',
-      width: '150px',
-      align: 'center',
-      render: (_, detail) => {
-        if (detail.role.roleName === 'User') {
-          return (
-            <Link to={`/statistic/user/${detail.userId}`}>Lihat Pengguna</Link>
-          );
-        }
       },
     },
   ];
@@ -192,12 +188,12 @@ const AdminListPages: React.FC = () => {
       loading={isLoading}
       columns={columns}
       dataSource={data}
-      rowKey={({ userId }) => userId}
+      rowKey={({ placeId }) => placeId}
       locale={{
-        emptyText: <EmptyData description="Data Pengguna Kosong" />,
+        emptyText: <EmptyData description="Data Tempat Kosong" />,
       }}
     />
   );
 };
 
-export default AdminListPages;
+export default SuperAdminPlaceStatisticPages;

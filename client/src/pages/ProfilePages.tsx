@@ -50,7 +50,7 @@ const ProfilePages: React.FC = () => {
       <BreadcrumbComponent title="Profil Pengguna" buttonTitle="Kembali" />
       <Flex gap={'middle'} vertical>
         <Skeleton loading={isLoading} active avatar paragraph={{ rows: 2 }}>
-          <Space direction={isMobile ? 'vertical' : 'horizontal'}>
+          <Space orientation={isMobile ? 'vertical' : 'horizontal'}>
             <ProfileAvatar avatar={data?.avatar} />
             <Flex vertical>
               <Row>

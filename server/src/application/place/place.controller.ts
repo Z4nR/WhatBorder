@@ -46,7 +46,7 @@ export class PlaceController {
     return this.placeService.findOne(id);
   }
 
-  @Roles(Role.USER, Role.ADMIN)
+  @Roles(Role.USER, Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get(':id/compare-list')
   async compareList(@Param('id') id: string) {
@@ -128,7 +128,7 @@ export class PlaceController {
     return this.placeService.statisticAdmin();
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.SUPER)
   @Version('1')
   @Get('all-user')
   async findAllPlace() {

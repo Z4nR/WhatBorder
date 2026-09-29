@@ -11,106 +11,151 @@ import {
   GroupOutlined,
 } from '@ant-design/icons';
 
-const pageRegistry: Record<
-  string,
-  {
-    order?: number | null;
-    parentKey?: string | null;
-    icon?: React.ReactNode | null;
-  }
-> = {
+type SideMenuConfig = {
+  order?: number | null;
+  parentKey?: string | null;
+  icon?: React.ReactNode | null;
+};
+
+type SideRegistry = Record<string, Record<string, SideMenuConfig>>;
+
+const sideRegistry: SideRegistry = {
   // Super Admin
-  dashboard_super_admin: {
-    order: 1,
-    parentKey: null,
-    icon: <AppstoreOutlined />,
-  },
-  access_super_admin: {
-    order: 2,
-    parentKey: null,
-    icon: <GroupOutlined />,
-  },
-  access_menu_super_admin: {
-    order: 1,
-    parentKey: null,
-    icon: <AppstoreAddOutlined />,
-  },
-  access_role_super_admin: {
-    order: 2,
-    parentKey: null,
-    icon: <IdcardOutlined />,
+  1: {
+    dashboard: {
+      order: 1,
+      parentKey: null,
+      icon: <AppstoreOutlined />,
+    },
+    statistic: {
+      order: 2,
+      parentKey: null,
+      icon: <FundViewOutlined />,
+    },
+    statistic_place: {
+      order: 1,
+      parentKey: 'statistic',
+      icon: <EnvironmentOutlined />,
+    },
+    statistic_user: {
+      order: 2,
+      parentKey: 'statistic',
+      icon: <TeamOutlined />,
+    },
+    compare_place: {
+      order: 3,
+      parentKey: null,
+      icon: <BlockOutlined />,
+    },
+    access: {
+      order: 2,
+      parentKey: null,
+      icon: <GroupOutlined />,
+    },
+    access_menu: {
+      order: 1,
+      parentKey: null,
+      icon: <AppstoreAddOutlined />,
+    },
+    access_role: {
+      order: 2,
+      parentKey: null,
+      icon: <IdcardOutlined />,
+    },
   },
   // Admin
-  dashboard_admin: {
-    order: 1,
-    parentKey: null,
-    icon: <AppstoreOutlined />,
-  },
-  compare_admin: {
-    order: 3,
-    parentKey: null,
-    icon: <BlockOutlined />,
+  2: {
+    dashboard: {
+      order: 1,
+      parentKey: null,
+      icon: <AppstoreOutlined />,
+    },
+    statistic: {
+      order: 2,
+      parentKey: null,
+      icon: <FundViewOutlined />,
+    },
+    statistic_place: {
+      order: 1,
+      parentKey: 'statistic',
+      icon: <EnvironmentOutlined />,
+    },
+    statistic_user: {
+      order: 2,
+      parentKey: 'statistic',
+      icon: <TeamOutlined />,
+    },
+    compare_place: {
+      order: 3,
+      parentKey: null,
+      icon: <BlockOutlined />,
+    },
   },
   // User
-  dashboard_user: {
-    order: 1,
-    parentKey: null,
-    icon: <AppstoreOutlined />,
-  },
-  compare_user: {
-    order: 3,
-    parentKey: null,
-    icon: <BlockOutlined />,
-  },
-  // General Sidebar
-  statistic: {
-    order: 2,
-    parentKey: null,
-    icon: <FundViewOutlined />,
-  },
-  statistic_place: {
-    order: 1,
-    parentKey: 'statistic',
-    icon: <EnvironmentOutlined />,
-  },
-  statistic_user_admin: {
-    order: 2,
-    parentKey: 'statistic',
-    icon: <TeamOutlined />,
-  },
-  statistic_user_user: {
-    order: 2,
-    parentKey: 'statistic',
-    icon: <TeamOutlined />,
+  3: {
+    dashboard: {
+      order: 1,
+      parentKey: null,
+      icon: <AppstoreOutlined />,
+    },
+    statistic: {
+      order: 2,
+      parentKey: null,
+      icon: <FundViewOutlined />,
+    },
+    statistic_place: {
+      order: 1,
+      parentKey: 'statistic',
+      icon: <EnvironmentOutlined />,
+    },
+    statistic_user: {
+      order: 2,
+      parentKey: 'statistic',
+      icon: <TeamOutlined />,
+    },
+    compare_place: {
+      order: 3,
+      parentKey: null,
+      icon: <BlockOutlined />,
+    },
   },
 };
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const buildSiderMenuItems = (routeData: any[]): MenuItem[] => {
-  const siderMapping: (MenuItem & { order: number })[] = routeData
+type OrderedMenuItem = MenuItem & {
+  order: number;
+};
+
+const buildSiderMenuItems = (
+  roleCode: number,
+  routeData: any[],
+): MenuItem[] => {
+  const roleRegistry = sideRegistry[String(roleCode)] ?? {};
+
+  console.log(routeData);
+
+  const siderMapping: OrderedMenuItem[] = routeData
     .map((route) => {
-      const registryEntry = pageRegistry[route.pathKey];
-      console.log(registryEntry);
+      const registryEntry = roleRegistry[route.pathKey];
 
       if (!registryEntry) return null;
 
-      const children: (MenuItem & { order: number })[] | undefined =
-        route.children
-          ?.map((child: any) => {
-            const childRegistry = pageRegistry[child.pathKey];
-            if (!childRegistry) return null;
+      const children: OrderedMenuItem[] | undefined = route.children
+        ?.map((child: any) => {
+          const childRegistry = roleRegistry[child.pathKey];
 
-            return {
-              key: child.pathKey,
-              label: <Link to={child.side}>{child.routeName}</Link>,
-              icon: childRegistry.icon ?? undefined,
-              order: child.order_path,
-            } as MenuItem & { order: number };
-          })
-          .filter(Boolean) as (MenuItem & { order: number })[];
+          if (!childRegistry) return null;
 
-      // sort children if exist
+          return {
+            key: child.pathKey,
+            label: <Link to={child.side}>{child.routeName}</Link>,
+            icon: childRegistry.icon ?? undefined,
+            order: childRegistry.order ?? child.order_path,
+          } as OrderedMenuItem;
+        })
+        .filter(Boolean) as OrderedMenuItem[];
+
       const sortedChildren =
         children && children.length > 0
           ? children.sort((a, b) => a.order - b.order)
@@ -121,12 +166,11 @@ const buildSiderMenuItems = (routeData: any[]): MenuItem[] => {
         label: <Link to={route.side}>{route.routeName}</Link>,
         icon: registryEntry.icon ?? undefined,
         children: sortedChildren,
-        order: registryEntry.order,
-      } as MenuItem & { order: number };
+        order: registryEntry.order ?? route.order_path,
+      } as OrderedMenuItem;
     })
-    .filter(Boolean) as (MenuItem & { order: number })[];
+    .filter(Boolean) as OrderedMenuItem[];
 
-  // sort parents
   siderMapping.sort((a, b) => a.order - b.order);
 
   return siderMapping;

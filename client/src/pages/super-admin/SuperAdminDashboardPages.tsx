@@ -41,7 +41,7 @@ const SuperAdminDashboardPages: React.FC = () => {
       <CompassOutlined key="list-place" onClick={() => navigate('/place')} />
     </Tooltip>,
     <Tooltip title="Daftar Pengguna">
-      <TeamOutlined key="list-user" onClick={() => navigate('/user-setting')} />
+      <TeamOutlined key="list-user" onClick={() => navigate('/user')} />
     </Tooltip>,
   ];
 
@@ -96,8 +96,8 @@ const SuperAdminDashboardPages: React.FC = () => {
                 data?.statusPercentage === 'increase'
                   ? 'green'
                   : data?.statusPercentage === 'decrease'
-                  ? 'red'
-                  : 'black',
+                    ? 'red'
+                    : 'black',
             }}
           />
         </Flex>

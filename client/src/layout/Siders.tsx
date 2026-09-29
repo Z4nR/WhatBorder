@@ -43,7 +43,7 @@ const Siders: React.FC = () => {
     enabled: !!useAuthState().accessToken,
   });
 
-  const asideData = data ? buildSiderMenuItems(data) : [];
+  const asideData = data ? buildSiderMenuItems(data.code, data.route) : [];
 
   return (
     <>
@@ -73,11 +73,7 @@ const Siders: React.FC = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={[
-            'dashboard_super_admin',
-            'dashboard_admin',
-            'dashboard_user',
-          ]}
+          defaultSelectedKeys={['dashboard']}
           items={asideData}
         />
       </Sider>

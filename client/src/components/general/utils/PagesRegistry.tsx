@@ -20,152 +20,218 @@ import MenuSettingPages from '@/pages/super-admin/menu-setting/MenuSettingPages'
 import RoleAccessSettingPages from '@/pages/super-admin/role-setting/RoleAccessSettingPages';
 import SuperAdminDashboardPages from '@/pages/super-admin/SuperAdminDashboardPages';
 import UserActiveStatusSettingPages from '@/pages/admin/UserActiveStatusSettingPages';
+import SuperAdminListPages from '../../../pages/super-admin/SuperAdminListPages';
+import SuperAdminPlaceStatisticPages from '../../../pages/super-admin/SuperAdminPlaceStatisticPages';
 
-const pageRegistry: Record<
-  string,
-  {
-    index: boolean;
-    parentKey: string | null;
-    element: React.ReactNode;
-  }
-> = {
+type PageMenuConfig = {
+  index: boolean;
+  parentKey: string | null;
+  element: React.ReactNode;
+};
+
+type PageRegistry = Record<string, Record<string, PageMenuConfig>>;
+
+const pageRegistry: PageRegistry = {
   // Super Admin
-  dashboard_super_admin: {
-    index: true,
-    parentKey: null,
-    element: <SuperAdminDashboardPages />,
-  },
-  user_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <UserRoleSettingPages />,
-  },
-  access_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <Outlet />,
-  },
-  access_menu_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <MenuSettingPages />,
-  },
-  access_role_super_admin: {
-    index: false,
-    parentKey: null,
-    element: <RoleAccessSettingPages />,
+  1: {
+    dashboard: {
+      index: true,
+      parentKey: null,
+      element: <SuperAdminDashboardPages />,
+    },
+    statistic: {
+      index: false,
+      parentKey: null,
+      element: <Outlet />,
+    },
+    statistic_place: {
+      index: false,
+      parentKey: 'statistic',
+      element: <SuperAdminPlaceStatisticPages />,
+    },
+    statistic_user: {
+      index: false,
+      parentKey: 'statistic',
+      element: <SuperAdminListPages />,
+    },
+    place_type: {
+      index: false,
+      parentKey: null,
+      element: <PlaceTypePages />,
+    },
+    place: {
+      index: false,
+      parentKey: null,
+      element: <PlaceAccessPages />,
+    },
+    user_setting: {
+      index: false,
+      parentKey: null,
+      element: <UserRoleSettingPages />,
+    },
+    compare_place: {
+      index: false,
+      parentKey: null,
+      element: <CompareAdminMapPages />,
+    },
+    access: {
+      index: false,
+      parentKey: null,
+      element: <Outlet />,
+    },
+    access_menu: {
+      index: false,
+      parentKey: 'access',
+      element: <MenuSettingPages />,
+    },
+    access_role: {
+      index: false,
+      parentKey: 'access',
+      element: <RoleAccessSettingPages />,
+    },
   },
   // Admin
-  dashboard_admin: {
-    index: true,
-    parentKey: null,
-    element: <AdminDashboardPages />,
-  },
-  user_admin: {
-    index: false,
-    parentKey: null,
-    element: <UserActiveStatusSettingPages />,
-  },
-  compare_admin: {
-    index: false,
-    parentKey: null,
-    element: <CompareAdminMapPages />,
+  2: {
+    dashboard: {
+      index: true,
+      parentKey: null,
+      element: <AdminDashboardPages />,
+    },
+    statistic: {
+      index: false,
+      parentKey: null,
+      element: <Outlet />,
+    },
+    statistic_place: {
+      index: false,
+      parentKey: 'statistic',
+      element: <PlaceStatisticPages />,
+    },
+    statistic_place_detail: {
+      index: false,
+      parentKey: 'statistic',
+      element: <PlaceDetailPages />,
+    },
+    statistic_user: {
+      index: false,
+      parentKey: 'statistic',
+      element: <AdminListPages />,
+    },
+    statistic_user_detail: {
+      index: false,
+      parentKey: 'statistic',
+      element: <StatisticProfilePages />,
+    },
+    place_type: {
+      index: false,
+      parentKey: null,
+      element: <PlaceTypePages />,
+    },
+    place: {
+      index: false,
+      parentKey: null,
+      element: <PlaceAccessPages />,
+    },
+    user_setting: {
+      index: false,
+      parentKey: null,
+      element: <UserActiveStatusSettingPages />,
+    },
+    compare_place: {
+      index: false,
+      parentKey: null,
+      element: <CompareAdminMapPages />,
+    },
   },
   // User
-  dashboard_user: {
-    index: true,
-    parentKey: null,
-    element: <UserDashboardPages />,
-  },
-  profile_user: {
-    index: false,
-    parentKey: null,
-    element: <ProfilePages />,
-  },
-  location_user: {
-    index: false,
-    parentKey: null,
-    element: <Outlet />,
-  },
-  new_desktop_user: {
-    index: false,
-    parentKey: 'location_user',
-    element: <IntegratedCreateLocationPages />,
-  },
-  new_client_user: {
-    index: false,
-    parentKey: 'location_user',
-    element: <AddCoordinatePages />,
-  },
-  new_manual_user: {
-    index: false,
-    parentKey: 'location_user',
-    element: <ManualCreateLocationPages />,
-  },
-  update_manual_user: {
-    index: false,
-    parentKey: 'location_user',
-    element: <ManualUpdateLocationPages />,
-  },
-  compare_user: {
-    index: false,
-    parentKey: null,
-    element: <CompareUserMapPages />,
-  },
-  // General Place Path
-  place_type_admin: {
-    index: false,
-    parentKey: null,
-    element: <PlaceTypePages />,
-  },
-  place_admin: {
-    index: false,
-    parentKey: null,
-    element: <PlaceAccessPages />,
-  },
-  // General Statistic Path
-  statistic: {
-    index: false,
-    parentKey: null,
-    element: <Outlet />,
-  },
-  statistic_place: {
-    index: false,
-    parentKey: 'statistic',
-    element: <PlaceStatisticPages />,
-  },
-  statistic_place_detail: {
-    index: false,
-    parentKey: 'statistic',
-    element: <PlaceDetailPages />,
-  },
-  statistic_user_admin: {
-    index: false,
-    parentKey: 'statistic',
-    element: <AdminListPages />,
-  },
-  statistic_user_user: {
-    index: false,
-    parentKey: 'statistic',
-    element: <UserListPages />,
-  },
-  statistic_user_detail: {
-    index: false,
-    parentKey: 'statistic',
-    element: <StatisticProfilePages />,
+  3: {
+    dashboard: {
+      index: true,
+      parentKey: null,
+      element: <UserDashboardPages />,
+    },
+    statistic: {
+      index: false,
+      parentKey: null,
+      element: <Outlet />,
+    },
+    statistic_place: {
+      index: false,
+      parentKey: 'statistic',
+      element: <PlaceStatisticPages />,
+    },
+    statistic_place_detail: {
+      index: false,
+      parentKey: 'statistic',
+      element: <PlaceDetailPages />,
+    },
+    statistic_user: {
+      index: false,
+      parentKey: 'statistic',
+      element: <UserListPages />,
+    },
+    statistic_user_detail: {
+      index: false,
+      parentKey: 'statistic',
+      element: <StatisticProfilePages />,
+    },
+    compare_place: {
+      index: false,
+      parentKey: null,
+      element: <CompareUserMapPages />,
+    },
+    profile: {
+      index: false,
+      parentKey: null,
+      element: <ProfilePages />,
+    },
+    location: {
+      index: false,
+      parentKey: null,
+      element: <Outlet />,
+    },
+    new_desktop: {
+      index: false,
+      parentKey: 'location',
+      element: <IntegratedCreateLocationPages />,
+    },
+    new_client: {
+      index: false,
+      parentKey: 'location',
+      element: <AddCoordinatePages />,
+    },
+    new_manual: {
+      index: false,
+      parentKey: 'location',
+      element: <ManualCreateLocationPages />,
+    },
+    update_manual: {
+      index: false,
+      parentKey: 'location',
+      element: <ManualUpdateLocationPages />,
+    },
   },
 };
 
-const buildRoutesFromRegistry = (routeData: any[]): RouteObject[] => {
+const buildRoutesFromRegistry = (
+  roleCode: number,
+  routeData: any[],
+): RouteObject[] => {
+  const roleRegistry = pageRegistry[String(roleCode)] ?? {};
+
   const routeMapping: RouteObject[] = routeData
     .map((route) => {
-      const registryEntry = pageRegistry[route.pathKey];
+      const registryEntry = roleRegistry[route.pathKey];
+
       if (!registryEntry) return null;
 
       const children: RouteObject[] | undefined = route.children
         ?.map((child: any) => {
-          const childRegistry = pageRegistry[child.pathKey];
+          // Important: use roleRegistry
+          const childRegistry = roleRegistry[child.pathKey];
+
           if (!childRegistry) return null;
+
           return {
             path: child.path,
             index: childRegistry.index,
@@ -182,8 +248,6 @@ const buildRoutesFromRegistry = (routeData: any[]): RouteObject[] => {
       } as RouteObject;
     })
     .filter(Boolean) as RouteObject[];
-
-  console.log(routeMapping);
 
   return routeMapping;
 };

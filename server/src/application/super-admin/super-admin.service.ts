@@ -149,6 +149,91 @@ export class SuperAdminService {
     }
   }
 
+  async getRoleRouteList(id: number | null) {
+    try {
+      const dataMenu = await this.getAllMenu();
+
+      // Get ALL roles
+      const dataRoles = await this.prisma.role.findMany({
+        select: {
+          role_code: true,
+          role_name: true,
+          RoleRoute: {
+            select: {
+              route_id: true,
+            },
+          },
+        },
+      });
+
+      // route_id -> ALL roles that have access to the route
+      const roleMap = new Map<
+        string,
+        { roleCode: number; roleName: string }[]
+      >();
+
+      for (const role of dataRoles) {
+        for (const roleRoute of role.RoleRoute) {
+          const roles = roleMap.get(roleRoute.route_id) ?? [];
+
+          roles.push({
+            roleCode: role.role_code,
+            roleName: role.role_name,
+          });
+
+          roleMap.set(roleRoute.route_id, roles);
+        }
+      }
+
+      // Only used for filtering when id !== null
+      let selectedRouteIds: Set<string> | null = null;
+
+      if (id !== null) {
+        const selectedRole = dataRoles.find((role) => role.role_code === id);
+
+        selectedRouteIds = new Set(
+          selectedRole?.RoleRoute.map((roleRoute) => roleRoute.route_id) ?? [],
+        );
+      }
+
+      const processRoutes = (routes: any[]): any[] => {
+        return routes
+          .map((route) => {
+            const roles = roleMap.get(route.route_id) ?? [];
+
+            const children = processRoutes(route.children ?? []);
+
+            const hasAccess =
+              selectedRouteIds === null || selectedRouteIds.has(route.route_id);
+
+            if (!hasAccess && children.length === 0) {
+              return null;
+            }
+
+            return {
+              ...route,
+
+              roleCode: id === null ? roles.map((role) => role.roleCode) : id,
+
+              roleName:
+                id === null
+                  ? roles.map((role) => role.roleName)
+                  : (roles.find((role) => role.roleCode === id)?.roleName ??
+                    null),
+
+              children,
+            };
+          })
+          .filter((route): route is any => route !== null);
+      };
+
+      return processRoutes(dataMenu);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   async getAllRole() {
     try {
       const data = await this.prisma.role.findMany({
@@ -170,57 +255,6 @@ export class SuperAdminService {
           label: item.role_name,
         };
       });
-    } catch (error) {
-      console.log(error);
-      throw error;
-    }
-  }
-
-  async getRoleRouteList(id: number | null) {
-    try {
-      const dataMenu = await this.getAllMenu();
-
-      let dataRole: {
-        RoleRoute: {
-          route_id: string;
-        }[];
-        role_code: number;
-        role_name: string;
-      } | null;
-
-      if (id) {
-        dataRole = await this.prisma.role.findUnique({
-          where: { role_code: id },
-          select: {
-            role_code: true,
-            role_name: true,
-            RoleRoute: {
-              select: {
-                route_id: true,
-              },
-            },
-          },
-        });
-      }
-      console.log(dataRole);
-
-      const addRoleCode = (route: any): any => {
-        const roleRoute = dataRole?.RoleRoute.some(
-          (item) => item.route_id === route.route_id,
-        );
-
-        return {
-          ...route,
-          roleCode: roleRoute ? dataRole?.role_code : null,
-          roleName: roleRoute ? dataRole?.role_name : null,
-          children: route.children?.map(addRoleCode) ?? [],
-        };
-      };
-
-      const result = dataMenu.map(addRoleCode);
-      console.log(result);
-
-      return result;
     } catch (error) {
       console.log(error);
       throw error;
