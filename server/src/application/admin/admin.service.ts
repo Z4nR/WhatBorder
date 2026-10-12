@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { AddBuildingDto } from './dto/create-admin.dto';
-import { PrismaService } from 'src/db/prisma.service';
 import { PlaceService } from '../place/place.service';
 import { UpdateBuildingDto } from './dto/update-admin.dto';
+import { PrismaService } from '../../db/prisma.service';
 
 @Injectable()
 export class AdminService {

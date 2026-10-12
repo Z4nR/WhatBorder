@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateMenuPathDto } from './dto/create-super-admin.dto';
-import { PrismaService } from 'src/db/prisma.service';
+import { PrismaService } from '../../db/prisma.service';
 
 @Injectable()
 export class SuperAdminService {

@@ -9,6 +9,7 @@ import { PrismaService } from './db/prisma.service';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DisableLogOnSuccessInterceptor } from './utils/interceptors/log.interceptor';
+import { PrismaModule } from './db/db.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { DisableLogOnSuccessInterceptor } from './utils/interceptors/log.interce
       envFilePath: '.env',
       isGlobal: true,
     }),
+    PrismaModule,
     VersionModule,
   ],
   controllers: [AppController],

@@ -9,10 +9,10 @@ import { AuthLoginDto, AuthRegistDto } from './dto/create-auth.dto';
 import { ChangePasswordDto } from './dto/update-auth.dto';
 import { randomUUID } from 'crypto';
 import { compare, hash } from 'bcrypt';
-import { PrismaService } from 'src/db/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { HelperService } from '../helper-service/helper.service';
+import { PrismaService } from '../../db/prisma.service';
 
 @Injectable()
 export class AuthService {

@@ -1,10 +1,10 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { CreatePlaceDto, GeoJson } from './dto/create-place.dto';
 import { UpdatePlaceDto } from './dto/update-place.dto';
-import { PrismaService } from 'src/db/prisma.service';
 import { Place } from './entities/place.entity';
 import { HelperService } from '../helper-service/helper.service';
 import { instanceToPlain } from 'class-transformer';
+import { PrismaService } from '../../db/prisma.service';
 
 @Injectable()
 export class PlaceService {
